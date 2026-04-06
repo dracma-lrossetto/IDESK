@@ -683,6 +683,8 @@
       <button class="nav-btn" onclick="scrollTo('productos')">04 · Productos</button>
       <button class="nav-btn" onclick="scrollTo('aps')">05 · Top APs</button>
       <button class="nav-btn" onclick="scrollTo('pl')">06 · P&L</button>
+      <button class="nav-btn" onclick="scrollTo('overhead')">06b · Overhead</button>
+      <button class="nav-btn" onclick="scrollTo('retiro')">06c · Retiro</button>
       <button class="nav-btn" onclick="scrollTo('equilibrio')">07 · Equilibrio</button>
       <button class="nav-btn" onclick="scrollTo('aum')">08 · AUM</button>
       <button class="nav-btn" onclick="scrollTo('rrhh')">09 · RRHH</button>
@@ -1085,7 +1087,7 @@
         <div id="waterfall"></div>
       </div>
       <div class="card">
-        <div class="card-title"><span class="dot g"></span>Utilidad Operativa por Segmento</div>
+        <div class="card-title"><span class="dot g"></span>Ingresos Netos Operativos por Segmento</div>
         <div class="chart-wrap" style="height:260px">
           <canvas id="chartPL"></canvas>
         </div>
@@ -1093,9 +1095,31 @@
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="dot"></span>P&L Detallado por Origen</div>
+      <div class="card-title" style="justify-content:space-between">
+        <div style="display:flex; align-items:center; gap:10px">
+          <span class="dot"></span>P&L Detallado por Origen
+        </div>
+        <button id="btnAsignacion" onclick="toggleAsignacion()"
+          style="display:flex; align-items:center; gap:8px; padding:6px 16px;
+                 background:rgba(255,209,102,0.1); border:1px solid var(--accent-y);
+                 border-radius:4px; cursor:pointer; transition:all 0.2s;
+                 font-family:'DM Mono',monospace; font-size:0.7rem;
+                 letter-spacing:0.06em; color:var(--accent-y); white-space:nowrap">
+          <span id="iconAsig">⊟</span>
+          <span id="lblAsig">SIN ASIGNACIÓN</span>
+        </button>
+      </div>
+
+      <div id="notaAsignacion" style="display:block; margin-bottom:12px; padding:8px 14px;
+           background:rgba(255,209,102,0.08); border:1px solid rgba(255,209,102,0.25);
+           border-radius:4px; font-size:0.74rem; color:var(--accent-y); font-family:'DM Sans',sans-serif">
+        <strong style="color:var(--white)">Vista sin asignación:</strong>
+        Sueldos y Overhead no se prorratean entre segmentos — solo figuran en la columna TOTAL.
+        El resultado por segmento refleja únicamente los costos directos (INVIU, Comisiones, Impuestos).
+      </div>
+
       <div class="tbl-wrap">
-        <table>
+        <table id="tablaPL">
           <thead>
             <tr>
               <th>Concepto</th>
@@ -1107,90 +1131,276 @@
               <th>TOTAL</th><th>%</th>
             </tr>
           </thead>
-          <tbody>
-            <tr class="subtotal">
-              <td class="bold">Ingresos Brutos</td>
-              <td>$358,5M</td><td class="muted">100%</td>
-              <td>$435,9M</td><td class="muted">100%</td>
-              <td>$157,6M</td><td class="muted">100%</td>
-              <td>$247,6M</td><td class="muted">100%</td>
-              <td>$72,9M</td><td class="muted">100%</td>
-              <td class="cyan bold">$1.272,5M</td><td class="muted">100%</td>
-            </tr>
-            <tr class="neg">
-              <td class="indent">Costo INVIU</td>
-              <td class="red">($66,7M)</td><td class="muted">-19%</td>
-              <td class="red">($85,0M)</td><td class="muted">-19%</td>
-              <td class="red">($26,8M)</td><td class="muted">-19%</td>
-              <td class="red">($47,2M)</td><td class="muted">-20%</td>
-              <td class="red">($12,0M)</td><td class="muted">-17%</td>
-              <td class="red bold">($240,6M)</td><td class="muted">-19%</td>
-            </tr>
-            <tr class="neg">
-              <td class="indent">Comisiones AP</td>
-              <td class="red">($104,7M)</td><td class="muted">-29%</td>
-              <td class="red">($254,4M)</td><td class="red bold">-58%</td>
-              <td class="muted">—</td><td class="muted">0%</td>
-              <td class="red">($121,6M)</td><td class="muted">-50%</td>
-              <td class="red">($36,4M)</td><td class="muted">-50%</td>
-              <td class="red bold">($519,4M)</td><td class="muted">-42%</td>
-            </tr>
-            <tr class="neg">
-              <td class="indent">Impuestos</td>
-              <td class="red">($29,5M)</td><td class="muted">-8%</td>
-              <td class="red">($35,4M)</td><td class="muted">-8%</td>
-              <td class="red">($11,5M)</td><td class="muted">-8%</td>
-              <td class="red">($20,4M)</td><td class="muted">-8%</td>
-              <td class="red">($5,2M)</td><td class="muted">-7%</td>
-              <td class="red bold">($101,9M)</td><td class="muted">-8%</td>
-            </tr>
-            <tr class="subtotal">
-              <td class="bold">Ing. Netos Operativos</td>
-              <td class="cyan">$149,4M</td><td class="cyan">42%</td>
-              <td>$61,1M</td><td class="muted">14%</td>
-              <td class="green">$119,4M</td><td class="green">74%</td>
-              <td>$58,3M</td><td class="muted">22%</td>
-              <td>$19,4M</td><td class="muted">26%</td>
-              <td class="cyan bold">$410,6M</td><td class="cyan bold">31%</td>
-            </tr>
-            <tr class="neg">
-              <td class="indent">Sueldos</td>
-              <td class="red">($62,8M)</td><td class="muted">-18%</td>
-              <td class="red">($76,3M)</td><td class="muted">-18%</td>
-              <td class="red">($27,6M)</td><td class="muted">-18%</td>
-              <td class="red">($43,3M)</td><td class="muted">-18%</td>
-              <td class="red">($12,8M)</td><td class="muted">-18%</td>
-              <td class="red bold">($222,7M)</td><td class="muted">-18%</td>
-            </tr>
-            <tr class="neg">
-              <td class="indent">Overhead</td>
-              <td class="red">($20,1M)</td><td class="muted">-6%</td>
-              <td class="red">($27,8M)</td><td class="muted">-6%</td>
-              <td class="red">($7,9M)</td><td class="muted">-5%</td>
-              <td class="red">($14,4M)</td><td class="muted">-6%</td>
-              <td class="red">($3,0M)</td><td class="muted">-4%</td>
-              <td class="red bold">($73,2M)</td><td class="muted">-6%</td>
-            </tr>
-            <tr class="subtotal">
-              <td class="bold">Utilidad Operativa</td>
-              <td class="cyan">$71,0M</td><td class="cyan">20%</td>
-              <td class="red">($44,3M)</td><td class="red">-10%</td>
-              <td class="green">$79,3M</td><td class="green">50%</td>
-              <td class="red">($4,4M)</td><td class="red">-2%</td>
-              <td>$1,3M</td><td class="muted">2%</td>
-              <td class="cyan bold">$102,9M</td><td class="cyan bold">8%</td>
-            </tr>
-            <tr class="total">
-              <td class="bold">Utilidad No Operativa</td>
-              <td class="cyan">$61,1M</td><td class="cyan">17%</td>
-              <td class="red">($56,7M)</td><td class="red">-13%</td>
-              <td class="green">$85,1M</td><td class="green">54%</td>
-              <td class="red">($11,1M)</td><td class="red">-4%</td>
-              <td>($0,5M)</td><td class="muted">-1%</td>
-              <td class="green bold">$77,9M</td><td class="green bold">6%</td>
-            </tr>
-          </tbody>
+          <tbody id="bodyPL"></tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     06b · OVERHEAD DESGLOSE
+══════════════════════════════════════════════ -->
+<section id="overhead">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">06b</div>
+        <h2 class="section-title">Desglose del Overhead</h2>
+      </div>
+      <div class="tag-period">Total: $74,4M ARS · Abr–Dic 2025</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Composición del Overhead</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="chartOverhead"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot y"></span>Detalle por Concepto</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th style="text-align:left">Concepto</th><th>Total 9M (ARS)</th><th>%</th><th>Prom. Mensual</th></tr>
+            </thead>
+            <tbody>
+              <tr class="subtotal">
+                <td class="bold lbl">Alq. / Expensas</td>
+                <td class="cyan bold">$25,8M</td><td class="cyan">34,7%</td>
+                <td class="cyan">$2,87M</td>
+              </tr>
+              <tr class="subtotal">
+                <td class="bold lbl">Instalaciones</td>
+                <td class="cyan bold">$22,0M</td><td class="cyan">29,6%</td>
+                <td class="cyan">$2,44M</td>
+              </tr>
+              <tr>
+                <td class="lbl">Gtos. Generales</td>
+                <td>$10,9M</td><td class="muted">14,7%</td>
+                <td class="muted">$1,21M</td>
+              </tr>
+              <tr>
+                <td class="lbl">Equipamientos</td>
+                <td>$9,4M</td><td class="muted">12,6%</td>
+                <td class="muted">$1,04M</td>
+              </tr>
+              <tr>
+                <td class="lbl">Cómputos</td>
+                <td>$4,9M</td><td class="muted">6,5%</td>
+                <td class="muted">$540k</td>
+              </tr>
+              <tr>
+                <td class="lbl">Seguros</td>
+                <td>$747k</td><td class="muted">1,0%</td>
+                <td class="muted">$83k</td>
+              </tr>
+              <tr>
+                <td class="lbl">Gtos. Bancarios</td>
+                <td>$334k</td><td class="muted">0,4%</td>
+                <td class="muted">$37k</td>
+              </tr>
+              <tr>
+                <td class="lbl">Int. / Telefonía</td>
+                <td>$179k</td><td class="muted">0,2%</td>
+                <td class="muted">$20k</td>
+              </tr>
+              <tr>
+                <td class="lbl">Suscripciones</td>
+                <td>$137k</td><td class="muted">0,2%</td>
+                <td class="muted">$15k</td>
+              </tr>
+              <tr>
+                <td class="lbl">Int. Pagados</td>
+                <td>$9k</td><td class="muted">0,0%</td>
+                <td class="muted">$1k</td>
+              </tr>
+              <tr class="total">
+                <td class="bold lbl">TOTAL OVERHEAD</td>
+                <td class="bold cyan">$74,4M</td>
+                <td class="bold muted">100%</td>
+                <td class="bold cyan">$8,26M</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px; font-size:.72rem; color:var(--muted); font-style:italic">
+          Alquileres + Instalaciones representan el 64,3% del overhead total. Promedio mensual calculado sobre 9 meses (abr–dic 2025).
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     06c · RETIRO DE UTILIDAD
+══════════════════════════════════════════════ -->
+<section id="retiro">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">06c</div>
+        <h2 class="section-title">Retiro de Utilidad & Distribución</h2>
+      </div>
+      <div class="tag-period">En USD · Abr–Dic 2025</div>
+    </div>
+
+    <div class="grid-2">
+
+      <!-- Retiro en USD -->
+      <div class="card">
+        <div class="card-title"><span class="dot g"></span>Retiro de Utilidad (USD)</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left">Período</th>
+                <th>Netos USD</th>
+                <th>HLV-JW</th>
+                <th>NOVILLO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="lbl">Abr, May, Jun 2025</td>
+                <td class="cyan">5.767</td><td>3.172</td><td>2.595</td>
+              </tr>
+              <tr>
+                <td class="lbl">Jul 2025</td>
+                <td class="cyan">2.713</td><td>1.492</td><td>1.221</td>
+              </tr>
+              <tr>
+                <td class="lbl">Ago, Sep, Oct, Nov 2025</td>
+                <td class="cyan">8.535</td><td>4.694</td><td>3.841</td>
+              </tr>
+              <tr class="subtotal">
+                <td class="bold lbl">TOTALES</td>
+                <td class="bold cyan">17.014</td>
+                <td class="bold">9.358</td>
+                <td class="bold">7.656</td>
+              </tr>
+              <tr>
+                <td class="lbl" style="color:var(--accent-y)">Reserva UT Dic 2025</td>
+                <td style="color:var(--accent-y)">2.176</td>
+                <td style="color:var(--accent-y)">1.197</td>
+                <td style="color:var(--accent-y)">979</td>
+              </tr>
+              <tr class="total">
+                <td class="bold lbl">TOTAL UT</td>
+                <td class="bold cyan">19.190</td>
+                <td class="bold">10.555</td>
+                <td class="bold">8.636</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:20px">
+          <div class="meter-row">
+            <div class="meter-label">HLV-JW</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" style="width:55%"></div></div>
+            <div class="meter-val">USD 10.555 · 55%</div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-label">NOVILLO</div>
+            <div class="meter-bar-wrap"><div class="meter-bar g" style="width:45%"></div></div>
+            <div class="meter-val">USD 8.636 · 45%</div>
+          </div>
+        </div>
+
+        <!-- Indicadores % -->
+        <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace; font-size:.62rem; color:var(--muted); letter-spacing:.12em; margin-bottom:12px; text-transform:uppercase">Retiro Total UT (USD 19.190 · ARS ~$25,4M)</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+            <div style="padding:12px 16px; background:rgba(0,176,216,0.06); border:1px solid var(--border); border-radius:6px; text-align:center">
+              <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.1em; margin-bottom:6px">% S/ING. BRUTOS</div>
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:.04em; color:var(--cyan)">2,0<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7; margin-left:2px">%</span></div>
+              <div style="font-size:.68rem; color:var(--muted); margin-top:2px">$25,4M / $1.272,5M</div>
+            </div>
+            <div style="padding:12px 16px; background:rgba(0,200,150,0.06); border:1px solid rgba(0,200,150,0.2); border-radius:6px; text-align:center">
+              <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.1em; margin-bottom:6px">% S/UTIL. NO OPERATIVA</div>
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:.04em; color:var(--accent-g)">32,6<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7; margin-left:2px">%</span></div>
+              <div style="font-size:.68rem; color:var(--muted); margin-top:2px">$25,4M / $77,9M</div>
+            </div>
+          </div>
+          <div style="margin-top:8px; font-size:.68rem; color:var(--muted); font-style:italic">
+            Conversión: USD × TC MEP promedio $1.322,93 (abr–dic 2025)
+          </div>
+        </div>
+      </div>
+
+      <!-- Distribución Utilidad No Operativa ARS -->
+      <div class="card">
+        <div class="card-title"><span class="dot y"></span>Distribución Utilidad No Operativa (ARS)</div>
+
+        <div style="margin-bottom:20px; padding:14px; background:rgba(0,176,216,0.06); border-radius:6px; border:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace; font-size:.65rem; color:var(--muted); letter-spacing:.12em; margin-bottom:6px">UTILIDAD NO OPERATIVA DISPONIBLE</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.04em; color:var(--accent-g)">
+            <span style="font-size:.65em; opacity:.7">$</span>77,9<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:3px">M ARS</span>
+          </div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th style="text-align:left">Concepto</th><th>ARS</th><th>%</th></tr>
+            </thead>
+            <tbody>
+              <tr class="neg">
+                <td class="lbl">Retiro de Socios</td>
+                <td class="red">($23,8M)</td><td class="muted">-31%</td>
+              </tr>
+              <tr class="neg">
+                <td class="lbl">Honorarios CEO Interino</td>
+                <td class="red">($14,7M)</td><td class="muted">-19%</td>
+              </tr>
+              <tr class="neg">
+                <td class="lbl">Reserva Cap. de Trabajo</td>
+                <td class="red">($35,0M)</td><td class="muted">-45%</td>
+              </tr>
+              <tr class="neg">
+                <td class="lbl">Reserva UT</td>
+                <td class="red">($3,0M)</td><td class="muted">-4%</td>
+              </tr>
+              <tr class="total">
+                <td class="bold lbl" style="color:var(--accent-g)">NETO FINAL</td>
+                <td class="bold" style="color:var(--accent-g)">$1,3M</td>
+                <td class="bold" style="color:var(--accent-g)">2%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Waterfall mini -->
+        <div style="margin-top:20px">
+          <div class="wf-row">
+            <div class="wf-label" style="font-size:.75rem; min-width:180px">Util. No Operativa</div>
+            <div class="wf-bar-wrap"><div class="wf-bar pos" style="width:100%">$77,9M</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-label" style="font-size:.75rem; color:var(--muted); min-width:180px">Reserva Cap. Trabajo</div>
+            <div class="wf-bar-wrap"><div class="wf-bar neg" style="width:44.9%">($35,0M)</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-label" style="font-size:.75rem; color:var(--muted); min-width:180px">Retiro Socios</div>
+            <div class="wf-bar-wrap"><div class="wf-bar neg" style="width:30.6%">($23,8M)</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-label" style="font-size:.75rem; color:var(--muted); min-width:180px">Honorarios CEO</div>
+            <div class="wf-bar-wrap"><div class="wf-bar neg" style="width:18.9%">($14,7M)</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-label" style="font-size:.75rem; color:var(--muted); min-width:180px">Reserva UT</div>
+            <div class="wf-bar-wrap"><div class="wf-bar neg" style="width:3.9%">($3,0M)</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-label" style="font-size:.75rem; font-weight:500; color:var(--accent-g); min-width:180px">= Neto Final</div>
+            <div class="wf-bar-wrap"><div class="wf-bar result" style="width:1.7%">$1,3M</div></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1726,7 +1936,10 @@ new Chart(document.getElementById('chartPL'), {
   data: {
     labels: ['DRACMA Int.','DRACMA Ext.','NOV. Int.','NOV. Ext.','IDESK'],
     datasets: [
-      { label: 'Util. Operativa', data: [75108842,-34449754,89168527,7066246,6024473], backgroundColor: [cyan,red,green,cyan,cyan], borderRadius: 4 }
+      { label: 'Ing. Netos Operativos',
+        data: [157642832, 61071165, 117439834, 55474424, 18944263],
+        backgroundColor: [cyan, cyan, green, cyan, 'rgba(0,176,216,0.55)'],
+        borderRadius: 4 }
     ]
   },
   options: {
@@ -1827,11 +2040,194 @@ new Chart(document.getElementById('chartRRHHMensual'), {
     }
   }
 });
+// ── P&L TABLE TOGGLE: Con Asignación / Sin Asignación ──
+const plData = {
+  rows: [
+    { label:'Ingresos Brutos',          css:'subtotal', bold:true,  indent:false, alloc:false,
+      di:['$358,5M','100%'],  de:['$435,9M','100%'],  ni:['$157,6M','100%'],
+      ne:['$247,6M','100%'],  id:['$72,9M','100%'],   tot:['$1.272,5M','100%'],
+      diClass:'', deClass:'', niClass:'', neClass:'', idClass:'', totClass:'cyan bold' },
+
+    { label:'Costo INVIU',              css:'neg',  bold:false, indent:true,  alloc:false,
+      di:['($66,7M)','-19%'], de:['($85,0M)','-19%'], ni:['($28,7M)','-19%'],
+      ne:['($48,1M)','-20%'], id:['($12,1M)','-17%'],  tot:['($240,6M)','-19%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Comisiones AP',            css:'neg',  bold:false, indent:true,  alloc:false,
+      di:['($104,7M)','-32%'], de:['($254,5M)','-58%'], ni:['—','0%'],
+      ne:['($123,6M)','-50%'], id:['($36,7M)','-50%'],  tot:['($519,4M)','-42%'],
+      diClass:'red', deClass:'red', niClass:'muted', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Impuestos',                css:'neg',  bold:false, indent:true,  alloc:false,
+      di:['($29,5M)','-8%'],  de:['($35,4M)','-8%'],  ni:['($11,5M)','-8%'],
+      ne:['($20,4M)','-8%'],  id:['($5,2M)','-7%'],   tot:['($101,9M)','-8%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Total Ing. Netos Operativos', css:'subtotal', bold:true, indent:false, alloc:false,
+      di:['$157,6M','42%'],   de:['$61,1M','14%'],   ni:['$117,4M','74%'],
+      ne:['$55,5M','22%'],    id:['$18,9M','26%'],   tot:['$410,6M','31%'],
+      di2:['$157,6M','42%'],  de2:['$61,1M','14%'],  ni2:['$117,4M','74%'],
+      ne2:['$55,5M','22%'],   id2:['$18,9M','26%'],  tot2:['$410,6M','31%'],
+      diClass:'cyan', deClass:'', niClass:'green', neClass:'', idClass:'', totClass:'cyan bold' },
+
+    { label:'Total Sueldos',            css:'neg',  bold:false, indent:true,  alloc:true,
+      di:['($62,8M)','-15%'], de:['($76,3M)','-15%'], ni:['($27,6M)','-15%'],
+      ne:['($43,3M)','-15%'], id:['($12,8M)','-14%'],  tot:['($222,7M)','-15%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Publicidad / Viáticos',    css:'neg',  bold:false, indent:true,  alloc:true,
+      di:['($1,5M)','0%'],   de:['($1,8M)','0%'],   ni:['($644k)','0%'],
+      ne:['($1,0M)','0%'],   id:['($298k)','0%'],    tot:['($5,2M)','0%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Gastos de Representación', css:'neg',  bold:false, indent:true,  alloc:true,
+      di:['($1,5M)','0%'],   de:['($1,8M)','0%'],   ni:['($661k)','0%'],
+      ne:['($1,0M)','0%'],   id:['($306k)','0%'],    tot:['($5,3M)','0%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Overhead',                 css:'neg',  bold:false, indent:true,  alloc:true,
+      di:['($21,0M)','-6%'],  de:['($25,5M)','-6%'],  ni:['($9,2M)','-5%'],
+      ne:['($14,5M)','-6%'],  id:['($4,3M)','-4%'],   tot:['($74,4M)','-6%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Utilidad Operativa',       css:'subtotal', bold:true, indent:false, alloc:false,
+      di:['$71,0M','21%'],    de:['($44,3M)','-8%'],  ni:['$79,3M','53%'],
+      ne:['($4,4M)','1%'],    id:['$1,3M','7%'],      tot:['$102,9M','10%'],
+      diClass:'cyan', deClass:'red', niClass:'green', neClass:'red', idClass:'', totClass:'cyan bold',
+      di2:['$157,6M','42%'],  de2:['$61,1M','14%'],  ni2:['$117,4M','74%'],
+      ne2:['$55,5M','22%'],   id2:['$18,9M','26%'],  tot2:['$102,9M','10%'],
+      diClass2:'cyan', deClass2:'', niClass2:'green', neClass2:'', idClass2:'', totClass2:'cyan bold' },
+
+    { label:'Cuota Préstamo',           css:'neg',  bold:false, indent:true,  alloc:true,
+      di:['($13,6M)','-4%'],  de:['($17,3M)','-4%'],  ni:['($5,7M)','-4%'],
+      ne:['($9,1M)','-4%'],   id:['($2,7M)','-4%'],   tot:['($48,4M)','-4%'],
+      diClass:'red', deClass:'red', niClass:'red', neClass:'red', idClass:'red', totClass:'red bold' },
+
+    { label:'Modelo Caño',              css:'',     bold:false, indent:true,  alloc:false,
+      di:['—','0%'],          de:['—','0%'],          ni:['$9,9M','7%'],
+      ne:['—','0%'],          id:['—','0%'],          tot:['$9,9M','1%'],
+      diClass:'muted', deClass:'muted', niClass:'cyan', neClass:'muted', idClass:'muted', totClass:'cyan bold' },
+
+    { label:'Intereses FIMA',           css:'',     bold:false, indent:true,  alloc:true,
+      di:['$3,8M','1%'],      de:['$4,9M','1%'],      ni:['$1,6M','1%'],
+      ne:['$2,4M','1%'],      id:['$805k','1%'],      tot:['$13,5M','1%'],
+      diClass:'cyan', deClass:'cyan', niClass:'cyan', neClass:'cyan', idClass:'cyan', totClass:'cyan bold' },
+
+    { label:'Utilidad No Operativa',    css:'total', bold:true, indent:false, alloc:false,
+      di:['$61,1M','18%'],    de:['($56,7M)','-11%'], ni:['$85,1M','57%'],
+      ne:['($11,1M)','-2%'],  id:['($535k)','5%'],    tot:['$77,9M','8%'],
+      diClass:'cyan', deClass:'red', niClass:'green', neClass:'red', idClass:'', totClass:'green bold',
+      di2:['$157,6M','42%'],  de2:['$61,1M','14%'],  ni2:['$117,4M','74%'],
+      ne2:['$55,5M','22%'],   id2:['$18,9M','26%'],  tot2:['$77,9M','8%'],
+      diClass2:'cyan', deClass2:'', niClass2:'green', neClass2:'', idClass2:'', totClass2:'green bold' },
+  ]
+};
+
+let conAsignacion = false;
+
+function fmtCell(val, pctVal, valClass, pctClass) {
+  const vc = valClass ? ` class="${valClass}"` : '';
+  const pc = pctClass ? ` class="${pctClass}"` : ' class="muted"';
+  return `<td${vc}>${val}</td><td${pc}>${pctVal}</td>`;
+}
+
+function renderPL() {
+  const body = document.getElementById('bodyPL');
+  if (!body) return;
+  body.innerHTML = '';
+
+  plData.rows.forEach(r => {
+    const sinAsig = !conAsignacion;
+    const tr = document.createElement('tr');
+    tr.className = r.css;
+
+    // label cell
+    const labelCls = (r.bold ? 'bold' : '') + (r.indent ? ' indent' : '');
+    let html = `<td class="${labelCls.trim()}">${r.label}</td>`;
+
+    // If alloc row and sin-asignacion → show zero/dash for segments, keep total
+    if (r.alloc && sinAsig) {
+      const zeroCell = `<td class="muted" style="color:rgba(122,155,181,0.35)">—</td><td class="muted" style="color:rgba(122,155,181,0.35)">—</td>`;
+      html += zeroCell + zeroCell + zeroCell + zeroCell + zeroCell;
+      // total stays
+      html += `<td class="${r.totClass}">${r.tot[0]}</td><td class="muted">${r.tot[1]}</td>`;
+    } else {
+      // Use mode-specific values if available
+      const use = (key) => sinAsig && r[key+'2'] !== undefined ? r[key+'2'] : r[key];
+      const useClass = (key) => sinAsig && r[key+'2'] !== undefined ? r[key+'2'] : r[key];
+
+      const cols = ['di','de','ni','ne','id','tot'];
+      const totIdx = 5;
+      cols.forEach((c, i) => {
+        const vals = use(c);
+        let vc = r[c+'Class'] || '';
+        if (sinAsig && r[c+'Class2'] !== undefined) vc = r[c+'Class2'];
+        // make total bold if has bold in class
+        const isTot = (i === totIdx);
+        const finalVc = vc ? ` class="${vc}"` : '';
+        const finalPc = vc && vc.includes('red') ? ` class="muted"` : ` class="muted"`;
+        html += `<td${finalVc}>${vals[0]}</td><td class="muted">${vals[1]}</td>`;
+      });
+    }
+
+    tr.innerHTML = html;
+    body.appendChild(tr);
+  });
+}
+
+function toggleAsignacion() {
+  conAsignacion = !conAsignacion;
+  const btn  = document.getElementById('btnAsignacion');
+  const lbl  = document.getElementById('lblAsig');
+  const icon = document.getElementById('iconAsig');
+  const nota = document.getElementById('notaAsignacion');
+
+  if (conAsignacion) {
+    btn.style.borderColor = 'var(--cyan)';
+    btn.style.color = 'var(--cyan)';
+    btn.style.background = 'rgba(0,176,216,0.1)';
+    lbl.textContent = 'CON ASIGNACIÓN';
+    icon.textContent = '⊞';
+    nota.style.display = 'none';
+  } else {
+    btn.style.borderColor = 'var(--accent-y)';
+    btn.style.color = 'var(--accent-y)';
+    btn.style.background = 'rgba(255,209,102,0.1)';
+    lbl.textContent = 'SIN ASIGNACIÓN';
+    icon.textContent = '⊟';
+    nota.style.display = 'block';
+  }
+  renderPL();
+}
+
+// Initial render
+renderPL();
+
+// ── CHART OVERHEAD: Donut ──
+new Chart(document.getElementById('chartOverhead'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Alq./Expensas','Instalaciones','Gtos. Grales','Equipamientos','Cómputos','Otros'],
+    datasets: [{
+      data: [25822632, 21983331, 10895863, 9394866, 4858477, 1406037],
+      backgroundColor: ['#003F8A','#0070B8','#00A0CC','#00B0D8','#00C5D5','#7A9BB5'],
+      borderColor: navy, borderWidth: 3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '58%',
+    plugins: {
+      legend: { position: 'right', labels: { color: muted, font: { family: 'DM Mono', size: 10 }, padding: 10, boxWidth: 10 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: $${(ctx.raw/1e6).toFixed(1)}M (${(ctx.raw/74361440*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
 function scrollTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-const sections = ['resumen','ingresos','origen','productos','aps','pl','equilibrio','aum','rrhh','analisis'];
+const sections = ['resumen','ingresos','origen','productos','aps','pl','overhead','retiro','equilibrio','aum','rrhh','analisis'];
 const navBtns = document.querySelectorAll('.nav-btn');
 
 const observer = new IntersectionObserver(entries => {
