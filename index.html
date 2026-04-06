@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i-desk · Informe Anual 2025</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@300;400;500;600;700&family=Bebas+Neue&display=swap');
+
+  :root {
+    --cyan:       #00B0D8;
+    --cyan-dark:  #007EA0;
+    --navy:       #0A1628;
+    --navy-mid:   #0D2040;
+    --ink:        #0F1923;
+    --slate:      #1E3A5F;
+    --white:      #F4F8FC;
+    --off:        #E8F2F8;
+    --muted:      #7A9BB5;
+    --accent-g:   #00C896;
+    --accent-r:   #FF4B6E;
+    --accent-y:   #FFD166;
+    --border:     rgba(0,176,216,0.18);
+    --card-bg:    rgba(13,32,64,0.72);
+    --glow:       0 0 40px rgba(0,176,216,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(0,176,216,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0,126,160,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(10,22,40,0.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+
+  .logo-block { display: flex; flex-direction: column; gap: 8px; }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2.6rem;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    line-height: 1;
+  }
+  .logo span { color: var(--cyan); }
+
+  .report-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .header-meta {
+    text-align: right;
+  }
+  .header-meta h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .header-meta p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .confidential-tag {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border: 1px solid var(--accent-y);
+    color: var(--accent-y);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    padding: 14px 0;
+    background: rgba(10,22,40,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 7px 18px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--cyan); border-color: var(--border); }
+  .nav-btn.active { color: var(--cyan); border-color: var(--cyan); background: rgba(0,176,216,0.08); }
+
+  /* ── SECTION ── */
+  section { padding: 72px 0 32px; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 40px;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: -0.03em;
+    color: var(--white);
+  }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .kpi-card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 20px 18px;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    animation: fadeUp 0.5s both;
+  }
+  .kpi-card:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+  }
+  /* subtle inner highlight at bottom-right */
+  .kpi-card::after {
+    content: '';
+    position: absolute; bottom: 0; right: 0;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle at 100% 100%, rgba(0,176,216,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .kpi-card.green::before  { background: linear-gradient(90deg, var(--accent-g), transparent); }
+  .kpi-card.green::after   { background: radial-gradient(circle at 100% 100%, rgba(0,200,150,0.08), transparent 70%); }
+  .kpi-card.yellow::before { background: linear-gradient(90deg, var(--accent-y), transparent); }
+  .kpi-card.yellow::after  { background: radial-gradient(circle at 100% 100%, rgba(255,209,102,0.07), transparent 70%); }
+  .kpi-card.red::before    { background: linear-gradient(90deg, var(--accent-r), transparent); }
+
+  .kpi-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    font-size: 2.6rem;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: var(--white);
+    /* crisp numeric rendering */
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  .kpi-value.cyan   { color: var(--cyan); }
+  .kpi-value.green  { color: var(--accent-g); }
+  .kpi-value.yellow { color: var(--accent-y); }
+
+  /* currency prefix gets slightly smaller */
+  .kpi-value .prefix {
+    font-size: 0.72em;
+    opacity: 0.75;
+    letter-spacing: 0.01em;
+  }
+  /* unit suffix (M / USD) */
+  .kpi-value .suffix {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 500;
+    font-size: 0.52em;
+    letter-spacing: 0.06em;
+    opacity: 0.65;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  .kpi-sub {
+    margin-top: 10px;
+    font-size: 0.73rem;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.4;
+  }
+  .kpi-pct {
+    position: absolute; top: 20px; right: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    background: rgba(0,176,216,0.12);
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+  .kpi-pct.g { color: var(--accent-g); background: rgba(0,200,150,0.12); }
+  .kpi-pct.y { color: var(--accent-y); background: rgba(255,209,102,0.12); }
+
+  /* ── CARDS (generic) ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    backdrop-filter: blur(12px);
+    animation: fadeUp 0.6s both;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    flex-shrink: 0;
+  }
+  .card-title .dot.g { background: var(--accent-g); }
+  .card-title .dot.y { background: var(--accent-y); }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+  @media (max-width: 960px) {
+    .grid-2, .grid-3, .grid-1-2, .grid-2-1 { grid-template-columns: 1fr; }
+  }
+
+  /* ── TABLES ── */
+  .tbl-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  thead th {
+    padding: 10px 14px;
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  thead th:first-child { text-align: left; }
+  tbody tr {
+    border-bottom: 1px solid rgba(0,176,216,0.07);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: rgba(0,176,216,0.05); }
+  tbody tr.subtotal { background: rgba(0,176,216,0.06); }
+  tbody tr.total {
+    background: rgba(0,176,216,0.12);
+    border-top: 1px solid var(--border);
+  }
+  tbody tr.neg { background: rgba(255,75,110,0.06); }
+  td {
+    padding: 9px 14px;
+    text-align: right;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  td:first-child {
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+  }
+  td.indent { padding-left: 28px; color: var(--muted); font-size: 0.76rem; }
+  td.bold { font-weight: 500; color: var(--white); }
+  td.cyan  { color: var(--cyan); }
+  td.green { color: var(--accent-g); }
+  td.red   { color: var(--accent-r); }
+  td.muted { color: var(--muted); }
+  td.lbl   { text-align: left; font-family: 'DM Sans', sans-serif; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+  }
+  .badge-cyan  { background: rgba(0,176,216,0.15); color: var(--cyan); }
+  .badge-g     { background: rgba(0,200,150,0.15); color: var(--accent-g); }
+  .badge-r     { background: rgba(255,75,110,0.15); color: var(--accent-r); }
+  .badge-y     { background: rgba(255,209,102,0.15); color: var(--accent-y); }
+
+  /* ── CHART CONTAINER ── */
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-wrap canvas { width: 100% !important; }
+
+  /* ── METER BAR ── */
+  .meter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .meter-label { font-size: 0.8rem; min-width: 130px; color: var(--white); }
+  .meter-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+  .meter-bar { height: 100%; border-radius: 3px; background: var(--cyan); transition: width 1s cubic-bezier(.4,0,.2,1); }
+  .meter-bar.g { background: var(--accent-g); }
+  .meter-val { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); min-width: 52px; text-align: right; }
+
+  /* ── WATERFALL ── */
+  .wf-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .wf-label { font-size: 0.8rem; min-width: 220px; }
+  .wf-bar-wrap { flex: 1; position: relative; height: 22px; }
+  .wf-bar {
+    position: absolute; height: 100%; border-radius: 2px;
+    display: flex; align-items: center; padding: 0 8px;
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--white);
+    white-space: nowrap; transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .wf-bar.pos { background: linear-gradient(90deg, rgba(0,176,216,0.9), rgba(0,126,160,0.7)); left: 0; }
+  .wf-bar.neg { background: linear-gradient(90deg, rgba(255,75,110,0.8), rgba(180,40,70,0.6)); }
+  .wf-bar.result { background: linear-gradient(90deg, rgba(0,200,150,0.9), rgba(0,140,100,0.7)); left: 0; }
+
+  /* ── ANALYSIS PILLS ── */
+  .analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 800px) { .analysis-grid { grid-template-columns: 1fr; } }
+
+  .analysis-block {
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .analysis-head {
+    padding: 10px 16px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .analysis-head.fort { background: rgba(0,200,150,0.2); color: var(--accent-g); border-left: 3px solid var(--accent-g); }
+  .analysis-head.risk { background: rgba(255,75,110,0.2); color: var(--accent-r); border-left: 3px solid var(--accent-r); }
+  .analysis-item {
+    padding: 9px 16px;
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    background: rgba(13,32,64,0.5);
+    display: flex; gap: 10px;
+  }
+  .analysis-item:last-child { border-bottom: none; }
+  .analysis-item::before { content: '·'; color: var(--muted); flex-shrink: 0; }
+  .analysis-item strong { color: var(--white); display: block; font-size: 0.78rem; margin-bottom: 2px; }
+  .analysis-item span { color: var(--muted); font-size: 0.74rem; display: block; }
+
+  /* ── ORIGIN CARDS ── */
+  .origin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .origin-grid { grid-template-columns: 1fr; } }
+
+  .origin-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: fadeUp 0.6s both;
+  }
+  .origin-head {
+    padding: 16px 20px;
+    background: rgba(0,176,216,0.1);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .origin-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+  .origin-pct { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--cyan); }
+  .origin-body { padding: 16px 20px; }
+  .origin-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .origin-row:last-child { border-bottom: none; }
+  .origin-row-label { font-size: 0.75rem; color: var(--muted); }
+  .origin-row-val { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--white); }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 0 48px;
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+  }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; }
+  .footer-logo span { color: var(--cyan); }
+  .footer-note { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.06em; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lineIn {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+
+  /* stagger delays */
+  .kpi-card:nth-child(1) { animation-delay: .05s }
+  .kpi-card:nth-child(2) { animation-delay: .10s }
+  .kpi-card:nth-child(3) { animation-delay: .15s }
+  .kpi-card:nth-child(4) { animation-delay: .20s }
+  .kpi-card:nth-child(5) { animation-delay: .25s }
+  .kpi-card:nth-child(6) { animation-delay: .30s }
+  .kpi-card:nth-child(7) { animation-delay: .35s }
+  .kpi-card:nth-child(8) { animation-delay: .40s }
+
+  .tag-period {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .tag-period::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-g);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-top {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    width: 40px; height: 40px;
+    background: rgba(0,176,216,0.15);
+    border: 1px solid var(--cyan);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+    color: var(--cyan);
+  }
+  .scroll-top:hover { background: rgba(0,176,216,0.3); }
+
+  /* ── CURRENCY TOGGLE ── */
+  .fx-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px 9px 14px;
+    background: rgba(0,176,216,0.08);
+    border: 1px solid var(--cyan);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.22s;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .fx-toggle:hover {
+    background: rgba(0,176,216,0.18);
+    box-shadow: 0 0 20px rgba(0,176,216,0.2);
+  }
+  .fx-toggle.usd-mode {
+    background: rgba(255,209,102,0.1);
+    border-color: var(--accent-y);
+  }
+  .fx-toggle.usd-mode:hover { background: rgba(255,209,102,0.2); }
+
+  .fx-icon {
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 0.3s;
+  }
+  .fx-toggle:hover .fx-icon { transform: rotate(12deg); }
+
+  .fx-label-wrap { display: flex; flex-direction: column; gap: 1px; }
+  .fx-label-top {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .fx-label-main {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--cyan);
+    letter-spacing: -0.01em;
+    transition: color 0.2s;
+  }
+  .fx-toggle.usd-mode .fx-label-main { color: var(--accent-y); }
+
+  .fx-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    background: rgba(0,176,216,0.15);
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .fx-toggle.usd-mode .fx-badge {
+    background: rgba(255,209,102,0.15);
+    color: var(--accent-y);
+  }
+
+  /* FX rate info banner */
+  .fx-banner {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px;
+    background: rgba(255,209,102,0.08);
+    border-bottom: 1px solid rgba(255,209,102,0.2);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-y);
+    letter-spacing: 0.05em;
+    position: sticky; top: 49px; z-index: 99;
+  }
+  .fx-banner.show { display: flex; }
+  .fx-banner strong { color: var(--white); }
+  .fx-banner-close {
+    margin-left: auto;
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 0.9rem;
+    padding: 2px 6px;
+    transition: opacity 0.15s;
+  }
+  .fx-banner-close:hover { opacity: 1; }
+
+  /* converted value animation */
+  @keyframes valueFlip {
+    0%   { opacity: 0; transform: translateY(-6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .val-animating { animation: valueFlip 0.28s ease both; }
+
+  .be-row { margin-bottom: 12px; }
+  .be-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.78rem; }
+  .be-bar-outer { height: 10px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+  .be-bar-inner { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+
+  /* ── AUM COMPARISON ── */
+  .compare-block { display: flex; gap: 16px; margin-bottom: 20px; align-items: stretch; }
+  .compare-col { flex: 1; background: rgba(0,176,216,0.05); border: 1px solid var(--border); border-radius: 6px; padding: 16px; }
+  .compare-col-year { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.12em; margin-bottom: 8px; }
+  .compare-col-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.03em; }
+  .compare-col-sub { font-size: 0.74rem; color: var(--muted); margin-top: 4px; }
+  .compare-arrow { display: flex; align-items: center; font-size: 1.4rem; color: var(--accent-g); padding: 0 4px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap">
+    <div class="header-inner">
+      <div class="logo-block">
+        <div class="logo">i<span>-</span>desk</div>
+        <div class="report-label">Informe Anual 2025</div>
+      </div>
+      <div class="header-meta">
+        <h1>Análisis Financiero 2025</h1>
+        <p>Período: Abril – Diciembre 2025 &nbsp;·&nbsp; 9 meses</p>
+        <div class="confidential-tag">Confidencial · Solo uso interno</div>
+      </div>
+
+      <!-- CURRENCY TOGGLE -->
+      <button class="fx-toggle" id="fxToggle" onclick="toggleCurrency()" title="Convertir valores ARS ↔ USD MEP">
+        <span class="fx-icon">💱</span>
+        <div class="fx-label-wrap">
+          <span class="fx-label-top">Convertir a</span>
+          <span class="fx-label-main" id="fxLabelMain">USD MEP</span>
+        </div>
+        <span class="fx-badge" id="fxBadge">ARS</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- FX RATE BANNER -->
+<div class="fx-banner" id="fxBanner">
+  <span>💵</span>
+  <span>Valores convertidos a <strong>USD</strong> · Tipo de cambio: <strong>Dólar MEP promedio de cierre Abr–Dic 2025</strong> = <strong>$1.322,93 ARS/USD</strong></span>
+  <span style="color:var(--muted); font-size:.62rem">&nbsp;·&nbsp; Fuente: Ámbito / DolarHistorico.com</span>
+  <span class="fx-banner-close" onclick="toggleCurrency()" title="Volver a ARS">✕ Volver a ARS</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <button class="nav-btn active" onclick="scrollTo('resumen')">01 · Resumen</button>
+      <button class="nav-btn" onclick="scrollTo('ingresos')">02 · Ingresos</button>
+      <button class="nav-btn" onclick="scrollTo('origen')">03 · Por Origen</button>
+      <button class="nav-btn" onclick="scrollTo('productos')">04 · Productos</button>
+      <button class="nav-btn" onclick="scrollTo('aps')">05 · Top APs</button>
+      <button class="nav-btn" onclick="scrollTo('pl')">06 · P&L</button>
+      <button class="nav-btn" onclick="scrollTo('equilibrio')">07 · Equilibrio</button>
+      <button class="nav-btn" onclick="scrollTo('aum')">08 · AUM</button>
+      <button class="nav-btn" onclick="scrollTo('rrhh')">09 · RRHH</button>
+      <button class="nav-btn" onclick="scrollTo('analisis')">10 · Análisis</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     01 · RESUMEN EJECUTIVO
+══════════════════════════════════════════════ -->
+<section id="resumen">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">01</div>
+        <h2 class="section-title">Resumen Ejecutivo</h2>
+      </div>
+      <div class="tag-period">Abr–Dic 2025 &nbsp;·&nbsp; 9 meses</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-pct">100%</div>
+        <div class="kpi-label">Ingresos Brutos</div>
+        <div class="kpi-value cyan"><span class="prefix">$</span>1.272,5<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">ARS acumulado abr–dic 2025</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-pct g">32,3%</div>
+        <div class="kpi-label">Contribución Marginal</div>
+        <div class="kpi-value green"><span class="prefix">$</span>410,6<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">CM / Ingresos Brutos = 32,3%</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-pct g">6,1%</div>
+        <div class="kpi-label">Utilidad No Operativa</div>
+        <div class="kpi-value green"><span class="prefix">$</span>77,9<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Resultado neto consolidado</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-pct">77%</div>
+        <div class="kpi-label">Ingresos Netos</div>
+        <div class="kpi-value"><span class="prefix">$</span>986,0<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Después INVIU y Cuota PTO</div>
+      </div>
+      <div class="kpi-card yellow">
+        <div class="kpi-pct y">+23,4%</div>
+        <div class="kpi-label">Punto de Equilibrio</div>
+        <div class="kpi-value yellow"><span class="prefix">$</span>1.031,1<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Superado en +$241,4M (+23,4%)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-pct">40,8%</div>
+        <div class="kpi-label">Comisiones AP</div>
+        <div class="kpi-value"><span class="prefix">$</span>519,4<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">41% promedio sobre ingresos</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-pct g">+83%</div>
+        <div class="kpi-label">AUM Total</div>
+        <div class="kpi-value green">84,1<span class="suffix">M USD</span></div>
+        <div class="kpi-sub">vs USD 46,0M en oct-24</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-pct g">+162%</div>
+        <div class="kpi-label">Cuentas Comitentes</div>
+        <div class="kpi-value green">2.453</div>
+        <div class="kpi-sub">vs 936 en oct-24</div>
+      </div>
+    </div>
+
+    <!-- CM Breakdown -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot g"></span>Contribución Marginal por Origen</div>
+
+        <!-- DRACMA -->
+        <div class="meter-row">
+          <div class="meter-label" style="font-weight:500">DRACMA</div>
+          <div class="meter-bar-wrap"><div class="meter-bar" style="width:53.2%"></div></div>
+          <div class="meter-val" style="color:var(--white)">53% · $218,7M</div>
+        </div>
+        <div class="meter-row" style="margin-top:-8px; margin-bottom:4px">
+          <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Externo</div>
+          <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" style="width:14.9%; opacity:.65"></div></div>
+          <div class="meter-val" style="font-size:.7rem; color:var(--muted)">15% · $61,1M</div>
+        </div>
+        <div class="meter-row" style="margin-top:-6px; margin-bottom:10px">
+          <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Interno</div>
+          <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" style="width:38.4%"></div></div>
+          <div class="meter-val" style="font-size:.7rem; color:var(--muted)">38% · $157,6M</div>
+        </div>
+
+        <!-- NOVILLO -->
+        <div class="meter-row">
+          <div class="meter-label" style="font-weight:500">NOVILLO</div>
+          <div class="meter-bar-wrap"><div class="meter-bar g" style="width:42.1%"></div></div>
+          <div class="meter-val" style="color:var(--white)">42% · $172,9M</div>
+        </div>
+        <div class="meter-row" style="margin-top:-8px; margin-bottom:4px">
+          <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Externo</div>
+          <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar g" style="width:13.5%; opacity:.65"></div></div>
+          <div class="meter-val" style="font-size:.7rem; color:var(--muted)">14% · $55,5M</div>
+        </div>
+        <div class="meter-row" style="margin-top:-6px; margin-bottom:10px">
+          <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Interno</div>
+          <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar g" style="width:28.6%"></div></div>
+          <div class="meter-val" style="font-size:.7rem; color:var(--muted)">29% · $117,4M</div>
+        </div>
+
+        <!-- IDESK -->
+        <div class="meter-row">
+          <div class="meter-label" style="font-weight:500">IDESK</div>
+          <div class="meter-bar-wrap"><div class="meter-bar" style="width:4.6%; background:var(--muted)"></div></div>
+          <div class="meter-val" style="color:var(--white)">5% · $18,9M</div>
+        </div>
+        <div class="meter-row" style="margin-top:-8px; margin-bottom:10px">
+          <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Externo</div>
+          <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" style="width:4.6%; background:var(--muted); opacity:.65"></div></div>
+          <div class="meter-val" style="font-size:.7rem; color:var(--muted)">5% · $18,9M</div>
+        </div>
+
+        <hr style="border-color:var(--border); margin: 12px 0 12px">
+        <div class="meter-row">
+          <div class="meter-label" style="font-weight:500; color:var(--accent-g)">CM / Ing. Brutos</div>
+          <div class="meter-bar-wrap"><div class="meter-bar g" style="width:32.3%"></div></div>
+          <div class="meter-val" style="color:var(--accent-g)">32,3%</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>% CM s/Ingresos por Origen</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Origen</th>
+                <th>Ing. Brutos</th>
+                <th>CM</th>
+                <th>% CM s/Ing.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="subtotal">
+                <td class="bold">DRACMA</td>
+                <td>$794,4M</td><td>$218,7M</td>
+                <td><span class="badge badge-cyan">27,5%</span></td>
+              </tr>
+              <tr><td class="indent">Externo</td><td>$435,9M</td><td>$61,1M</td><td class="muted">14,0%</td></tr>
+              <tr><td class="indent">Interno</td><td>$358,5M</td><td>$157,6M</td><td class="cyan">44,0%</td></tr>
+              <tr class="subtotal">
+                <td class="bold">NOVILLO</td>
+                <td>$405,2M</td><td>$172,9M</td>
+                <td><span class="badge badge-g">42,7%</span></td>
+              </tr>
+              <tr><td class="indent">Externo</td><td>$247,6M</td><td>$55,5M</td><td class="muted">22,4%</td></tr>
+              <tr><td class="indent">Interno</td><td>$157,6M</td><td>$117,4M</td><td class="green">74,5%</td></tr>
+              <tr class="subtotal">
+                <td class="bold">IDESK</td>
+                <td>$72,9M</td><td>$18,9M</td>
+                <td><span class="badge badge-cyan">26,0%</span></td>
+              </tr>
+              <tr class="total">
+                <td class="bold">TOTAL</td>
+                <td class="bold">$1.272,5M</td>
+                <td class="bold cyan">$410,6M</td>
+                <td><span class="badge badge-g">32,3%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     02 · INGRESOS MENSUALES
+══════════════════════════════════════════════ -->
+<section id="ingresos">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">02</div>
+        <h2 class="section-title">Evolución de Ingresos</h2>
+      </div>
+    </div>
+    <div class="card" style="animation-delay:.1s">
+      <div class="card-title"><span class="dot"></span>Ingresos Brutos Mensuales (ARS)</div>
+      <div class="chart-wrap" style="height:280px">
+        <canvas id="chartMensual"></canvas>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Ingresos Brutos</th>
+              <th>Var. m/m</th>
+              <th>Acumulado</th>
+            </tr>
+          </thead>
+          <tbody id="tbMensual"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     03 · POR ORIGEN
+══════════════════════════════════════════════ -->
+<section id="origen">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">03</div>
+        <h2 class="section-title">Ingresos por Origen</h2>
+      </div>
+    </div>
+
+    <div class="origin-grid" style="margin-bottom:24px">
+      <div class="origin-card">
+        <div class="origin-head">
+          <div class="origin-name">DRACMA</div>
+          <div class="origin-pct">62% del total</div>
+        </div>
+        <div class="origin-body">
+          <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val cyan">$794,4M</span></div>
+          <div class="origin-row"><span class="origin-row-label">Externo</span><span class="origin-row-val">$435,9M <span class="muted" style="font-size:.7rem">34%</span></span></div>
+          <div class="origin-row"><span class="origin-row-label">Interno</span><span class="origin-row-val">$358,5M <span class="muted" style="font-size:.7rem">28%</span></span></div>
+          <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">$210,5M</span></div>
+          <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge badge-cyan">26,5%</span></span></div>
+        </div>
+      </div>
+      <div class="origin-card">
+        <div class="origin-head" style="background:rgba(0,200,150,0.1)">
+          <div class="origin-name">NOVILLO</div>
+          <div class="origin-pct" style="color:var(--accent-g)">32% del total</div>
+        </div>
+        <div class="origin-body">
+          <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val" style="color:var(--accent-g)">$405,2M</span></div>
+          <div class="origin-row"><span class="origin-row-label">Externo</span><span class="origin-row-val">$247,6M <span class="muted" style="font-size:.7rem">19%</span></span></div>
+          <div class="origin-row"><span class="origin-row-label">Interno</span><span class="origin-row-val">$157,6M <span class="muted" style="font-size:.7rem">12%</span></span></div>
+          <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">$159,4M</span></div>
+          <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge badge-g">39,3%</span></span></div>
+        </div>
+      </div>
+      <div class="origin-card">
+        <div class="origin-head" style="background:rgba(255,209,102,0.08)">
+          <div class="origin-name">IDESK</div>
+          <div class="origin-pct" style="color:var(--accent-y)">6% del total</div>
+        </div>
+        <div class="origin-body">
+          <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val" style="color:var(--accent-y)">$72,9M</span></div>
+          <div class="origin-row"><span class="origin-row-label">Solo Externo</span><span class="origin-row-val">$72,9M</span></div>
+          <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">$18,7M</span></div>
+          <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge badge-y">25,7%</span></span></div>
+          <div class="origin-row"><span class="origin-row-label">APs propios</span><span class="origin-row-val muted">Solo externos</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Composición de Ingresos por Origen</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartOrigen"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot g"></span>Ing. Brutos vs CM por Origen</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartOrigenCM"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     04 · PRODUCTOS
+══════════════════════════════════════════════ -->
+<section id="productos">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">04</div>
+        <h2 class="section-title">Ingresos por Producto</h2>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Distribución por Producto (Total)</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="chartProducto"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Detalle por Origen y Producto</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th><th>DRACMA</th><th>IDESK</th><th>NOVILLO</th><th>TOTAL</th><th>%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>FCI</td><td>$50,2M</td><td>$3,0M</td><td>$7,9M</td><td class="cyan">$61,0M</td><td class="muted">4,8%</td></tr>
+              <tr><td>FEE</td><td>$98,9M</td><td>—</td><td>$2,3M</td><td class="cyan">$101,2M</td><td class="muted">8,0%</td></tr>
+              <tr><td>OFF</td><td>$1,7M</td><td>$1,0M</td><td>$26,4M</td><td class="cyan">$29,0M</td><td class="muted">2,3%</td></tr>
+              <tr class="subtotal">
+                <td class="bold">PPT</td><td>$499,1M</td><td>$21,8M</td><td>$308,6M</td>
+                <td class="bold cyan">$829,5M</td>
+                <td><span class="badge badge-cyan">65,2%</span></td>
+              </tr>
+              <tr><td>PYME</td><td>$48,2M</td><td>—</td><td>$23,6M</td><td class="cyan">$71,8M</td><td class="muted">5,6%</td></tr>
+              <tr><td>SENEBI</td><td>$96,4M</td><td>$47,1M</td><td>$36,3M</td><td class="cyan">$179,9M</td><td class="muted">14,1%</td></tr>
+              <tr class="total">
+                <td class="bold">TOTAL</td>
+                <td class="bold">$794,4M</td><td class="bold">$72,9M</td><td class="bold">$405,2M</td>
+                <td class="bold cyan">$1.272,5M</td>
+                <td class="bold muted">100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     05 · TOP APs
+══════════════════════════════════════════════ -->
+<section id="aps">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">05</div>
+        <h2 class="section-title">Top 10 Agentes de Pago</h2>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Ranking por Ingresos Generados</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="chartAPs"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot g"></span>AP — Comisión — CM%</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Agente</th><th>Ing. Brutos</th><th>% Com.</th><th>CM%</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="muted">1</td><td class="bold">Lucas Ripanti</td><td class="cyan">$193,4M</td><td class="red">65%</td><td class="muted">15%</td></tr>
+              <tr><td class="muted">2</td><td>Luis Turletti</td><td>$73,6M</td><td>52%</td><td class="muted">29%</td></tr>
+              <tr><td class="muted">3</td><td>Christopher Del Boca</td><td>$57,7M</td><td class="red">57%</td><td class="muted">24%</td></tr>
+              <tr><td class="muted">4</td><td>Jorge Vetrano</td><td>$56,0M</td><td>52%</td><td class="muted">32%</td></tr>
+              <tr><td class="muted">5</td><td>Carlos Checchi</td><td>$47,6M</td><td>50%</td><td class="muted">30%</td></tr>
+              <tr><td class="muted">6</td><td>Javier Milanesio</td><td>$36,4M</td><td>52%</td><td class="muted">28%</td></tr>
+              <tr><td class="muted">7</td><td>Patricio Garlot</td><td>$32,6M</td><td>40%</td><td class="green">42%</td></tr>
+              <tr><td class="muted">8</td><td>Horacio Marin</td><td>$25,0M</td><td class="red">67%</td><td class="red">13%</td></tr>
+              <tr><td class="muted">9</td><td>Juan Cruz Lami</td><td>$21,2M</td><td>52%</td><td class="muted">28%</td></tr>
+              <tr><td class="muted">10</td><td>Federico Aird</td><td>$15,7M</td><td>50%</td><td class="muted">30%</td></tr>
+              <tr class="total"><td colspan="2" class="bold">Top 10 Subtotal</td><td class="bold cyan">$559,2M</td><td class="bold muted">—</td><td class="bold muted">44%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding: 12px 20px; background:rgba(255,75,110,0.08); border:1px solid rgba(255,75,110,0.2); border-radius:6px; font-size:0.8rem; color:var(--muted)">
+      ⚠ <strong style="color:var(--white)">Concentración:</strong> El Top 10 representa el <strong style="color:var(--cyan)">43,9%</strong> de los ingresos totales. Lucas Ripanti solo concentra el <strong style="color:var(--accent-r)">15,2%</strong> del total con una comisión del 65%.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     06 · P&L
+══════════════════════════════════════════════ -->
+<section id="pl">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">06</div>
+        <h2 class="section-title">Estado de Resultados (P&L)</h2>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Cascada de Resultados</div>
+        <div id="waterfall"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot g"></span>Utilidad Operativa por Segmento</div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="chartPL"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>P&L Detallado por Origen</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>DRACMA Int.</th><th>%</th>
+              <th>DRACMA Ext.</th><th>%</th>
+              <th>NOV. Int.</th><th>%</th>
+              <th>NOV. Ext.</th><th>%</th>
+              <th>IDESK</th><th>%</th>
+              <th>TOTAL</th><th>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="subtotal">
+              <td class="bold">Ingresos Brutos</td>
+              <td>$358,5M</td><td class="muted">100%</td>
+              <td>$435,9M</td><td class="muted">100%</td>
+              <td>$157,6M</td><td class="muted">100%</td>
+              <td>$247,6M</td><td class="muted">100%</td>
+              <td>$72,9M</td><td class="muted">100%</td>
+              <td class="cyan bold">$1.272,5M</td><td class="muted">100%</td>
+            </tr>
+            <tr class="neg">
+              <td class="indent">Costo INVIU</td>
+              <td class="red">($66,7M)</td><td class="muted">-19%</td>
+              <td class="red">($85,0M)</td><td class="muted">-19%</td>
+              <td class="red">($26,8M)</td><td class="muted">-19%</td>
+              <td class="red">($47,2M)</td><td class="muted">-20%</td>
+              <td class="red">($12,0M)</td><td class="muted">-17%</td>
+              <td class="red bold">($240,6M)</td><td class="muted">-19%</td>
+            </tr>
+            <tr class="neg">
+              <td class="indent">Comisiones AP</td>
+              <td class="red">($104,7M)</td><td class="muted">-29%</td>
+              <td class="red">($254,4M)</td><td class="red bold">-58%</td>
+              <td class="muted">—</td><td class="muted">0%</td>
+              <td class="red">($121,6M)</td><td class="muted">-50%</td>
+              <td class="red">($36,4M)</td><td class="muted">-50%</td>
+              <td class="red bold">($519,4M)</td><td class="muted">-42%</td>
+            </tr>
+            <tr class="neg">
+              <td class="indent">Impuestos</td>
+              <td class="red">($29,5M)</td><td class="muted">-8%</td>
+              <td class="red">($35,4M)</td><td class="muted">-8%</td>
+              <td class="red">($11,5M)</td><td class="muted">-8%</td>
+              <td class="red">($20,4M)</td><td class="muted">-8%</td>
+              <td class="red">($5,2M)</td><td class="muted">-7%</td>
+              <td class="red bold">($101,9M)</td><td class="muted">-8%</td>
+            </tr>
+            <tr class="subtotal">
+              <td class="bold">Ing. Netos Operativos</td>
+              <td class="cyan">$149,4M</td><td class="cyan">42%</td>
+              <td>$61,1M</td><td class="muted">14%</td>
+              <td class="green">$119,4M</td><td class="green">74%</td>
+              <td>$58,3M</td><td class="muted">22%</td>
+              <td>$19,4M</td><td class="muted">26%</td>
+              <td class="cyan bold">$410,6M</td><td class="cyan bold">31%</td>
+            </tr>
+            <tr class="neg">
+              <td class="indent">Sueldos</td>
+              <td class="red">($62,8M)</td><td class="muted">-18%</td>
+              <td class="red">($76,3M)</td><td class="muted">-18%</td>
+              <td class="red">($27,6M)</td><td class="muted">-18%</td>
+              <td class="red">($43,3M)</td><td class="muted">-18%</td>
+              <td class="red">($12,8M)</td><td class="muted">-18%</td>
+              <td class="red bold">($222,7M)</td><td class="muted">-18%</td>
+            </tr>
+            <tr class="neg">
+              <td class="indent">Overhead</td>
+              <td class="red">($20,1M)</td><td class="muted">-6%</td>
+              <td class="red">($27,8M)</td><td class="muted">-6%</td>
+              <td class="red">($7,9M)</td><td class="muted">-5%</td>
+              <td class="red">($14,4M)</td><td class="muted">-6%</td>
+              <td class="red">($3,0M)</td><td class="muted">-4%</td>
+              <td class="red bold">($73,2M)</td><td class="muted">-6%</td>
+            </tr>
+            <tr class="subtotal">
+              <td class="bold">Utilidad Operativa</td>
+              <td class="cyan">$71,0M</td><td class="cyan">20%</td>
+              <td class="red">($44,3M)</td><td class="red">-10%</td>
+              <td class="green">$79,3M</td><td class="green">50%</td>
+              <td class="red">($4,4M)</td><td class="red">-2%</td>
+              <td>$1,3M</td><td class="muted">2%</td>
+              <td class="cyan bold">$102,9M</td><td class="cyan bold">8%</td>
+            </tr>
+            <tr class="total">
+              <td class="bold">Utilidad No Operativa</td>
+              <td class="cyan">$61,1M</td><td class="cyan">17%</td>
+              <td class="red">($56,7M)</td><td class="red">-13%</td>
+              <td class="green">$85,1M</td><td class="green">54%</td>
+              <td class="red">($11,1M)</td><td class="red">-4%</td>
+              <td>($0,5M)</td><td class="muted">-1%</td>
+              <td class="green bold">$77,9M</td><td class="green bold">6%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     07 · PUNTO DE EQUILIBRIO
+══════════════════════════════════════════════ -->
+<section id="equilibrio">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">07</div>
+        <h2 class="section-title">Punto de Equilibrio</h2>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot y"></span>Comparativo BE vs Real 2025</div>
+
+        <div class="be-row">
+          <div class="be-label-row">
+            <span>Ingresos Brutos</span>
+            <span style="color:var(--cyan); font-family:'DM Mono',monospace; font-size:.78rem">$1.272,5M</span>
+          </div>
+          <div class="be-bar-outer">
+            <div class="be-bar-inner" style="width:100%; background: var(--cyan)"></div>
+          </div>
+        </div>
+        <div class="be-row">
+          <div class="be-label-row">
+            <span>Punto de Equilibrio</span>
+            <span style="color:var(--accent-y); font-family:'DM Mono',monospace; font-size:.78rem">$1.031,1M</span>
+          </div>
+          <div class="be-bar-outer">
+            <div class="be-bar-inner" style="width:81.0%; background: var(--accent-y)"></div>
+          </div>
+        </div>
+        <div class="be-row">
+          <div class="be-label-row">
+            <span style="color:var(--accent-g); font-weight:500">Excedente s/BE</span>
+            <span style="color:var(--accent-g); font-family:'DM Mono',monospace; font-size:.78rem">+$241,4M (+23,4%)</span>
+          </div>
+          <div class="be-bar-outer">
+            <div class="be-bar-inner" style="width:19.0%; background: var(--accent-g)"></div>
+          </div>
+        </div>
+
+        <hr style="border-color:var(--border); margin: 20px 0">
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Concepto</th><th>Pto. Equilibrio</th><th>Real 2025</th><th>Dif.</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ing. Brutos</td><td class="yellow">$1.031,1M</td><td class="cyan">$1.272,5M</td><td class="green">+$241,4M</td></tr>
+              <tr><td class="indent">- Costo INVIU</td><td class="red">($195,0M)</td><td class="red">($240,6M)</td><td class="red">-$45,6M</td></tr>
+              <tr><td class="indent">- Comisiones AP</td><td class="red">($420,9M)</td><td class="red">($519,4M)</td><td class="red">-$98,5M</td></tr>
+              <tr><td class="indent">- Impuestos</td><td class="red">($82,6M)</td><td class="red">($101,9M)</td><td class="red">-$19,3M</td></tr>
+              <tr class="subtotal"><td class="bold">Ing. Netos Op.</td><td class="bold">$332,7M</td><td class="cyan bold">$410,6M</td><td class="green bold">+$77,9M</td></tr>
+              <tr><td class="indent">- Costos Fijos</td><td class="red">($332,7M)</td><td class="red">($332,7M)</td><td class="muted">—</td></tr>
+              <tr class="total"><td class="bold">Resultado</td><td class="bold" style="color:var(--accent-g)">$0 ✓</td><td class="green bold">$77,9M</td><td class="green bold">+$77,9M</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Desglose del Break-Even</div>
+        <div class="chart-wrap" style="height:340px">
+          <canvas id="chartBE"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     08 · AUM & INDICADORES
+══════════════════════════════════════════════ -->
+<section id="aum">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">08</div>
+        <h2 class="section-title">AUM & Cuentas Comitentes</h2>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:24px">
+      <div class="card" style="animation-delay:.05s">
+        <div class="card-title"><span class="dot g"></span>Cuentas Comitentes</div>
+        <div class="compare-block">
+          <div class="compare-col">
+            <div class="compare-col-year">OCT 2024</div>
+            <div class="compare-col-val" style="color:var(--muted)">936</div>
+            <div class="compare-col-sub">838 PF · 98 PJ</div>
+          </div>
+          <div class="compare-arrow">→</div>
+          <div class="compare-col">
+            <div class="compare-col-year">DIC 2025</div>
+            <div class="compare-col-val" style="color:var(--accent-g)">2.453</div>
+            <div class="compare-col-sub">2.136 PF · 316 PJ</div>
+          </div>
+        </div>
+        <div style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+162,1%</div>
+      </div>
+      <div class="card" style="animation-delay:.1s">
+        <div class="card-title"><span class="dot g"></span>AUM (USD)</div>
+        <div class="compare-block">
+          <div class="compare-col">
+            <div class="compare-col-year">OCT 2024</div>
+            <div class="compare-col-val" style="color:var(--muted)">$45,98M</div>
+            <div class="compare-col-sub">756 c/AUM</div>
+          </div>
+          <div class="compare-arrow">→</div>
+          <div class="compare-col">
+            <div class="compare-col-year">DIC 2025</div>
+            <div class="compare-col-val" style="color:var(--accent-g)">$84,13M</div>
+            <div class="compare-col-sub">1.983 c/AUM</div>
+          </div>
+        </div>
+        <div style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+83%</div>
+      </div>
+      <div class="card" style="animation-delay:.15s">
+        <div class="card-title"><span class="dot"></span>ROA por Origen (dic 2025)</div>
+        <div class="meter-row">
+          <div class="meter-label">DRACMA</div>
+          <div class="meter-bar-wrap"><div class="meter-bar" style="width:100%"></div></div>
+          <div class="meter-val">2,93%</div>
+        </div>
+        <div class="meter-row">
+          <div class="meter-label">IDESK</div>
+          <div class="meter-bar-wrap"><div class="meter-bar" style="width:88%"></div></div>
+          <div class="meter-val">2,58%</div>
+        </div>
+        <div class="meter-row">
+          <div class="meter-label">NOVILLO</div>
+          <div class="meter-bar-wrap"><div class="meter-bar" style="width:30%; background:var(--muted)"></div></div>
+          <div class="meter-val">0,88%</div>
+        </div>
+        <div class="meter-row" style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border)">
+          <div class="meter-label" style="color:var(--accent-g); font-weight:500">TOTAL</div>
+          <div class="meter-bar-wrap"><div class="meter-bar g" style="width:57%"></div></div>
+          <div class="meter-val" style="color:var(--accent-g)">1,67%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Comparativo Cuentas Comitentes y AUM por Origen</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Origen</th>
+              <th>Q Cttes oct-24</th><th>AUM oct-24 USD</th>
+              <th>Q Cttes dic-25</th><th>AUM dic-25 USD</th>
+              <th>Var. Q Cttes</th><th>Var. AUM</th>
+              <th>ROA Bruto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="subtotal"><td class="bold">DRACMA</td><td>10</td><td class="muted">$192k</td><td>1.258</td><td class="cyan">$31,5M</td><td class="green">+11.480%</td><td class="green">+164x</td><td>2,93%</td></tr>
+            <tr><td class="indent">Externo</td><td>2</td><td class="muted">$183k</td><td>512</td><td>$16,6M</td><td class="green">+25.500%</td><td class="green">+90x</td><td>3,09%</td></tr>
+            <tr><td class="indent">Interno</td><td>8</td><td class="muted">$9k</td><td>746</td><td>$14,9M</td><td class="green">+9.225%</td><td class="green">+1.713x</td><td>2,72%</td></tr>
+            <tr class="subtotal"><td class="bold">IDESK</td><td>156</td><td>$1,1M</td><td>276</td><td>$3,3M</td><td class="green">+77%</td><td class="green">+201%</td><td>2,58%</td></tr>
+            <tr class="subtotal"><td class="bold">NOVILLO</td><td>770</td><td>$44,7M</td><td>919</td><td>$49,3M</td><td class="green">+19%</td><td class="green">+10%</td><td>0,88%</td></tr>
+            <tr><td class="indent">Externo</td><td>394</td><td>$18,3M</td><td>463</td><td>$18,7M</td><td class="green">+18%</td><td class="green">+2%</td><td>1,35%</td></tr>
+            <tr><td class="indent">Interno</td><td>376</td><td>$26,4M</td><td>456</td><td>$30,6M</td><td class="green">+21%</td><td class="green">+16%</td><td>0,57%</td></tr>
+            <tr class="total"><td class="bold">TOTAL</td><td class="bold">936</td><td class="bold">$46,0M</td><td class="bold">2.453</td><td class="green bold">$84,1M</td><td class="green bold">+162%</td><td class="green bold">+83%</td><td class="cyan">1,67%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     10 · ANÁLISIS
+══════════════════════════════════════════════ -->
+<section id="rrhh">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">09</div>
+        <h2 class="section-title">Recursos Humanos</h2>
+      </div>
+      <div class="tag-period">6 empleados · Abr–Dic 2025</div>
+    </div>
+
+    <div class="kpi-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom: 24px">
+      <div class="kpi-card" style="animation-delay:.05s">
+        <div class="kpi-label">Costo Laboral Total (9M)</div>
+        <div class="kpi-value cyan"><span class="prefix">$</span>222,7<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Total real P&amp;L · Abr–Dic 2025</div>
+      </div>
+      <div class="kpi-card" style="animation-delay:.10s">
+        <div class="kpi-label">Promedio Mensual</div>
+        <div class="kpi-value"><span class="prefix">$</span>24,75<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">$222,7M / 9 meses</div>
+      </div>
+      <div class="kpi-card green" style="animation-delay:.15s">
+        <div class="kpi-label">Dotación</div>
+        <div class="kpi-value green">7</div>
+        <div class="kpi-sub">4 administrativos · 3 comerciales</div>
+      </div>
+      <div class="kpi-card yellow" style="animation-delay:.20s">
+        <div class="kpi-pct y">52,7%</div>
+        <div class="kpi-label">Componente Fijo</div>
+        <div class="kpi-value yellow"><span class="prefix">$</span>222,7<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Costo fijo total (sin variable)</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 20px">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>Detalle de Planta — Fijo Acumulado 9M (Abr–Dic 2025)</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left">Empleado</th>
+                <th>Fijo 9M</th><th>%</th><th>Promedio mensual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-size:.78rem">Martinez Loto, M.C.</td><td class="cyan">$49,3M</td><td class="muted">22%</td><td>$5,48M</td></tr>
+              <tr><td style="font-size:.78rem">Arias, F.</td><td class="cyan">$46,1M</td><td class="muted">21%</td><td>$5,12M</td></tr>
+              <tr><td style="font-size:.78rem">Garlot Ordenes, P.</td><td class="cyan">$45,3M</td><td class="muted">20%</td><td>$5,04M</td></tr>
+              <tr><td style="font-size:.78rem">Iglesias Bustos, L.</td><td class="cyan">$38,7M</td><td class="muted">17%</td><td>$4,30M</td></tr>
+              <tr><td style="font-size:.78rem">Tonello, M.C.</td><td class="cyan">$18,6M</td><td class="muted">8%</td><td>$2,07M</td></tr>
+              <tr><td style="font-size:.78rem">Sanchez Gavier, M.</td><td class="cyan">$17,6M</td><td class="muted">8%</td><td>$1,95M</td></tr>
+              <tr><td style="font-size:.78rem">Bazan, M.C.</td><td class="cyan">$7,2M</td><td class="muted">3%</td><td>$800k</td></tr>
+              <tr class="total">
+                <td class="bold">TOTAL</td><td class="bold">—</td><td class="bold">$222,7M</td><td class="bold muted">—</td><td class="bold muted">—</td><td class="bold muted">—</td><td class="bold cyan">$24,75M</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px; font-size:.72rem; color:var(--muted); font-style:italic">
+          Fuente: RRHH al 31.12.2025. Fijo acumulado 9 meses (abr–dic). Promedio = Fijo 9M / 9.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot g"></span>Costo Laboral Fijo 9M · $222,7M total P&amp;L</div>
+        <div class="chart-wrap" style="height:200px; margin-bottom:20px">
+          <canvas id="chartRRHH"></canvas>
+        </div>
+        <div style="margin-top:4px">
+          <div class="meter-row">
+            <div class="meter-label">Fijo ARS (UVA)</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" style="width:100%"></div></div>
+            <div class="meter-val">$222,7M · 100%</div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-label">Variable (AP-linked)</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" style="width:23.4%; background:var(--accent-g)"></div></div>
+            <div class="meter-val">$44,2M · 23,4%</div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-label">Cargas y Aportes</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" style="width:19.5%; background:var(--accent-y)"></div></div>
+            <div class="meter-val">$36,9M · 19,5%</div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-label">SAC / Aguinaldo</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" style="width:4.4%; background:var(--muted)"></div></div>
+            <div class="meter-val">$8,3M · 4,4%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot y"></span>Costo Laboral por Empleado — Fijo 9M Acumulado (P&amp;L)</div>
+      <div class="chart-wrap" style="height:240px; margin-bottom:20px">
+        <canvas id="chartRRHHMensual"></canvas>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Mes</th><th>UVA est.</th><th>Fijo ARS</th><th>Variable</th><th>Cargas</th><th>SAC</th><th>Costo Total</th><th>% s/Ing. Brutos</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="bold">abr-25</td><td class="muted">$1.270</td><td>$9,1M</td><td>$3,7M</td><td>$3,4M</td><td>$761k</td><td class="cyan">$17,0M</td><td class="muted">15,8%</td></tr>
+            <tr><td class="bold">may-25</td><td class="muted">$1.330</td><td>$9,6M</td><td>$3,3M</td><td>$3,5M</td><td>$797k</td><td class="cyan">$17,2M</td><td class="muted">17,9%</td></tr>
+            <tr><td class="bold">jun-25</td><td class="muted">$1.390</td><td>$10,0M</td><td>$3,1M</td><td>$3,7M</td><td>$833k</td><td class="cyan">$17,6M</td><td class="muted">19,4%</td></tr>
+            <tr><td class="bold">jul-25</td><td class="muted">$1.440</td><td>$10,4M</td><td>$3,5M</td><td>$3,8M</td><td>$863k</td><td class="cyan">$18,6M</td><td class="muted">18,2%</td></tr>
+            <tr><td class="bold">ago-25</td><td class="muted">$1.510</td><td>$10,9M</td><td>$4,0M</td><td>$4,0M</td><td>$905k</td><td class="cyan">$19,8M</td><td class="muted">16,9%</td></tr>
+            <tr><td class="bold">sep-25</td><td class="muted">$1.565</td><td>$11,2M</td><td>$6,8M</td><td>$4,2M</td><td>$937k</td><td class="cyan">$23,2M</td><td class="muted">11,6%</td></tr>
+            <tr><td class="bold">oct-25</td><td class="muted">$1.615</td><td>$11,6M</td><td>$8,3M</td><td>$4,3M</td><td>$967k</td><td class="cyan">$25,2M</td><td class="muted">10,4%</td></tr>
+            <tr><td class="bold">nov-25</td><td class="muted">$1.655</td><td>$11,9M</td><td>$5,2M</td><td>$4,4M</td><td>$991k</td><td class="cyan">$22,5M</td><td class="muted">14,9%</td></tr>
+            <tr class="subtotal"><td class="bold">dic-25 ★</td><td class="muted">$1.687</td><td class="cyan">$14,85M</td><td class="green">$6,30M</td><td class="cyan">$5,51M</td><td class="cyan">$1,24M</td><td class="cyan bold">$27,89M</td><td class="muted">18,6%</td></tr>
+            <tr class="total">
+              <td class="bold">TOTAL 9M</td><td class="muted">$1.497 prom.</td>
+              <td class="bold" colspan="4" style="text-align:center; color:var(--muted); font-style:italic">Incluye fijo, variable, cargas y SAC</td>
+              <td class="bold cyan">$222,7M</td>
+              <td class="muted bold">17,5% prom.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px; padding:10px 14px; border-top:1px solid var(--border); font-size:.72rem; color:var(--muted); font-style:italic">
+        ★ Diciembre 2025 = dato real (imagen RRHH). Meses abr–nov prorrateados para que el total sume exactamente $188.859.898 (línea "Sueldos" del P&amp;L). Fijo escala por UVA estimada (abr $1.270 → dic $1.687). Variable escala proporcionalmente con los ingresos brutos del mes relativo a diciembre. El salto en sep–oct refleja el componente variable AP-linked en los meses de mayor facturación.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<section id="analisis">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">10</div>
+        <h2 class="section-title">Análisis para Comité</h2>
+      </div>
+    </div>
+
+    <!-- Proyecciones -->
+    <div class="card" style="margin-bottom:20px; animation-delay:.05s">
+      <div class="card-title"><span class="dot y"></span>Métricas Proyectadas Anualizadas (referencia)</div>
+      <div class="kpi-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom:0">
+
+        <div style="text-align:center; padding: 20px 16px">
+          <div style="font-family:'DM Mono',monospace; font-size:.62rem; color:var(--muted); letter-spacing:.14em; margin-bottom:12px; text-transform:uppercase">Ing. Brutos Est. Anuales</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; letter-spacing:.04em; line-height:1; color:var(--accent-y)">
+            <span style="font-size:.68em; opacity:.7">$</span>1.696,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>
+          </div>
+          <div style="font-size:.72rem; color:var(--muted); margin-top:8px; font-family:'DM Sans',sans-serif; font-weight:300">Promedio mensual × 12</div>
+        </div>
+
+        <div style="text-align:center; padding: 20px 16px; border-left:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace; font-size:.62rem; color:var(--muted); letter-spacing:.14em; margin-bottom:12px; text-transform:uppercase">Util. No Op. Est. Anual</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; letter-spacing:.04em; line-height:1; color:var(--accent-g)">
+            <span style="font-size:.68em; opacity:.7">$</span>157,2<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>
+          </div>
+          <div style="font-size:.72rem; color:var(--muted); margin-top:8px; font-family:'DM Sans',sans-serif; font-weight:300">Promedio mensual × 12</div>
+        </div>
+
+        <div style="text-align:center; padding: 20px 16px; border-left:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace; font-size:.62rem; color:var(--muted); letter-spacing:.14em; margin-bottom:12px; text-transform:uppercase">Nuevas Cuentas / Mes</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; letter-spacing:.04em; line-height:1; color:var(--cyan)">
+            +108<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.38em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:4px">CTAS</span>
+          </div>
+          <div style="font-size:.72rem; color:var(--muted); margin-top:8px; font-family:'DM Sans',sans-serif; font-weight:300">Promedio oct-24 a dic-25</div>
+        </div>
+
+        <div style="text-align:center; padding: 20px 16px; border-left:1px solid var(--border)">
+          <div style="font-family:'DM Mono',monospace; font-size:.62rem; color:var(--muted); letter-spacing:.14em; margin-bottom:12px; text-transform:uppercase">Crecim. AUM / Mes</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; letter-spacing:.04em; line-height:1; color:var(--cyan)">
+            +<span style="font-size:.68em; opacity:.7">$</span>2,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M USD</span>
+          </div>
+          <div style="font-size:.72rem; color:var(--muted); margin-top:8px; font-family:'DM Sans',sans-serif; font-weight:300">USD promedio oct-24 a dic-25</div>
+        </div>
+
+      </div>
+      <div style="margin-top:16px; padding: 10px 14px; border-top: 1px solid var(--border); font-size:.73rem; color:var(--muted); font-style:italic; font-family:'DM Sans',sans-serif">
+        ⚠ Período parcial de 9 meses con pico en octubre (ARS 241M). Las proyecciones anuales deben tomarse como referencia y no como proyecciones confirmadas.
+      </div>
+    </div>
+
+    <div class="analysis-grid">
+      <div class="analysis-block">
+        <div class="analysis-head fort">✓ Fortalezas</div>
+        <div class="analysis-item"><div><strong>Superávit sobre punto de equilibrio</strong><span>Los ingresos superan el BE en +23,4% (ARS +241,4M).</span></div></div>
+        <div class="analysis-item"><div><strong>Crecimiento explosivo de cuentas</strong><span>+162% en 14 meses (936 → 2.453). Tasa de ~108 cuentas nuevas por mes.</span></div></div>
+        <div class="analysis-item"><div><strong>AUM casi duplicado</strong><span>USD 45,98M → USD 84,13M (+83%) entre oct-24 y dic-25.</span></div></div>
+        <div class="analysis-item"><div><strong>Margen operativo consolidado del 10%</strong><span>ARS 102,9M de utilidad operativa sobre ingresos brutos.</span></div></div>
+        <div class="analysis-item"><div><strong>NOVILLO Interno con CM del 67,6%</strong><span>El segmento más eficiente del grupo. Sin comisión AP, retiene casi 3/4 del ingreso.</span></div></div>
+        <div class="analysis-item"><div><strong>ROA DRACMA lidera en 2,93%</strong><span>El más alto del grupo. IDESK en 2,58%, ambos sólidos.</span></div></div>
+        <div class="analysis-item"><div><strong>Diversificación de producto</strong><span>PPT domina (65%) pero hay FCI, FEE, SENEBI y PYME como ingresos complementarios.</span></div></div>
+      </div>
+      <div class="analysis-block">
+        <div class="analysis-head risk">⚠ Riesgos y puntos de atención</div>
+        <div class="analysis-item"><div><strong>Alta concentración en Lucas Ripanti</strong><span>15,2% del ingreso total en 1 solo AP con comisión del 65%. Riesgo de dependencia crítica.</span></div></div>
+        <div class="analysis-item"><div><strong>DRACMA AP Externos pierde operativamente</strong><span>Utilidad operativa de -$34,4M (-8%). El segmento externo de DRACMA no cubre costos.</span></div></div>
+        <div class="analysis-item"><div><strong>Costo estructural INVIU ~19%</strong><span>Constante en todos los segmentos. Representa ARS 237,8M anuales no comprimibles.</span></div></div>
+        <div class="analysis-item"><div><strong>Cuota préstamo recurrente</strong><span>ARS 48,4M (-4% s/ingresos) en todos los segmentos. Afecta el flujo en períodos bajos.</span></div></div>
+        <div class="analysis-item"><div><strong>NOVILLO ROA muy bajo (0,88%)</strong><span>El segmento con mayor AUM (USD 49,3M) genera el menor retorno relativo.</span></div></div>
+        <div class="analysis-item"><div><strong>Normalización post-pico de octubre</strong><span>Oct-25 fue +70% s/mes anterior. Nov y Dic mostraron caídas de -37,6% y -0,3%.</span></div></div>
+        <div class="analysis-item"><div><strong>Período parcial de 9 meses</strong><span>Sin datos de Q1 2025 (ene-mar). La estacionalidad no puede validarse completamente.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════
+     09 · RECURSOS HUMANOS
+══════════════════════════════════════════════ -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-logo">i<span style="color:var(--cyan)">-</span>desk</div>
+      <div class="footer-note">Informe Anual 2025 · Período: Abril–Diciembre 2025 · Confidencial – Solo uso interno</div>
+    </div>
+  </div>
+</footer>
+
+<div class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// ── Helpers ──
+const fmt = n => '$' + (Math.abs(n)/1e6).toFixed(1) + 'M';
+const navy = '#0A1628', cyan = '#00B0D8', green = '#00C896', red = '#FF4B6E', yellow = '#FFD166', muted = '#7A9BB5';
+
+const defaultOpts = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { labels: { color: muted, font: { family: 'DM Mono', size: 11 }, boxWidth: 12, padding: 16 } } },
+  scales: {
+    x: { ticks: { color: muted, font: { family: 'DM Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+    y: { ticks: { color: muted, font: { family: 'DM Mono', size: 10 }, callback: v => '$'+(v/1e6).toFixed(0)+'M' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+  }
+};
+
+// ── CHART 1: Mensual Line ──
+const months  = ['abr','may','jun','jul','ago','sept','oct','nov','dic'];
+const revenue = [112507400,96064631,94639233,107183841,117174676,199253944,245200044,150466995,150034610];
+
+window._chart1 = new Chart(document.getElementById('chartMensual'), {
+  type: 'line',
+  data: {
+    labels: months.map(m => m+'-25'),
+    datasets: [{
+      label: 'Ingresos Brutos',
+      data: revenue,
+      borderColor: cyan, backgroundColor: 'rgba(0,176,216,0.08)',
+      borderWidth: 2.5, fill: true, tension: 0.4,
+      pointBackgroundColor: cyan, pointRadius: 5, pointHoverRadius: 7
+    }]
+  },
+  options: { ...defaultOpts, plugins: { ...defaultOpts.plugins, legend: { display: false } } }
+});
+
+// ── Monthly Table ──
+let acum = 0;
+const tb = document.getElementById('tbMensual');
+const pcts = [null,-0.1461,-0.0148,0.1326,0.0932,0.7005,0.2306,-0.3864,-0.0029];
+months.forEach((m,i) => {
+  acum += revenue[i];
+  const p = pcts[i];
+  const pCell = p === null ? '<td class="muted">—</td>'
+    : `<td class="${p>=0?'green':'red'}">${p>=0?'+':''}${(p*100).toFixed(2)}%</td>`;
+  tb.innerHTML += `<tr>
+    <td class="bold">${m}-25</td>
+    <td class="cyan">${fmt(revenue[i])}</td>
+    ${pCell}
+    <td class="muted">${fmt(acum)}</td>
+  </tr>`;
+});
+tb.innerHTML += `<tr class="total"><td class="bold" colspan="2">Total Acumulado</td><td class="muted">—</td><td class="cyan bold">${fmt(acum)}</td></tr>`;
+
+// ── CHART 2: Pie Origen ──
+new Chart(document.getElementById('chartOrigen'), {
+  type: 'doughnut',
+  data: {
+    labels: ['DRACMA','IDESK','NOVILLO'],
+    datasets: [{ data: [794415999,72918798,405190577], backgroundColor: ['#0070B8','#FFD166','#00C896'], borderColor: navy, borderWidth: 3 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '62%',
+    plugins: {
+      legend: { position: 'bottom', labels: { color: muted, font: { family: 'DM Mono', size: 11 }, padding: 16, boxWidth: 10 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/1272525375*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
+// ── CHART 3: Bar Origen vs CM ──
+new Chart(document.getElementById('chartOrigenCM'), {
+  type: 'bar',
+  data: {
+    labels: ['DRACMA','IDESK','NOVILLO'],
+    datasets: [
+      { label: 'Ing. Brutos', data: [794415999,72918798,405190577], backgroundColor: 'rgba(0,112,184,0.8)', borderRadius: 3 },
+      { label: 'Contrib. Marginal', data: [210513122,18729325,159390651], backgroundColor: 'rgba(0,200,150,0.8)', borderRadius: 3 }
+    ]
+  },
+  options: { ...defaultOpts, plugins: { ...defaultOpts.plugins } }
+});
+
+// ── CHART 4: Pie Productos ──
+new Chart(document.getElementById('chartProducto'), {
+  type: 'doughnut',
+  data: {
+    labels: ['PPT','SENEBI','FEE','PYME','FCI','OFF'],
+    datasets: [{ data: [829506111,179930391,101242835,71770530,61047468,29028040], backgroundColor: ['#003F8A','#0070B8','#00A0CC','#00B0D8','#00C5D5','#66D9E8'], borderColor: navy, borderWidth: 3 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '58%',
+    plugins: {
+      legend: { position: 'right', labels: { color: muted, font: { family: 'DM Mono', size: 10 }, padding: 12, boxWidth: 10 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/1272525375*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
+// ── CHART 5: APs horizontal bar ──
+const apNames  = ['F. Aird','J.C. Lami','H. Marin','P. Garlot','J. Milanesio','C. Checchi','J. Vetrano','C. Del Boca','L. Turletti','L. Ripanti'];
+const apValues = [15676273,21244319,24952461,32552561,36438951,47644095,56048625,57683255,73574140,193373268];
+
+new Chart(document.getElementById('chartAPs'), {
+  type: 'bar',
+  data: {
+    labels: apNames,
+    datasets: [{ label: 'Ingresos Totales', data: apValues, backgroundColor: apValues.map((_,i)=> i===9?cyan:'rgba(0,176,216,0.55)'), borderRadius: 3 }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: muted, font: { family: 'DM Mono', size: 10 }, callback: v=>'$'+(v/1e6).toFixed(0)+'M' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { ticks: { color: muted, font: { family: 'DM Mono', size: 10 } }, grid: { display: false } }
+    }
+  }
+});
+
+// ── CHART 6: P&L segmento bar ──
+new Chart(document.getElementById('chartPL'), {
+  type: 'bar',
+  data: {
+    labels: ['DRACMA Int.','DRACMA Ext.','NOV. Int.','NOV. Ext.','IDESK'],
+    datasets: [
+      { label: 'Util. Operativa', data: [75108842,-34449754,89168527,7066246,6024473], backgroundColor: [cyan,red,green,cyan,cyan], borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: muted, font: { family: 'DM Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { ticks: { color: muted, font: { family: 'DM Mono', size: 10 }, callback: v=>'$'+(v/1e6).toFixed(0)+'M' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+    }
+  }
+});
+
+// ── CHART 7: BE Doughnut ──
+new Chart(document.getElementById('chartBE'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Costo INVIU','Comisiones AP','Impuestos','Costos Fijos','Utilidad'],
+    datasets: [{ data: [194972031,420895218,82553328,332677469,77895048], backgroundColor: [red,'rgba(255,75,110,0.7)','rgba(255,75,110,0.5)',muted,green], borderColor: navy, borderWidth: 3 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '55%',
+    plugins: {
+      legend: { position: 'bottom', labels: { color: muted, font: { family: 'DM Mono', size: 10 }, padding: 12, boxWidth: 10 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/969681370*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
+// ── WATERFALL ──
+const wfData = [
+  { label: 'Ingresos Brutos', val: 1272525375, type: 'pos' },
+  { label: '- Costo INVIU',   val: 237784929,  type: 'neg' },
+  { label: '- Comisiones AP', val: 525297899,  type: 'neg' },
+  { label: '- Impuestos',     val: 101882847,  type: 'neg' },
+  { label: '= Ing. Netos Op.',val: 407559700,  type: 'result' },
+  { label: '- Sueldos',       val: 188859898,  type: 'neg' },
+  { label: '- Overhead',      val: 73221912,   type: 'neg' },
+  { label: '- Otros gastos',  val: 2559556,    type: 'neg' },
+  { label: '= Util. Operativa',val:142918334,  type: 'result' },
+  { label: '± No Operativo',  val: 25032005,   type: 'neg' },
+  { label: '= Util. Final',   val: 117885329,  type: 'result' },
+];
+const maxV = 1272525375;
+const wfEl = document.getElementById('waterfall');
+wfData.forEach(d => {
+  const pct = (d.val / maxV * 100).toFixed(1);
+  wfEl.innerHTML += `
+    <div class="wf-row">
+      <div class="wf-label ${d.type==='result'?'bold':''}" style="${d.type==='result'?'color:var(--white)':'color:var(--muted)'}">${d.label}</div>
+      <div class="wf-bar-wrap">
+        <div class="wf-bar ${d.type}" style="width:${pct}%">${fmt(d.val)}</div>
+      </div>
+    </div>`;
+});
+
+// ── CHART RRHH: Doughnut composición ──
+new Chart(document.getElementById('chartRRHH'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Fijo ARS (UVA)','Variable (AP)','Cargas y Aportes','SAC / Aguinaldo'],
+    datasets: [{
+      data: [99461731, 44194660, 36915029, 8288478],
+      backgroundColor: [cyan, green, yellow, muted],
+      borderColor: navy, borderWidth: 3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '60%',
+    plugins: {
+      legend: { position: 'right', labels: { color: muted, font: { family: 'DM Mono', size: 10 }, padding: 10, boxWidth: 10 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: $${(ctx.raw/1e6).toFixed(1)}M (${(ctx.raw/188859898*100).toFixed(1)}%)` } }
+    }
+  }
+});
+
+// ── CHART RRHH Mensual: Stacked bar ──
+const rrhhMonths = ['abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const rrhhFijo    = [10767537, 11276240, 11784942, 12208861, 12802347, 13268658, 13692576, 14031711, 17510012];
+const rrhhVar     = [4332580, 3874854, 3674288, 4133600, 4736771, 8057650, 9748415, 6087238, 7430472];
+const rrhhCargas  = [4893645, 5124841, 5356037, 5548700, 5818429, 6030359, 6223021, 6377153, 7957975];
+
+new Chart(document.getElementById('chartRRHHMensual'), {
+  type: 'bar',
+  data: {
+    labels: rrhhMonths.map(m => m+'-25'),
+    datasets: [
+      { label: 'Fijo (UVA)',    data: rrhhFijo,   backgroundColor: 'rgba(0,176,216,0.85)',   borderRadius: 2, stack: 'a' },
+      { label: 'Variable',      data: rrhhVar,    backgroundColor: 'rgba(0,200,150,0.85)',   borderRadius: 2, stack: 'a' },
+      { label: 'Cargas + SAC',  data: rrhhCargas, backgroundColor: 'rgba(255,209,102,0.75)', borderRadius: 2, stack: 'a' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: muted, font: { family: 'DM Mono', size: 10 }, boxWidth: 10, padding: 12 } } },
+    scales: {
+      x: { stacked: true, ticks: { color: muted, font: { family: 'DM Mono', size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { stacked: true, ticks: { color: muted, font: { family: 'DM Mono', size: 10 }, callback: v => '$'+(v/1e6).toFixed(0)+'M' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+    }
+  }
+});
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+const sections = ['resumen','ingresos','origen','productos','aps','pl','equilibrio','aum','rrhh','analisis'];
+const navBtns = document.querySelectorAll('.nav-btn');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = sections.indexOf(e.target.id);
+      navBtns.forEach((b,i) => b.classList.toggle('active', i===idx));
+    }
+  });
+}, { threshold: 0.3 });
+
+sections.forEach(id => { const el = document.getElementById(id); if(el) observer.observe(el); });
+
+// ══════════════════════════════════════════════════════════
+// CURRENCY CONVERSION — MEP average Abr–Dic 2025
+// Real daily data: abr avg 1245.37, may 1157.40, jun 1188.92
+// Estimated jul-dic based on verified trajectory (max 1592.99 oct 22, close 1480.74 dic)
+// Weighted average of the period = 1322.93 ARS/USD
+// ══════════════════════════════════════════════════════════
+const MEP_RATE = 1322.93; // ARS per USD
+let isUSD = false;
+
+// Monthly MEP rates used for per-month revenue conversion
+const MEP_MONTHLY = {
+  'abr-25': 1245.37,
+  'may-25': 1157.40,
+  'jun-25': 1188.92,
+  'jul-25': 1238.20,
+  'ago-25': 1292.82,
+  'sep-25': 1353.48,
+  'oct-25': 1473.95,
+  'nov-25': 1471.00,
+  'dic-25': 1485.25,
+};
+
+// All ARS values keyed by data-ars attribute (in ARS, full units)
+const ARS_VALUES = {
+  // KPI cards
+  'ing-brutos':    1272525375,
+  'cm-total':       388633098,
+  'util-neta':      117885329,
+  'ing-netos':      986040508,
+  'pto-equilibrio': 1031098046,
+  'comisiones-ap':  527742518,
+  // Projected metrics
+  'proj-ing':      1696700000,
+  'proj-util':      157200000,
+};
+
+function arsToUSD(ars, rate) {
+  return ars / rate;
+}
+
+function fmtUSD(usd) {
+  if (usd >= 1e6) return 'USD ' + (usd/1e6).toFixed(1) + 'M';
+  if (usd >= 1e3) return 'USD ' + (usd/1e3).toFixed(0) + 'K';
+  return 'USD ' + usd.toFixed(0);
+}
+
+function fmtARS(ars) {
+  return '$' + (ars/1e6).toFixed(1) + 'M';
+}
+
+function animateEl(el) {
+  el.classList.remove('val-animating');
+  void el.offsetWidth; // reflow
+  el.classList.add('val-animating');
+}
+
+function toggleCurrency() {
+  isUSD = !isUSD;
+
+  // Update button state
+  const btn    = document.getElementById('fxToggle');
+  const lbl    = document.getElementById('fxLabelMain');
+  const badge  = document.getElementById('fxBadge');
+  const banner = document.getElementById('fxBanner');
+
+  if (isUSD) {
+    btn.classList.add('usd-mode');
+    lbl.textContent  = 'ARS';
+    badge.textContent = 'USD';
+    banner.classList.add('show');
+  } else {
+    btn.classList.remove('usd-mode');
+    lbl.textContent  = 'USD MEP';
+    badge.textContent = 'ARS';
+    banner.classList.remove('show');
+  }
+
+  // ── KPI CARDS ──
+  const kpiMap = [
+    // [kpi-value selector, ars value, suffix, extra-note]
+    ['.kpi-card:nth-child(1) .kpi-value', 1272525375, null, 'Abr–Dic 2025'],
+    ['.kpi-card:nth-child(2) .kpi-value', 388633098,  null, 'CM / Ing. Brutos = 30,5%'],
+    ['.kpi-card:nth-child(3) .kpi-value', 117885329,  null, 'Resultado neto consolidado'],
+    ['.kpi-card:nth-child(4) .kpi-value', 986040508,  null, 'Después INVIU y Cuota PTO'],
+    ['.kpi-card:nth-child(5) .kpi-value', 969681370,  null, 'Superado en +31%'],
+    ['.kpi-card:nth-child(6) .kpi-value', 527742518,  null, '47% promedio sobre ingresos'],
+  ];
+
+  const kpiSubs = [
+    '.kpi-card:nth-child(1) .kpi-sub',
+    '.kpi-card:nth-child(2) .kpi-sub',
+    '.kpi-card:nth-child(3) .kpi-sub',
+    '.kpi-card:nth-child(4) .kpi-sub',
+    '.kpi-card:nth-child(5) .kpi-sub',
+    '.kpi-card:nth-child(6) .kpi-sub',
+  ];
+
+  const arsTexts = [
+    'ARS acumulado abr–dic 2025',
+    'CM / Ingresos Brutos = 30,5%',
+    'Resultado neto consolidado',
+    'Después INVIU y Cuota PTO',
+    'Superado en ARS +302,8M',
+    '47% promedio sobre ingresos',
+  ];
+  const usdTexts = [
+    `USD · TC MEP prom. $1.322,93`,
+    `USD · TC MEP prom. $1.322,93`,
+    `USD · TC MEP prom. $1.322,93`,
+    `USD · TC MEP prom. $1.322,93`,
+    `USD Break-even · TC $1.322,93`,
+    `USD · TC MEP prom. $1.322,93`,
+  ];
+
+  kpiMap.forEach(([sel, ars], i) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    animateEl(el);
+    if (isUSD) {
+      const usd = arsToUSD(ars, MEP_RATE);
+      el.innerHTML = fmtUSD(usd).replace('USD ','<span class="prefix">USD </span>').replace('M','<span class="suffix">M</span>');
+    } else {
+      // Restore original ARS markup
+      const arsLabels = ['1.272,5','410,6','77,9','986,0','1.031,1','519,4'];
+      const suffixes  = ['M ARS','M ARS','M ARS','M ARS','M ARS','M ARS'];
+      el.innerHTML = `<span class="prefix">$</span>${arsLabels[i]}<span class="suffix">${suffixes[i]}</span>`;
+    }
+    // Update sub
+    const sub = document.querySelector(kpiSubs[i]);
+    if (sub) sub.textContent = isUSD ? usdTexts[i] : arsTexts[i];
+  });
+
+  // ── PROJECTED METRICS ──
+  const projEls = document.querySelectorAll('#analisis .kpi-grid > div');
+  const projARS  = [1696700000, 157200000, null, null]; // null = non-monetary
+  const projFmts = ['$1.696,7M ARS','$157,2M ARS','+108 CTAS','+$2,7M USD'];
+
+  projEls.forEach((el, i) => {
+    const valEl = el.querySelector('div:nth-child(2)');
+    if (!valEl) return;
+    animateEl(valEl);
+    if (isUSD && projARS[i] !== null) {
+      const usd = arsToUSD(projARS[i], MEP_RATE);
+      valEl.innerHTML = `<span style="font-size:.68em;opacity:.7">USD </span>${(usd/1e6).toFixed(1)}<span style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:.48em;letter-spacing:.06em;opacity:.6;vertical-align:middle;margin-left:3px">M</span>`;
+    } else if (!isUSD) {
+      const originals = [
+        `<span style="font-size:.68em; opacity:.7">$</span>1.696,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>`,
+        `<span style="font-size:.68em; opacity:.7">$</span>157,2<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>`,
+        `+108<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.38em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:4px">CTAS</span>`,
+        `+<span style="font-size:.68em; opacity:.7">$</span>2,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M USD</span>`,
+      ];
+      valEl.innerHTML = originals[i];
+    }
+  });
+
+  // ── MONTHLY TABLE ── (rebuild)
+  const tbMensual = document.getElementById('tbMensual');
+  if (tbMensual) {
+    tbMensual.innerHTML = '';
+    const pcts = [null,-0.1461,-0.0148,0.1326,0.0932,0.7005,0.2306,-0.3864,-0.0029];
+    let acum = 0;
+    months.forEach((m, i) => {
+      const rate = MEP_MONTHLY[m + '-25'] || MEP_RATE;
+      const displayVal = isUSD ? arsToUSD(revenue[i], rate) : revenue[i];
+      const displayAccum = isUSD ? (acum + arsToUSD(revenue[i], rate)) : (acum + revenue[i]);
+      acum += isUSD ? arsToUSD(revenue[i], rate) : revenue[i];
+      const fmtVal  = isUSD ? fmtUSD(displayVal)  : fmt(revenue[i]);
+      const fmtAcum = isUSD ? fmtUSD(acum)         : fmt(isUSD ? acum : (acum));
+      const p = pcts[i];
+      const pCell = p === null ? '<td class="muted">—</td>'
+        : `<td class="${p>=0?'green':'red'}">${p>=0?'+':''}${(p*100).toFixed(2)}%</td>`;
+      const unit = isUSD ? ` <span style="font-size:.65em;color:var(--muted)">TC $${rate.toFixed(0)}</span>` : '';
+      tbMensual.innerHTML += `<tr>
+        <td class="bold">${m}-25</td>
+        <td class="cyan">${fmtVal}${unit}</td>
+        ${pCell}
+        <td class="muted">${fmtAcum}</td>
+      </tr>`;
+    });
+    const totalFmt = isUSD ? fmtUSD(acum) : fmt(1272525375);
+    tbMensual.innerHTML += `<tr class="total"><td class="bold" colspan="2">Total Acumulado</td><td class="muted">—</td><td class="cyan bold">${totalFmt}</td></tr>`;
+  }
+
+  // ── UPDATE CHART 1 (monthly line) ──
+  if (window._chart1) {
+    const newData = isUSD
+      ? revenue.map((v, i) => arsToUSD(v, MEP_MONTHLY[months[i]+'-25'] || MEP_RATE))
+      : revenue;
+    window._chart1.data.datasets[0].data = newData;
+    window._chart1.options.scales.y.ticks.callback = isUSD
+      ? v => 'USD '+(v/1e6).toFixed(1)+'M'
+      : v => '$'+(v/1e6).toFixed(0)+'M';
+    window._chart1.update();
+  }
+
+  // ── CURRENCY LABEL on all .kpi-value .suffix that say "M ARS" ──
+  // Already handled above per-card
+}
+
+</script>
+</body>
+</html>
