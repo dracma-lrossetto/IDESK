@@ -120,7 +120,7 @@
 
   /* ── NAV ── */
   nav {
-    position: sticky; top: 0; z-index: 100;
+    position: sticky; top: 49px; z-index: 100;
     padding: 14px 0;
     background: rgba(10,22,40,0.92);
     backdrop-filter: blur(16px);
@@ -202,6 +202,8 @@
 
   .kpi-card.green::before  { background: linear-gradient(90deg, var(--accent-g), transparent); }
   .kpi-card.green::after   { background: radial-gradient(circle at 100% 100%, rgba(0,200,150,0.08), transparent 70%); }
+  .kpi-card.red-card::before { background: linear-gradient(90deg, var(--accent-r), transparent); }
+  .kpi-card.red-card::after  { background: radial-gradient(circle at 100% 100%, rgba(255,75,110,0.08), transparent 70%); }
   .kpi-card.yellow::before { background: linear-gradient(90deg, var(--accent-y), transparent); }
   .kpi-card.yellow::after  { background: radial-gradient(circle at 100% 100%, rgba(255,209,102,0.07), transparent 70%); }
   .kpi-card.red::before    { background: linear-gradient(90deg, var(--accent-r), transparent); }
@@ -254,6 +256,15 @@
     font-weight: 300;
     line-height: 1.4;
   }
+  .kpi-note {
+    margin-top: 6px;
+    font-size: 0.62rem;
+    color: rgba(122,155,181,0.55);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    border-top: 1px solid rgba(122,155,181,0.12);
+    padding-top: 5px;
+  }
   .kpi-pct {
     position: absolute; top: 20px; right: 16px;
     font-family: 'DM Mono', monospace;
@@ -265,6 +276,7 @@
   }
   .kpi-pct.g { color: var(--accent-g); background: rgba(0,200,150,0.12); }
   .kpi-pct.y { color: var(--accent-y); background: rgba(255,209,102,0.12); }
+  .kpi-pct.r { color: var(--accent-r); background: rgba(255,75,110,0.12); }
 
   /* ── CARDS (generic) ── */
   .card {
@@ -395,7 +407,7 @@
   }
   .wf-bar.pos { background: linear-gradient(90deg, rgba(0,176,216,0.9), rgba(0,126,160,0.7)); left: 0; }
   .wf-bar.neg { background: linear-gradient(90deg, rgba(255,75,110,0.8), rgba(180,40,70,0.6)); }
-  .wf-bar.result { background: linear-gradient(90deg, rgba(0,200,150,0.9), rgba(0,140,100,0.7)); left: 0; }
+  .wf-bar.neg_result { background: linear-gradient(90deg, rgba(255,75,110,0.9), rgba(180,40,70,0.7)); left: 0; }
 
   /* ── ANALYSIS PILLS ── */
   .analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -601,7 +613,7 @@
     font-size: 0.7rem;
     color: var(--accent-y);
     letter-spacing: 0.05em;
-    position: sticky; top: 49px; z-index: 99;
+    position: sticky; top: 98px; z-index: 99;
   }
   .fx-banner.show { display: flex; }
   .fx-banner strong { color: var(--white); }
@@ -634,6 +646,103 @@
   .compare-col-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.03em; }
   .compare-col-sub { font-size: 0.74rem; color: var(--muted); margin-top: 4px; }
   .compare-arrow { display: flex; align-items: center; font-size: 1.4rem; color: var(--accent-g); padding: 0 4px; }
+
+  /* ── YEAR SELECTOR ── */
+  .year-selector-bar {
+    background: rgba(10,22,40,0.97);
+    border-bottom: 2px solid var(--border);
+    padding: 0;
+    position: sticky; top: 0; z-index: 200;
+  }
+  .year-selector-inner {
+    max-width: 1400px; margin: 0 auto; padding: 0 32px;
+    display: flex; align-items: stretch;
+  }
+  .year-btn {
+    flex: 1; padding: 14px 24px; background: transparent;
+    border: none; border-bottom: 3px solid transparent;
+    color: var(--muted); font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.95rem; letter-spacing: 0.02em;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    position: relative; top: 2px;
+  }
+  .year-btn:hover { color: var(--white); }
+  .year-btn.active-2025 { color: var(--cyan); border-bottom-color: var(--cyan); background: rgba(0,176,216,0.05); }
+  .year-btn.active-2026 { color: var(--accent-g); border-bottom-color: var(--accent-g); background: rgba(0,200,150,0.05); }
+  .year-btn.active-acum { color: var(--accent-y); border-bottom-color: var(--accent-y); background: rgba(255,209,102,0.05); }
+  .year-btn .year-tag {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    padding: 2px 7px; border-radius: 2px; letter-spacing: 0.08em;
+  }
+  .year-btn.active-2025 .year-tag { background: rgba(0,176,216,0.15); color: var(--cyan); }
+  .year-btn.active-2026 .year-tag { background: rgba(0,200,150,0.15); color: var(--accent-g); }
+  .year-btn.active-acum .year-tag { background: rgba(255,209,102,0.15); color: var(--accent-y); }
+  .year-btn:not([class*="active"]) .year-tag { background: rgba(122,155,181,0.1); color: var(--muted); }
+
+  /* ── ZERO OVERLAY ── */
+  .zero-overlay {
+    display: none; position: fixed; inset: 0; z-index: 150;
+    background: rgba(10,22,40,0.9); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px; text-align: center; padding: 32px;
+  }
+  .zero-overlay.show { display: flex; }
+  .zero-overlay-icon { font-size: 3.5rem; opacity: 0.45; }
+  .zero-overlay-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 2.2rem; letter-spacing: -0.03em; color: var(--white);
+  }
+  .zero-overlay-sub {
+    font-size: 1rem; color: var(--muted); max-width: 440px; line-height: 1.7;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .zero-overlay-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    padding: 6px 20px; border-radius: 3px; letter-spacing: 0.1em; border: 1px solid;
+    cursor: pointer;
+  }
+  /* ── MONTH SUB-NAV (2026 only) ── */
+  .month-nav-bar {
+    display: none;
+    background: rgba(6,15,30,0.98);
+    border-bottom: 1px solid rgba(0,200,150,0.2);
+    padding: 0;
+  }
+  .month-nav-bar.visible { display: block; }
+  .month-nav-inner {
+    max-width: 1400px; margin: 0 auto; padding: 0 32px;
+    display: flex; align-items: center; gap: 0;
+  }
+  .month-nav-label {
+    font-family: 'DM Mono', monospace; font-size: .6rem;
+    color: var(--muted); letter-spacing: .12em;
+    padding: 10px 20px 10px 0; border-right: 1px solid var(--border);
+    margin-right: 8px; white-space: nowrap; text-transform: uppercase;
+  }
+  .month-btn {
+    padding: 9px 18px; background: transparent;
+    border: none; border-bottom: 2px solid transparent;
+    color: var(--muted); font-family: 'DM Mono', monospace;
+    font-size: .72rem; letter-spacing: .08em;
+    cursor: pointer; transition: all .2s;
+    position: relative; top: 1px;
+  }
+  .month-btn:hover { color: var(--white); }
+  .month-btn.active-month {
+    color: var(--accent-g); border-bottom-color: var(--accent-g);
+  }
+  .month-btn.active-acum26 {
+    color: var(--accent-y); border-bottom-color: var(--accent-y);
+  }
+  .month-btn.unavailable {
+    color: rgba(122,155,181,0.3); cursor: not-allowed;
+    font-style: italic;
+  }
+  .month-btn .month-status {
+    font-size: .55rem; margin-left: 4px;
+    vertical-align: middle; opacity: .6;
+  }
 </style>
 </head>
 <body>
@@ -664,6 +773,79 @@
     </div>
   </div>
 </header>
+
+<!-- YEAR SELECTOR BAR -->
+<div class="year-selector-bar">
+  <div class="year-selector-inner">
+    <button class="year-btn active-2025" id="yearBtn2025" onclick="selectYear('2025')">
+      2025 <span class="year-tag">ABR–DIC · 9M</span>
+    </button>
+    <button class="year-btn" id="yearBtn2026" onclick="selectYear('2026')">
+      2026 <span class="year-tag">ENE–FEB · 2M</span>
+    </button>
+    <button class="year-btn" id="yearBtnAcum" onclick="selectYear('acum')">
+      ACUMULADO <span class="year-tag">2025 + 2026</span>
+    </button>
+  </div>
+</div>
+
+<!-- MONTH SUB-NAV — visible only in 2026 -->
+<div class="month-nav-bar" id="monthNavBar">
+  <div class="month-nav-inner">
+    <div class="month-nav-label">2026 · VER</div>
+    <button class="month-btn active-month" id="mBtn_ene" onclick="selectMonth2026('ene')">
+      ENE <span class="month-status">✓</span>
+    </button>
+    <button class="month-btn" id="mBtn_feb" onclick="selectMonth2026('feb')">
+      FEB <span class="month-status">✓</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_mar" title="Sin datos aún">
+      MAR <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_abr" title="Sin datos aún">
+      ABR <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_may" title="Sin datos aún">
+      MAY <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_jun" title="Sin datos aún">
+      JUN <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_jul" title="Sin datos aún">
+      JUL <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_ago" title="Sin datos aún">
+      AGO <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_sep" title="Sin datos aún">
+      SEP <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_oct" title="Sin datos aún">
+      OCT <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_nov" title="Sin datos aún">
+      NOV <span class="month-status">–</span>
+    </button>
+    <button class="month-btn unavailable" id="mBtn_dic" title="Sin datos aún">
+      DIC <span class="month-status">–</span>
+    </button>
+    <div style="flex:1"></div>
+    <button class="month-btn" id="mBtnAcum26" onclick="selectMonth2026('acum')">
+      ACUMULADO <span class="month-status" id="acumCount26">2M</span>
+    </button>
+  </div>
+</div>
+<div class="zero-overlay" id="zeroOverlay">
+  <div class="zero-overlay-icon">📊</div>
+  <div class="zero-overlay-title" id="zeroTitle">2026</div>
+  <div class="zero-overlay-sub" id="zeroSub">
+    Aún no hay información cargada para este período.<br>
+    Una vez disponible, se integrará automáticamente al dashboard.
+  </div>
+  <button class="zero-overlay-badge g" id="zeroBadge" onclick="selectYear('2025')">
+    ← Volver a 2025
+  </button>
+</div>
 
 <!-- FX RATE BANNER -->
 <div class="fx-banner" id="fxBanner">
@@ -708,52 +890,60 @@
 
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-pct">100%</div>
+        <div class="kpi-pct" id="badge0">Período base</div>
         <div class="kpi-label">Ingresos Brutos</div>
         <div class="kpi-value cyan"><span class="prefix">$</span>1.272,5<span class="suffix">M ARS</span></div>
-        <div class="kpi-sub">ARS acumulado abr–dic 2025</div>
+        <div class="kpi-sub" id="sub0">Abr–Dic 2025 · período base</div>
+        <div class="kpi-note" id="note0">var% vs período anterior</div>
       </div>
       <div class="kpi-card green">
-        <div class="kpi-pct g">32,3%</div>
+        <div class="kpi-pct g" id="badge1">32,3%</div>
         <div class="kpi-label">Contribución Marginal</div>
         <div class="kpi-value green"><span class="prefix">$</span>410,6<span class="suffix">M ARS</span></div>
-        <div class="kpi-sub">CM / Ingresos Brutos = 32,3%</div>
+        <div class="kpi-sub" id="sub1">CM / Ingresos Brutos = 32,3%</div>
+        <div class="kpi-note" id="note1">CM ÷ Ing. Brutos</div>
       </div>
       <div class="kpi-card green">
-        <div class="kpi-pct g">6,1%</div>
+        <div class="kpi-pct g" id="badge2">6,1%</div>
         <div class="kpi-label">Utilidad No Operativa</div>
         <div class="kpi-value green"><span class="prefix">$</span>77,9<span class="suffix">M ARS</span></div>
-        <div class="kpi-sub">Resultado neto consolidado</div>
+        <div class="kpi-sub" id="sub2">Resultado neto consolidado</div>
+        <div class="kpi-note" id="note2">Util. No Op. ÷ Ing. Brutos</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-pct">77%</div>
+        <div class="kpi-pct" id="badge3">77%</div>
         <div class="kpi-label">Ingresos Netos</div>
         <div class="kpi-value"><span class="prefix">$</span>986,0<span class="suffix">M ARS</span></div>
-        <div class="kpi-sub">Después INVIU y Cuota PTO</div>
+        <div class="kpi-sub" id="sub3">Después INVIU y Cuota PTO</div>
+        <div class="kpi-note" id="note3">Ing. Netos ÷ Ing. Brutos</div>
       </div>
       <div class="kpi-card yellow">
-        <div class="kpi-pct y">+23,4%</div>
+        <div class="kpi-pct y" id="badge4">+23,4%</div>
         <div class="kpi-label">Punto de Equilibrio</div>
         <div class="kpi-value yellow"><span class="prefix">$</span>1.031,1<span class="suffix">M ARS</span></div>
-        <div class="kpi-sub">Superado en +$241,4M (+23,4%)</div>
+        <div class="kpi-sub" id="sub4">Superado en +$241,4M (+23,4%)</div>
+        <div class="kpi-note" id="note4">(Ing. Brutos − BE) ÷ BE</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-pct">40,8%</div>
+        <div class="kpi-pct" id="badge5">40,8%</div>
         <div class="kpi-label">Comisiones AP</div>
         <div class="kpi-value"><span class="prefix">$</span>519,4<span class="suffix">M ARS</span></div>
-        <div class="kpi-sub">41% promedio sobre ingresos</div>
+        <div class="kpi-sub" id="sub5">40,8% s/ingresos brutos</div>
+        <div class="kpi-note" id="note5">Com. AP ÷ Ing. Brutos</div>
       </div>
       <div class="kpi-card green">
-        <div class="kpi-pct g">+83%</div>
+        <div class="kpi-pct g" id="badge6">+83%</div>
         <div class="kpi-label">AUM Total</div>
         <div class="kpi-value green">84,1<span class="suffix">M USD</span></div>
-        <div class="kpi-sub">vs USD 46,0M en oct-24</div>
+        <div class="kpi-sub" id="sub6">+83% vs período anterior</div>
+        <div class="kpi-note" id="note6">var% vs período anterior</div>
       </div>
       <div class="kpi-card green">
-        <div class="kpi-pct g">+162%</div>
+        <div class="kpi-pct g" id="badge7">+162%</div>
         <div class="kpi-label">Cuentas Comitentes</div>
         <div class="kpi-value green">2.453</div>
-        <div class="kpi-sub">vs 936 en oct-24</div>
+        <div class="kpi-sub" id="sub7">+162% vs período anterior</div>
+        <div class="kpi-note" id="note7">var% vs período anterior</div>
       </div>
     </div>
 
@@ -828,10 +1018,7 @@
                 <th>% CM s/Ing.</th>
               </tr>
             </thead>
-            <tbody>
-              <tr class="subtotal">
-                <td class="bold">DRACMA</td>
-                <td>$794,4M</td><td>$218,7M</td>
+            <tbody id="cmTableBody">
                 <td><span class="badge badge-cyan">27,5%</span></td>
               </tr>
               <tr><td class="indent">Externo</td><td>$435,9M</td><td>$61,1M</td><td class="muted">14,0%</td></tr>
@@ -910,47 +1097,7 @@
       </div>
     </div>
 
-    <div class="origin-grid" style="margin-bottom:24px">
-      <div class="origin-card">
-        <div class="origin-head">
-          <div class="origin-name">DRACMA</div>
-          <div class="origin-pct">62% del total</div>
-        </div>
-        <div class="origin-body">
-          <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val cyan">$794,4M</span></div>
-          <div class="origin-row"><span class="origin-row-label">Externo</span><span class="origin-row-val">$435,9M <span class="muted" style="font-size:.7rem">34%</span></span></div>
-          <div class="origin-row"><span class="origin-row-label">Interno</span><span class="origin-row-val">$358,5M <span class="muted" style="font-size:.7rem">28%</span></span></div>
-          <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">$210,5M</span></div>
-          <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge badge-cyan">26,5%</span></span></div>
-        </div>
-      </div>
-      <div class="origin-card">
-        <div class="origin-head" style="background:rgba(0,200,150,0.1)">
-          <div class="origin-name">NOVILLO</div>
-          <div class="origin-pct" style="color:var(--accent-g)">32% del total</div>
-        </div>
-        <div class="origin-body">
-          <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val" style="color:var(--accent-g)">$405,2M</span></div>
-          <div class="origin-row"><span class="origin-row-label">Externo</span><span class="origin-row-val">$247,6M <span class="muted" style="font-size:.7rem">19%</span></span></div>
-          <div class="origin-row"><span class="origin-row-label">Interno</span><span class="origin-row-val">$157,6M <span class="muted" style="font-size:.7rem">12%</span></span></div>
-          <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">$159,4M</span></div>
-          <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge badge-g">39,3%</span></span></div>
-        </div>
-      </div>
-      <div class="origin-card">
-        <div class="origin-head" style="background:rgba(255,209,102,0.08)">
-          <div class="origin-name">IDESK</div>
-          <div class="origin-pct" style="color:var(--accent-y)">6% del total</div>
-        </div>
-        <div class="origin-body">
-          <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val" style="color:var(--accent-y)">$72,9M</span></div>
-          <div class="origin-row"><span class="origin-row-label">Solo Externo</span><span class="origin-row-val">$72,9M</span></div>
-          <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">$18,7M</span></div>
-          <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge badge-y">25,7%</span></span></div>
-          <div class="origin-row"><span class="origin-row-label">APs propios</span><span class="origin-row-val muted">Solo externos</span></div>
-        </div>
-      </div>
-    </div>
+    <div class="origin-grid" id="originCards" style="margin-bottom:24px"></div>
 
     <div class="grid-2">
       <div class="card">
@@ -996,7 +1143,7 @@
                 <th>Producto</th><th>DRACMA</th><th>IDESK</th><th>NOVILLO</th><th>TOTAL</th><th>%</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="prodTableBody">
               <tr><td>FCI</td><td>$50,2M</td><td>$3,0M</td><td>$7,9M</td><td class="cyan">$61,0M</td><td class="muted">4,8%</td></tr>
               <tr><td>FEE</td><td>$98,9M</td><td>—</td><td>$2,3M</td><td class="cyan">$101,2M</td><td class="muted">8,0%</td></tr>
               <tr><td>OFF</td><td>$1,7M</td><td>$1,0M</td><td>$26,4M</td><td class="cyan">$29,0M</td><td class="muted">2,3%</td></tr>
@@ -1044,20 +1191,20 @@
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>#</th><th>Agente</th><th>Ing. Brutos</th><th>% Com.</th><th>CM%</th></tr>
+              <tr><th>#</th><th>Agente</th><th>Ing. Brutos</th><th>% Com.</th><th>Comisión</th><th>Neto IDESK</th><th>CM%</th></tr>
             </thead>
-            <tbody>
-              <tr><td class="muted">1</td><td class="bold">Lucas Ripanti</td><td class="cyan">$193,4M</td><td class="red">65%</td><td class="muted">15%</td></tr>
-              <tr><td class="muted">2</td><td>Luis Turletti</td><td>$73,6M</td><td>52%</td><td class="muted">29%</td></tr>
-              <tr><td class="muted">3</td><td>Christopher Del Boca</td><td>$57,7M</td><td class="red">57%</td><td class="muted">24%</td></tr>
-              <tr><td class="muted">4</td><td>Jorge Vetrano</td><td>$56,0M</td><td>52%</td><td class="muted">32%</td></tr>
-              <tr><td class="muted">5</td><td>Carlos Checchi</td><td>$47,6M</td><td>50%</td><td class="muted">30%</td></tr>
-              <tr><td class="muted">6</td><td>Javier Milanesio</td><td>$36,4M</td><td>52%</td><td class="muted">28%</td></tr>
-              <tr><td class="muted">7</td><td>Patricio Garlot</td><td>$32,6M</td><td>40%</td><td class="green">42%</td></tr>
-              <tr><td class="muted">8</td><td>Horacio Marin</td><td>$25,0M</td><td class="red">67%</td><td class="red">13%</td></tr>
-              <tr><td class="muted">9</td><td>Juan Cruz Lami</td><td>$21,2M</td><td>52%</td><td class="muted">28%</td></tr>
-              <tr><td class="muted">10</td><td>Federico Aird</td><td>$15,7M</td><td>50%</td><td class="muted">30%</td></tr>
-              <tr class="total"><td colspan="2" class="bold">Top 10 Subtotal</td><td class="bold cyan">$559,2M</td><td class="bold muted">—</td><td class="bold muted">44%</td></tr>
+            <tbody id="apsTbody">
+              <tr><td class="bold">1</td><td class="bold">Lucas Ripanti</td><td class="cyan">$193,4M</td><td class="red">65%</td><td class="red">($125,7M)</td><td>$29,8M</td><td><span class="badge badge-cyan">15%</span></td></tr>
+              <tr><td class="bold">2</td><td>Luis Turletti</td><td>$73,6M</td><td>52%</td><td class="red">($38,2M)</td><td>$21,0M</td><td><span class="badge badge-cyan">29%</span></td></tr>
+              <tr><td class="bold">3</td><td>C. Del Boca</td><td>$57,7M</td><td class="red">57%</td><td class="red">($32,7M)</td><td>$14,0M</td><td><span class="badge badge-cyan">24%</span></td></tr>
+              <tr><td class="bold">4</td><td>Jorge Vetrano</td><td>$56,0M</td><td>52%</td><td class="red">($29,1M)</td><td>$18,0M</td><td><span class="badge badge-cyan">32%</span></td></tr>
+              <tr><td class="bold">5</td><td>Carlos Checchi</td><td>$47,6M</td><td>50%</td><td class="red">($23,8M)</td><td>$14,4M</td><td><span class="badge badge-cyan">30%</span></td></tr>
+              <tr><td class="bold">6</td><td>Javier Milanesio</td><td>$36,4M</td><td>52%</td><td class="red">($18,9M)</td><td>$10,3M</td><td><span class="badge badge-cyan">28%</span></td></tr>
+              <tr><td class="bold">7</td><td>Patricio Garlot</td><td>$32,6M</td><td>40%</td><td class="red">($13,0M)</td><td>$13,6M</td><td><span class="badge badge-g">42%</span></td></tr>
+              <tr><td class="bold">8</td><td>Horacio Marin</td><td>$25,0M</td><td class="red">67%</td><td class="red">($16,7M)</td><td>$3,3M</td><td><span class="badge badge-r">13%</span></td></tr>
+              <tr><td class="bold">9</td><td>Juan Cruz Lami</td><td>$21,2M</td><td>52%</td><td class="red">($11,0M)</td><td>$6,0M</td><td><span class="badge badge-cyan">28%</span></td></tr>
+              <tr><td class="bold">10</td><td>Federico Aird</td><td>$15,7M</td><td>50%</td><td class="red">($7,8M)</td><td>$4,8M</td><td><span class="badge badge-cyan">30%</span></td></tr>
+              <tr class="total"><td></td><td class="bold">TOTAL</td><td class="bold cyan">$1.272,5M</td><td class="bold muted">41%</td><td class="bold red">($519,4M)</td><td class="bold cyan">$512,5M</td><td><span class="badge badge-g">33%</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -1420,33 +1567,33 @@
 
     <div class="grid-2">
       <div class="card">
-        <div class="card-title"><span class="dot y"></span>Comparativo BE vs Real 2025</div>
+        <div class="card-title"><span class="dot y"></span>Comparativo BE vs Real <span id="beTitleYear">2025</span></div>
 
         <div class="be-row">
           <div class="be-label-row">
             <span>Ingresos Brutos</span>
-            <span style="color:var(--cyan); font-family:'DM Mono',monospace; font-size:.78rem">$1.272,5M</span>
+            <span id="beValReal" style="color:var(--cyan); font-family:'DM Mono',monospace; font-size:.78rem">$1.272,5M</span>
           </div>
           <div class="be-bar-outer">
-            <div class="be-bar-inner" style="width:100%; background: var(--cyan)"></div>
+            <div class="be-bar-inner" id="beBarReal" style="width:100%; background: var(--cyan)"></div>
           </div>
         </div>
         <div class="be-row">
           <div class="be-label-row">
             <span>Punto de Equilibrio</span>
-            <span style="color:var(--accent-y); font-family:'DM Mono',monospace; font-size:.78rem">$1.031,1M</span>
+            <span id="beValBE" style="color:var(--accent-y); font-family:'DM Mono',monospace; font-size:.78rem">$1.031,1M</span>
           </div>
           <div class="be-bar-outer">
-            <div class="be-bar-inner" style="width:81.0%; background: var(--accent-y)"></div>
+            <div class="be-bar-inner" id="beBarBE" style="width:81.0%; background: var(--accent-y)"></div>
           </div>
         </div>
         <div class="be-row">
           <div class="be-label-row">
             <span style="color:var(--accent-g); font-weight:500">Excedente s/BE</span>
-            <span style="color:var(--accent-g); font-family:'DM Mono',monospace; font-size:.78rem">+$241,4M (+23,4%)</span>
+            <span id="beValExc" style="color:var(--accent-g); font-family:'DM Mono',monospace; font-size:.78rem">+$241,4M (+23,4%)</span>
           </div>
           <div class="be-bar-outer">
-            <div class="be-bar-inner" style="width:19.0%; background: var(--accent-g)"></div>
+            <div class="be-bar-inner" id="beBarExc" style="width:19.0%; background: var(--accent-g)"></div>
           </div>
         </div>
 
@@ -1455,9 +1602,9 @@
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Concepto</th><th>Pto. Equilibrio</th><th>Real 2025</th><th>Dif.</th></tr>
+              <tr><th>Concepto</th><th>Pto. Equilibrio</th><th id="beThReal">Real 2025</th><th>Dif.</th></tr>
             </thead>
-            <tbody>
+            <tbody id="beTableBody">
               <tr><td>Ing. Brutos</td><td class="yellow">$1.031,1M</td><td class="cyan">$1.272,5M</td><td class="green">+$241,4M</td></tr>
               <tr><td class="indent">- Costo INVIU</td><td class="red">($195,0M)</td><td class="red">($240,6M)</td><td class="red">-$45,6M</td></tr>
               <tr><td class="indent">- Comisiones AP</td><td class="red">($420,9M)</td><td class="red">($519,4M)</td><td class="red">-$98,5M</td></tr>
@@ -1496,58 +1643,84 @@
       <div class="card" style="animation-delay:.05s">
         <div class="card-title"><span class="dot g"></span>Cuentas Comitentes</div>
         <div class="compare-block">
-          <div class="compare-col">
-            <div class="compare-col-year">OCT 2024</div>
-            <div class="compare-col-val" style="color:var(--muted)">936</div>
+          <div class="compare-col" id="aum-col-prev-cttes">
+            <div class="compare-col-year" id="aum-prev-label">OCT 2024</div>
+            <div class="compare-col-val" id="aum-prev-cttes" style="color:var(--muted)">936</div>
             <div class="compare-col-sub">838 PF · 98 PJ</div>
           </div>
           <div class="compare-arrow">→</div>
-          <div class="compare-col">
-            <div class="compare-col-year">DIC 2025</div>
-            <div class="compare-col-val" style="color:var(--accent-g)">2.453</div>
-            <div class="compare-col-sub">2.136 PF · 316 PJ</div>
+          <div class="compare-col" id="aum-col-curr-cttes">
+            <div class="compare-col-year" id="aum-curr-label-cttes">DIC 2025</div>
+            <div class="compare-col-val" id="aum-curr-cttes" style="color:var(--accent-g)">2.453</div>
+            <div class="compare-col-sub" id="aum-curr-cttes-sub">2.136 PF · 316 PJ</div>
           </div>
         </div>
-        <div style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+162,1%</div>
+        <div id="aum-pct-cttes" style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+162,1%</div>
       </div>
       <div class="card" style="animation-delay:.1s">
         <div class="card-title"><span class="dot g"></span>AUM (USD)</div>
         <div class="compare-block">
-          <div class="compare-col">
-            <div class="compare-col-year">OCT 2024</div>
-            <div class="compare-col-val" style="color:var(--muted)">$45,98M</div>
+          <div class="compare-col" id="aum-col-prev-usd">
+            <div class="compare-col-year" id="aum-prev-label-usd">OCT 2024</div>
+            <div class="compare-col-val" id="aum-prev-usd" style="color:var(--muted)">$45,98M</div>
             <div class="compare-col-sub">756 c/AUM</div>
           </div>
           <div class="compare-arrow">→</div>
-          <div class="compare-col">
-            <div class="compare-col-year">DIC 2025</div>
-            <div class="compare-col-val" style="color:var(--accent-g)">$84,13M</div>
+          <div class="compare-col" id="aum-col-curr-usd">
+            <div class="compare-col-year" id="aum-curr-label-usd">DIC 2025</div>
+            <div class="compare-col-val" id="aum-curr-usd" style="color:var(--accent-g)">$84,13M</div>
             <div class="compare-col-sub">1.983 c/AUM</div>
           </div>
         </div>
-        <div style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+83%</div>
+        <div id="aum-pct-usd" style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+83%</div>
       </div>
       <div class="card" style="animation-delay:.15s">
-        <div class="card-title"><span class="dot"></span>ROA por Origen (dic 2025)</div>
-        <div class="meter-row">
-          <div class="meter-label">DRACMA</div>
-          <div class="meter-bar-wrap"><div class="meter-bar" style="width:100%"></div></div>
-          <div class="meter-val">2,93%</div>
-        </div>
-        <div class="meter-row">
-          <div class="meter-label">IDESK</div>
-          <div class="meter-bar-wrap"><div class="meter-bar" style="width:88%"></div></div>
-          <div class="meter-val">2,58%</div>
-        </div>
-        <div class="meter-row">
-          <div class="meter-label">NOVILLO</div>
-          <div class="meter-bar-wrap"><div class="meter-bar" style="width:30%; background:var(--muted)"></div></div>
-          <div class="meter-val">0,88%</div>
-        </div>
-        <div class="meter-row" style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border)">
-          <div class="meter-label" style="color:var(--accent-g); font-weight:500">TOTAL</div>
-          <div class="meter-bar-wrap"><div class="meter-bar g" style="width:57%"></div></div>
-          <div class="meter-val" style="color:var(--accent-g)">1,67%</div>
+        <div class="card-title"><span class="dot"></span>ROA por Origen (<span id="roaLabel">dic 2025</span>)</div>
+        <div id="roaMeters">
+          <!-- DRACMA -->
+          <div class="meter-row">
+            <div class="meter-label" style="font-weight:500">DRACMA</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" id="roa-bar-dracma" style="width:100%"></div></div>
+            <div class="meter-val" id="roa-dracma">2,93%</div>
+          </div>
+          <div class="meter-row" style="margin-top:-8px; margin-bottom:4px">
+            <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Externo</div>
+            <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" id="roa-bar-dracma-ext" style="width:100%; opacity:.65"></div></div>
+            <div class="meter-val" id="roa-dracma-ext" style="font-size:.7rem; color:var(--muted)">3,09%</div>
+          </div>
+          <div class="meter-row" style="margin-top:-6px; margin-bottom:10px">
+            <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Interno</div>
+            <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" id="roa-bar-dracma-int" style="width:93%; opacity:.65"></div></div>
+            <div class="meter-val" id="roa-dracma-int" style="font-size:.7rem; color:var(--muted)">2,72%</div>
+          </div>
+          <!-- IDESK -->
+          <div class="meter-row">
+            <div class="meter-label" style="font-weight:500">IDESK</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" id="roa-bar-idesk" style="width:88%"></div></div>
+            <div class="meter-val" id="roa-idesk">2,58%</div>
+          </div>
+          <!-- NOVILLO -->
+          <div class="meter-row" style="margin-top:6px">
+            <div class="meter-label" style="font-weight:500">NOVILLO</div>
+            <div class="meter-bar-wrap"><div class="meter-bar" id="roa-bar-novillo" style="width:30%; background:var(--muted)"></div></div>
+            <div class="meter-val" id="roa-novillo">0,88%</div>
+          </div>
+          <div class="meter-row" style="margin-top:-8px; margin-bottom:4px">
+            <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Externo</div>
+            <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" id="roa-bar-novillo-ext" style="width:46%; background:var(--muted); opacity:.65"></div></div>
+            <div class="meter-val" id="roa-novillo-ext" style="font-size:.7rem; color:var(--muted)">1,35%</div>
+          </div>
+          <div class="meter-row" style="margin-top:-6px; margin-bottom:10px">
+            <div class="meter-label" style="font-size:.72rem; color:var(--muted); padding-left:14px">Interno</div>
+            <div class="meter-bar-wrap" style="height:4px"><div class="meter-bar" id="roa-bar-novillo-int" style="width:19%; background:var(--muted); opacity:.65"></div></div>
+            <div class="meter-val" id="roa-novillo-int" style="font-size:.7rem; color:var(--muted)">0,57%</div>
+          </div>
+          <!-- TOTAL -->
+          <div class="meter-row" style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border)">
+            <div class="meter-label" style="color:var(--accent-g); font-weight:500">TOTAL</div>
+            <div class="meter-bar-wrap"><div class="meter-bar g" id="roa-bar-total" style="width:57%"></div></div>
+            <div class="meter-val" id="roa-total" style="color:var(--accent-g)">1,67%</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1559,13 +1732,13 @@
           <thead>
             <tr>
               <th>Origen</th>
-              <th>Q Cttes oct-24</th><th>AUM oct-24 USD</th>
-              <th>Q Cttes dic-25</th><th>AUM dic-25 USD</th>
+              <th id="aumTh1">Q Cttes oct-24</th><th id="aumTh2">AUM oct-24 USD</th>
+              <th id="aumTh3">Q Cttes dic-25</th><th id="aumTh4">AUM dic-25 USD</th>
               <th>Var. Q Cttes</th><th>Var. AUM</th>
               <th>ROA Bruto</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="aumTableBody">
             <tr class="subtotal"><td class="bold">DRACMA</td><td>10</td><td class="muted">$192k</td><td>1.258</td><td class="cyan">$31,5M</td><td class="green">+11.480%</td><td class="green">+164x</td><td>2,93%</td></tr>
             <tr><td class="indent">Externo</td><td>2</td><td class="muted">$183k</td><td>512</td><td>$16,6M</td><td class="green">+25.500%</td><td class="green">+90x</td><td>3,09%</td></tr>
             <tr><td class="indent">Interno</td><td>8</td><td class="muted">$9k</td><td>746</td><td>$14,9M</td><td class="green">+9.225%</td><td class="green">+1.713x</td><td>2,72%</td></tr>
@@ -1865,7 +2038,7 @@ months.forEach((m,i) => {
 tb.innerHTML += `<tr class="total"><td class="bold" colspan="2">Total Acumulado</td><td class="muted">—</td><td class="cyan bold">${fmt(acum)}</td></tr>`;
 
 // ── CHART 2: Pie Origen ──
-new Chart(document.getElementById('chartOrigen'), {
+window.chartOrigen = new Chart(document.getElementById('chartOrigen'), {
   type: 'doughnut',
   data: {
     labels: ['DRACMA','IDESK','NOVILLO'],
@@ -1876,26 +2049,26 @@ new Chart(document.getElementById('chartOrigen'), {
     cutout: '62%',
     plugins: {
       legend: { position: 'bottom', labels: { color: muted, font: { family: 'DM Mono', size: 11 }, padding: 16, boxWidth: 10 } },
-      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/1272525375*100).toFixed(1)}%)` } }
+      tooltip: { callbacks: { label: ctx => { const t=window._currentIngTotal||1272525375; return `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/t*100).toFixed(1)}%)`; } } }
     }
   }
 });
 
 // ── CHART 3: Bar Origen vs CM ──
-new Chart(document.getElementById('chartOrigenCM'), {
+window.chartOrigenCM = new Chart(document.getElementById('chartOrigenCM'), {
   type: 'bar',
   data: {
     labels: ['DRACMA','IDESK','NOVILLO'],
     datasets: [
       { label: 'Ing. Brutos', data: [794415999,72918798,405190577], backgroundColor: 'rgba(0,112,184,0.8)', borderRadius: 3 },
-      { label: 'Contrib. Marginal', data: [210513122,18729325,159390651], backgroundColor: 'rgba(0,200,150,0.8)', borderRadius: 3 }
+      { label: 'Contrib. Marginal', data: [218713998,18944263,172914258], backgroundColor: 'rgba(0,200,150,0.8)', borderRadius: 3 }
     ]
   },
   options: { ...defaultOpts, plugins: { ...defaultOpts.plugins } }
 });
 
 // ── CHART 4: Pie Productos ──
-new Chart(document.getElementById('chartProducto'), {
+window.chartProducto = new Chart(document.getElementById('chartProducto'), {
   type: 'doughnut',
   data: {
     labels: ['PPT','SENEBI','FEE','PYME','FCI','OFF'],
@@ -1905,7 +2078,7 @@ new Chart(document.getElementById('chartProducto'), {
     responsive: true, maintainAspectRatio: false, cutout: '58%',
     plugins: {
       legend: { position: 'right', labels: { color: muted, font: { family: 'DM Mono', size: 10 }, padding: 12, boxWidth: 10 } },
-      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/1272525375*100).toFixed(1)}%)` } }
+      tooltip: { callbacks: { label: ctx => { const t=window._currentIngTotal||1272525375; return `${ctx.label}: ${fmt(ctx.raw)} (${(ctx.raw/t*100).toFixed(1)}%)`; } } }
     }
   }
 });
@@ -1914,7 +2087,7 @@ new Chart(document.getElementById('chartProducto'), {
 const apNames  = ['F. Aird','J.C. Lami','H. Marin','P. Garlot','J. Milanesio','C. Checchi','J. Vetrano','C. Del Boca','L. Turletti','L. Ripanti'];
 const apValues = [15676273,21244319,24952461,32552561,36438951,47644095,56048625,57683255,73574140,193373268];
 
-new Chart(document.getElementById('chartAPs'), {
+window.chartAPs = new Chart(document.getElementById('chartAPs'), {
   type: 'bar',
   data: {
     labels: apNames,
@@ -1931,7 +2104,7 @@ new Chart(document.getElementById('chartAPs'), {
 });
 
 // ── CHART 6: P&L segmento bar ──
-new Chart(document.getElementById('chartPL'), {
+window.chartPL2 = new Chart(document.getElementById('chartPL'), {
   type: 'bar',
   data: {
     labels: ['DRACMA Int.','DRACMA Ext.','NOV. Int.','NOV. Ext.','IDESK'],
@@ -1953,7 +2126,7 @@ new Chart(document.getElementById('chartPL'), {
 });
 
 // ── CHART 7: BE Doughnut ──
-new Chart(document.getElementById('chartBE'), {
+window.chartBE = new Chart(document.getElementById('chartBE'), {
   type: 'doughnut',
   data: {
     labels: ['Costo INVIU','Comisiones AP','Impuestos','Costos Fijos','Utilidad'],
@@ -1969,31 +2142,60 @@ new Chart(document.getElementById('chartBE'), {
 });
 
 // ── WATERFALL ──
-const wfData = [
-  { label: 'Ingresos Brutos', val: 1272525375, type: 'pos' },
-  { label: '- Costo INVIU',   val: 237784929,  type: 'neg' },
-  { label: '- Comisiones AP', val: 525297899,  type: 'neg' },
-  { label: '- Impuestos',     val: 101882847,  type: 'neg' },
-  { label: '= Ing. Netos Op.',val: 407559700,  type: 'result' },
-  { label: '- Sueldos',       val: 188859898,  type: 'neg' },
-  { label: '- Overhead',      val: 73221912,   type: 'neg' },
-  { label: '- Otros gastos',  val: 2559556,    type: 'neg' },
-  { label: '= Util. Operativa',val:142918334,  type: 'result' },
-  { label: '± No Operativo',  val: 25032005,   type: 'neg' },
-  { label: '= Util. Final',   val: 117885329,  type: 'result' },
-];
-const maxV = 1272525375;
-const wfEl = document.getElementById('waterfall');
-wfData.forEach(d => {
-  const pct = (d.val / maxV * 100).toFixed(1);
-  wfEl.innerHTML += `
-    <div class="wf-row">
-      <div class="wf-label ${d.type==='result'?'bold':''}" style="${d.type==='result'?'color:var(--white)':'color:var(--muted)'}">${d.label}</div>
-      <div class="wf-bar-wrap">
-        <div class="wf-bar ${d.type}" style="width:${pct}%">${fmt(d.val)}</div>
-      </div>
-    </div>`;
-});
+const wfDatasets = {
+  '2025': [
+    { label: 'Ingresos Brutos',  val: 1272525375, type: 'pos' },
+    { label: '- Costo INVIU',    val: 240623923,  type: 'neg' },
+    { label: '- Comisiones AP',  val: 519446087,  type: 'neg' },
+    { label: '- Impuestos',      val: 101882847,  type: 'neg' },
+    { label: '= Ing. Netos Op.', val: 410572518,  type: 'result' },
+    { label: '- Sueldos',        val: 222748912,  type: 'neg' },
+    { label: '- Overhead',       val: 74361440,   type: 'neg' },
+    { label: '- Otros gastos',   val: 10534112,   type: 'neg' },
+    { label: '= Util. Operativa',val: 102928053,  type: 'result' },
+    { label: '± No Operativo',   val: 25032995,   type: 'neg' },
+    { label: '= Util. Final',    val: 77895048,   type: 'result' },
+  ],
+  '2026': [
+    { label: 'Ingresos Brutos',  val: 156897559,  type: 'pos' },
+    { label: '- Costo INVIU',    val: 30127575,   type: 'neg' },
+    { label: '- Comisiones AP',  val: 69345442,   type: 'neg' },
+    { label: '- Impuestos',      val: 13121003,   type: 'neg' },
+    { label: '= Ing. Netos Op.', val: 44303538,   type: 'result' },
+    { label: '- Sueldos',        val: 30188491,   type: 'neg' },
+    { label: '- Overhead',       val: 6275275,    type: 'neg' },
+    { label: '- Otros gastos',   val: 0,          type: 'neg' },
+    { label: '= Util. Operativa',val: 7839772,    type: 'result' },
+    { label: '± No Operativo',   val: 1944770,    type: 'pos' },
+    { label: '= Util. Final',    val: 5895002,    type: 'result' },
+  ],
+};
+
+function renderWaterfall(yr, monthDataset) {
+  const wfEl = document.getElementById('waterfall');
+  if (!wfEl) return;
+  let data;
+  if (yr === '2026' && monthDataset && monthDataset.wfData) {
+    data = monthDataset.wfData;
+  } else {
+    data = wfDatasets[yr] || wfDatasets['2025'];
+  }
+  const maxV = data[0].val;
+  wfEl.innerHTML = '';
+  data.forEach(d => {
+    if (d.val === 0) return; // skip zero rows
+    const pct = (d.val / maxV * 100).toFixed(1);
+    wfEl.innerHTML += `
+      <div class="wf-row">
+        <div class="wf-label ${d.type==='result'?'bold':''}" style="${d.type==='result'?'color:var(--white)':'color:var(--muted)'}">${d.label}</div>
+        <div class="wf-bar-wrap">
+          <div class="wf-bar ${d.type}" style="width:${pct}%">${fmt(d.val)}</div>
+        </div>
+      </div>`;
+  });
+}
+
+renderWaterfall('2025');
 
 // ── CHART RRHH: Doughnut composición ──
 new Chart(document.getElementById('chartRRHH'), {
@@ -2203,6 +2405,1289 @@ function toggleAsignacion() {
 // Initial render
 renderPL();
 
+// ── YEAR SELECTOR ──
+let activeYear = '2025';
+
+// ══════════════════════════════════════════════
+// DATASETS
+// ══════════════════════════════════════════════
+const D = {
+  '2025': {
+    periodo: 'Abril – Diciembre 2025 · 9 meses',
+    titulo:  'Análisis Financiero 2025',
+    label:   'Informe Anual 2025',
+    tag:     'ABR–DIC · 9M',
+    // KPIs
+    ingBrutos:   1272525375,
+    cm:           410572518,
+    cmPct:        '32,3%',
+    utilNoOp:      77895048,
+    utilNoOpPct:  '6,1%',
+    ingNetos:     986040508,
+    ingVar:       null,  // período base 2025
+    be:          1031098046,
+    bePct:       '+23,4%',
+    comAP:        519446087,
+    comAPPct:    '40,8%',
+    aum:           84129051,
+    aumPct:       '+83%',
+    cuentas:          2453,
+    cuentasPct:   '+162%',
+    // ingresos mensuales
+    months:  ['abr','may','jun','jul','ago','sept','oct','nov','dic'],
+    revenue: [112507400,96064631,94639233,107183841,117174676,199253944,245200044,150466995,150034610],
+    pcts:    [null,-0.1461,-0.0148,0.1326,0.0932,0.7005,0.2306,-0.3864,-0.0029],
+    // Origen
+    origenIng: {
+      dracma:{tot:794415999,ext:435886403,int:358529596},
+      idesk: {tot:72918798,ext:72918798},
+      novillo:{tot:405190577,ext:247573242,int:157617336},
+      total: 1272525375
+    },
+    origenCM: {
+      dracma:{tot:218713998,ext:61071165,int:157642832,pct:0.275,ext_pct:0.140,int_pct:0.440},
+      idesk: {tot:18944263,ext:18944263,pct:0.260},
+      novillo:{tot:172914258,ext:55474424,int:117439834,pct:0.427,ext_pct:0.224,int_pct:0.745},
+      total: 410572518, total_pct:0.323
+    },
+    // AP-CM
+    apCM: [
+      ['DRACMA AAGI',358526233,0.30,104653550,187128154,0.51],
+      ['Lucas Ripanti',193373268,0.65,125692624,29825095,0.15],
+      ['NOVILLO AAGI',157525956,0.00,0,128819549,0.82],
+      ['Matias Novillo',87084558,0.50,43542279,26526250,0.30],
+      ['Luis Turletti',73574140,0.52,38240159,20982821,0.29],
+    ],
+    apTotal: {ing:1272525375,pct:0.41,com:519446087,neto:512455365,cm:0.33},
+    // P&L rows (sin asig default)
+    pl: {
+      di:['$358,5M','100%'], de:['$435,9M','100%'], ni:['$157,6M','100%'],
+      ne:['$247,6M','100%'], id:['$72,9M','100%'],  tot:['$1.272,5M','100%'],
+    },
+    plUtilOp:  [70965075,-44308296,79334424,-4378636,1315487,102928053],
+    plNetOp:   [157642832,61071165,117439834,55474424,18944263,410572518],
+    // BE
+    beIng:145215543, // not applicable for 2025 (using 1031098046 above)
+    beFijos:-332677469,
+    beInviu:-194972031,
+    beCom:-420895218,
+    beImp:-82553328,
+    beNeto:332677469,
+    // AUM
+    aum_data: {total:84129051,dracma:31485152,idesk:3314677,novillo:49329222,cuentas:2453},
+    aumCompare: {
+      prev: { label:'OCT 2024', cttes:936, pf:838, pj:98, aum:45983017, cAUM:756,
+              dracma:{cttes:10, ext_c:2,   int_c:8,   aum:192011,   ext_a:183327,   int_a:8684,    roa:null, roa_ext:null, roa_int:null},
+              idesk: {cttes:156,ext_c:156, int_c:0,   aum:1101157,  ext_a:1101157,  int_a:0,       roa:null},
+              novillo:{cttes:770,ext_c:394,int_c:376, aum:44689849, ext_a:18310585, int_a:26379264, roa:null, roa_ext:null, roa_int:null},
+              roa:{dracma:null, idesk:null, novillo:null, total:null} },
+      curr: { label:'DIC 2025', cttes:2453, pf:2136, pj:317, aum:84129051, cAUM:1983,
+              dracma:{cttes:1258,ext_c:512, int_c:746, aum:31485152, ext_a:16615622, int_a:14869530, roa:2.93, roa_ext:3.09, roa_int:2.72},
+              idesk: {cttes:276, ext_c:276, int_c:0,   aum:3314677,  ext_a:3314677,  int_a:0,       roa:2.58},
+              novillo:{cttes:919,ext_c:463, int_c:456, aum:49329222, ext_a:18683070, int_a:30646152, roa:0.88, roa_ext:1.35, roa_int:0.57},
+              roa:{dracma:2.93, idesk:2.58, novillo:0.88, total:1.67} },
+    },
+  },
+
+  '2026': {
+    periodo: 'Enero 2026 · 1 mes',
+    titulo:  'Análisis Financiero 2026',
+    label:   'Informe Mensual 2026',
+    tag:     'ENE · 1M',
+    // KPIs
+    ingBrutos:   156897559,
+    cm:           44303538,
+    cmPct:        '28,2%',
+    utilNoOp:      5895002,
+    utilNoOpPct:  '3,8%',
+    ingNetos:     108241420,
+    ingVar:       4.57,  // vs dic-25
+    be:           145215543,
+    bePct:        '+8,0%',
+    comAP:         69345442,
+    comAPPct:    '44,2%',
+    aum:           83707854,
+    aumPct:       '-0,5%',
+    cuentas:          2477,
+    cuentasPct:   '+1,0%',
+    // ingresos mensuales (solo enero)
+    months:  ['ene'],
+    revenue: [156897559],
+    pcts:    [null],
+    // Origen
+    origenIng: {
+      dracma:{tot:108474165,ext:66019540,int:42454625},
+      idesk: {tot:8067870,ext:8067870},
+      novillo:{tot:40355523,ext:20771425,int:19584098},
+      total: 156897559
+    },
+    origenCM: {
+      dracma:{tot:24044660,ext:8598377,int:15446284,pct:0.222,ext_pct:0.130,int_pct:0.364},
+      idesk: {tot:1671139,ext:1671139,pct:0.207},
+      novillo:{tot:18587739,ext:4273981,int:14313758,pct:0.461,ext_pct:0.206,int_pct:0.731},
+      total: 44303538, total_pct:0.282
+    },
+    // AP-CM
+    apCM: [
+      ['DRACMA AAGI',42454625,0.31,15496844,18996672,0.49],
+      ['Lucas Ripanti',31309918,0.65,20351447,4842013,0.15],
+      ['NOVILLO AAGI',19584091,0.00,0,15951526,0.81],
+      ['Christopher Del Boca',12540788,0.57,7110627,2962741,0.24],
+      ['Luis Turletti',12418782,0.52,6454662,3529668,0.28],
+    ],
+    apTotal: {ing:156897559,pct:0.48,com:69345442,neto:57424110,cm:0.32},
+    // P&L
+    plUtilOp:  [5579620,-6744890,9762317,-553400,-203874,7839772],
+    plNetOp:   [15446284,8598377,14313758,4273981,1671139,44303538],
+    // BE
+    beIng:    145215543,
+    beFijos:  -42564873,
+    beInviu:  -27884387,
+    beCom:    -64182235,
+    beImp:    -12144062,
+    beNeto:    41004859,
+    // AUM
+    aum_data: {total:83707854,dracma:32242532,idesk:3724369,novillo:47740953,cuentas:2477},
+
+    // Productos enero 2026
+    productos: {
+      PPT:   {dracma:75918698, idesk:7629706, novillo:33282649, total:116831052},
+      SENEBI:{dracma:8994750,  idesk:0,        novillo:505713,  total:9500463},
+      FEE:   {dracma:14702793, idesk:0,        novillo:335600,  total:15038393},
+      PYME:  {dracma:229600,   idesk:0,        novillo:0,       total:229600},
+      FCI:   {dracma:7678123,  idesk:370662,   novillo:888585,  total:8937370},
+      OFF:   {dracma:950202,   idesk:67503,    novillo:5342976, total:6360681},
+    },
+    // AUM enero 2026 — comparar con dic 2025
+    aumCompare: {
+      prev: { label:'DIC 2025', cttes:2453, pf:2136, pj:317,  aum:84129051, cAUM:1983,
+              dracma:{cttes:1258,aum:31485152}, idesk:{cttes:276,aum:3314677}, novillo:{cttes:919,aum:49329222},
+              roa:{dracma:2.93, idesk:2.58, novillo:0.88, total:1.67} },
+      curr: { label:'ENE 2026', cttes:2477, pf:2136, pj:341,  aum:83707854, cAUM:1983,
+              dracma:{cttes:1261,aum:32242532}, idesk:{cttes:295,aum:3724369}, novillo:{cttes:921,aum:47740953},
+              roa:{dracma:2.73, idesk:1.76, novillo:0.69, total:1.52} },
+    },
+    // P&L rows
+    pl2026rows: [
+      { label:'Ingresos Brutos',          css:'subtotal',bold:true, indent:false,alloc:false,
+        di:['$42,5M','100%'], de:['$66,0M','100%'], ni:['$19,6M','100%'],
+        ne:['$20,8M','100%'], id:['$8,1M','100%'],  tot:['$156,9M','100%'],
+        diClass:'',deClass:'',niClass:'',neClass:'',idClass:'',totClass:'cyan bold'},
+      { label:'Costo INVIU',              css:'neg',bold:false,indent:true,alloc:false,
+        di:['($8,0M)','-19%'],de:['($12,9M)','-20%'],ni:['($3,6M)','-19%'],
+        ne:['($4,0M)','-19%'],id:['($1,6M)','-20%'], tot:['($30,1M)','-19%'],
+        diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+      { label:'Comisiones AP',            css:'neg',bold:false,indent:true,alloc:false,
+        di:['($15,5M)','-37%'],de:['($39,0M)','-59%'],ni:['—','0%'],
+        ne:['($10,7M)','-52%'],id:['($4,1M)','-51%'],tot:['($69,3M)','-44%'],
+        diClass:'red',deClass:'red',niClass:'muted',neClass:'red',idClass:'red',totClass:'red bold'},
+      { label:'Impuestos',                css:'neg',bold:false,indent:true,alloc:false,
+        di:['($3,6M)','-8%'],de:['($5,5M)','-8%'],ni:['($1,6M)','-8%'],
+        ne:['($1,7M)','-8%'],id:['($674k)','-8%'],  tot:['($13,1M)','-8%'],
+        diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+      { label:'Total Ing. Netos Operativos',css:'subtotal',bold:true,indent:false,alloc:false,
+        di:['$15,4M','36%'],de:['$8,6M','13%'],ni:['$14,3M','73%'],
+        ne:['$4,3M','21%'],id:['$1,7M','21%'],    tot:['$44,3M','28%'],
+        di2:['$15,4M','36%'],de2:['$8,6M','13%'],ni2:['$14,3M','73%'],
+        ne2:['$4,3M','21%'],id2:['$1,7M','21%'],  tot2:['$44,3M','28%'],
+        diClass:'cyan',deClass:'',niClass:'green',neClass:'',idClass:'',totClass:'cyan bold'},
+      { label:'Total Sueldos',            css:'neg',bold:false,indent:true,alloc:true,
+        di:['($8,2M)','-19%'],de:['($12,7M)','-19%'],ni:['($3,8M)','-19%'],
+        ne:['($4,0M)','-19%'],id:['($1,6M)','-19%'],tot:['($30,2M)','-19%'],
+        diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+      { label:'Publicidad / Viáticos',    css:'neg',bold:false,indent:true,alloc:true,
+        di:['—','0%'],de:['—','0%'],ni:['—','0%'],ne:['—','0%'],id:['—','0%'],tot:['—','0%'],
+        diClass:'muted',deClass:'muted',niClass:'muted',neClass:'muted',idClass:'muted',totClass:'muted'},
+      { label:'Gastos de Representación', css:'neg',bold:false,indent:true,alloc:true,
+        di:['—','0%'],de:['—','0%'],ni:['—','0%'],ne:['—','0%'],id:['—','0%'],tot:['—','0%'],
+        diClass:'muted',deClass:'muted',niClass:'muted',neClass:'muted',idClass:'muted',totClass:'muted'},
+      { label:'Overhead',                 css:'neg',bold:false,indent:true,alloc:true,
+        di:['($1,7M)','-4%'],de:['($2,6M)','-4%'],ni:['($783k)','-4%'],
+        ne:['($831k)','-4%'],id:['($323k)','-4%'],  tot:['($6,3M)','-4%'],
+        diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+      { label:'Utilidad Operativa',       css:'subtotal',bold:true,indent:false,alloc:false,
+        di:['$5,6M','13%'],de:['($6,7M)','-10%'],ni:['$9,8M','50%'],
+        ne:['($553k)','-3%'],id:['($204k)','-3%'],  tot:['$7,8M','5%'],
+        diClass:'cyan',deClass:'red',niClass:'green',neClass:'red',idClass:'',totClass:'cyan bold',
+        di2:['$15,4M','36%'],de2:['$8,6M','13%'],ni2:['$14,3M','73%'],
+        ne2:['$4,3M','21%'],id2:['$1,7M','21%'],  tot2:['$7,8M','5%'],
+        diClass2:'cyan',deClass2:'',niClass2:'green',neClass2:'',idClass2:'',totClass2:'cyan bold'},
+      { label:'Cuota Préstamo',           css:'neg',bold:false,indent:true,alloc:true,
+        di:['($1,7M)','-4%'],de:['($2,6M)','-4%'],ni:['($762k)','-4%'],
+        ne:['($808k)','-4%'],id:['($314k)','-4%'],  tot:['($6,1M)','-4%'],
+        diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+      { label:'Modelo Caño',              css:'',bold:false,indent:true,alloc:false,
+        di:['—','0%'],de:['—','0%'],ni:['$1,6M','8%'],ne:['—','0%'],id:['—','0%'],tot:['$1,6M','1%'],
+        diClass:'muted',deClass:'muted',niClass:'cyan',neClass:'muted',idClass:'muted',totClass:'cyan bold'},
+      { label:'Intereses FIMA',           css:'',bold:false,indent:true,alloc:true,
+        di:['$703k','2%'],de:['$1,1M','2%'],ni:['$324k','2%'],
+        ne:['$344k','2%'],id:['$134k','2%'],       tot:['$2,6M','2%'],
+        diClass:'cyan',deClass:'cyan',niClass:'cyan',neClass:'cyan',idClass:'cyan',totClass:'cyan bold'},
+      { label:'Utilidad No Operativa',    css:'total',bold:true,indent:false,alloc:false,
+        di:['$4,6M','11%'],de:['($8,2M)','-12%'],ni:['$10,9M','56%'],
+        ne:['($1,0M)','-5%'],id:['($384k)','-5%'],  tot:['$5,9M','4%'],
+        diClass:'cyan',deClass:'red',niClass:'green',neClass:'red',idClass:'',totClass:'green bold',
+        di2:['$15,4M','36%'],de2:['$8,6M','13%'],ni2:['$14,3M','73%'],
+        ne2:['$4,3M','21%'],id2:['$1,7M','21%'],  tot2:['$5,9M','4%'],
+        diClass2:'cyan',deClass2:'',niClass2:'green',neClass2:'',idClass2:'',totClass2:'green bold'},
+    ],
+  }
+};
+
+// ══════════════════════════════════════════════
+// RENDER FUNCTIONS — update dashboard with dataset
+// ══════════════════════════════════════════════
+
+function fmtM(n) {
+  const abs = Math.abs(n);
+  if (abs >= 1e9) return (n<0?'($':'$')+(abs/1e9).toFixed(1)+'B'+(n<0?')':'');
+  if (abs >= 1e6) return (n<0?'($':'$')+(abs/1e6).toFixed(1)+'M'+(n<0?')':'');
+  if (abs >= 1e3) return (n<0?'($':'$')+(abs/1e3).toFixed(0)+'k'+(n<0?')':'');
+  return (n<0?'($':'$')+abs+(n<0?')':'');
+}
+
+// ══════════════════════════════════════════════
+// MONTH SELECTOR — 2026
+// ══════════════════════════════════════════════
+
+// Available months in 2026 (add more as data arrives)
+// ── FEBRERO 2026 ──
+const D2026_FEB = {
+  periodo: 'Febrero 2026 · 1 mes',
+  titulo:  'Análisis Financiero 2026',
+  label:   'Informe Mensual 2026',
+  tag:     'FEB · 1M',
+  // KPIs
+  ingBrutos:   133774268,
+  cm:           43201013,
+  cmPct:        '32,3%',
+  utilNoOp:     -2857951,
+  utilNoOpPct: '-2,1%',  // -2,857,951 / 133,774,268
+  ingNetos:     101638544,
+  ingVar:       -14.74,
+  plNetOp:   [18748980, 4424526, 13428014, 5702878, 896615, 43201013],
+  plUtilOp:  [4850778, -7785942, 8183803, -3746098, -691465, 811077],
+  be:           141138715,
+  bePct:        '-5,2%',
+  comAP:         53753190,
+  comAPPct:    '40,2%',
+  aum:           81039533,
+  aumPct:       '-3,2%',
+  cuentas:           2524,
+  cuentasPct:   '+1,9%',
+  // Ingresos mensuales
+  months:  ['feb'],
+  revenue: [133774268],
+  pcts:    [-0.1474],
+  // Origen
+  origenIng: {
+    dracma:{tot:87897123, ext:37295562, int:50601562},
+    idesk: {tot:4967981,  ext:4967981},
+    novillo:{tot:40909164,ext:22704589,int:18204575},
+    total: 133774268
+  },
+  origenCM: {
+    dracma:{tot:23173506,ext:4424526,int:18748980,pct:0.263,ext_pct:0.119,int_pct:0.371},
+    idesk: {tot:896615,  ext:896615,               pct:0.181},
+    novillo:{tot:19130892,ext:5702878,int:13428014,pct:0.468,ext_pct:0.251,int_pct:0.738},
+    total: 43201013, total_pct: 0.323
+  },
+  // AP-CM
+  apCM: [
+    ['DRACMA AAGI',    50601562, 0.31, 18108453, 23210832, 0.49],
+    ['Lucas Ripanti',  21283150, 0.65, 13834047,  3264316, 0.15],
+    ['NOVILLO AAGI',   18204568, 0.00,        0, 15033218, 0.83],
+    ['Patricio Garlot', 8272380, 0.40,  3308952,  3647824, 0.44],
+    ['Luis Turletti',   5013520, 0.52,  2605777,  1421328, 0.28],
+  ],
+  apTotal: {ing:133774268, pct:0.48, com:53753190, neto:54996714, cm:0.33},
+  // P&L rows
+  pl2026rows: [
+    { label:'Ingresos Brutos',          css:'subtotal',bold:true, indent:false,alloc:false,
+      di:['$50,6M','100%'], de:['$37,3M','100%'], ni:['$18,2M','100%'],
+      ne:['$22,7M','100%'], id:['$5,0M','100%'],  tot:['$133,8M','100%'],
+      diClass:'',deClass:'',niClass:'',neClass:'',idClass:'',totClass:'cyan bold'},
+    { label:'Costo INVIU',              css:'neg',bold:false,indent:true,alloc:false,
+      di:['($9,3M)','-18%'],de:['($7,3M)','-20%'],ni:['($3,2M)','-17%'],
+      ne:['($4,2M)','-18%'],id:['($1,1M)','-22%'], tot:['($25,0M)','-19%'],
+      diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Comisiones AP',            css:'neg',bold:false,indent:true,alloc:false,
+      di:['($18,1M)','-36%'],de:['($22,3M)','-60%'],ni:['—','0%'],
+      ne:['($10,8M)','-48%'],id:['($2,5M)','-51%'],tot:['($53,8M)','-40%'],
+      diClass:'red',deClass:'red',niClass:'muted',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Impuestos',                css:'neg',bold:false,indent:true,alloc:false,
+      di:['($4,5M)','-9%'], de:['($3,3M)','-9%'], ni:['($1,6M)','-9%'],
+      ne:['($2,0M)','-9%'], id:['($438k)','-9%'], tot:['($11,8M)','-9%'],
+      diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Total Ing. Netos Operativos',css:'subtotal',bold:true,indent:false,alloc:false,
+      di:['$18,7M','37%'],  de:['$4,4M','12%'],  ni:['$13,4M','74%'],
+      ne:['$5,7M','25%'],   id:['$897k','18%'],  tot:['$43,2M','32%'],
+      di2:['$18,7M','37%'], de2:['$4,4M','12%'], ni2:['$13,4M','74%'],
+      ne2:['$5,7M','25%'],  id2:['$897k','18%'], tot2:['$43,2M','32%'],
+      diClass:'cyan',deClass:'',niClass:'green',neClass:'',idClass:'',totClass:'cyan bold'},
+    { label:'Total Sueldos',            css:'neg',bold:false,indent:true,alloc:true,
+      di:['($11,4M)','-23%'],de:['($8,4M)','-23%'],ni:['($4,1M)','-23%'],
+      ne:['($5,1M)','-23%'],id:['($1,1M)','-23%'],tot:['($30,2M)','-23%'],
+      diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Publicidad / Viáticos',    css:'neg',bold:false,indent:true,alloc:true,
+      di:['($571k)','-1%'],de:['($888k)','-2%'],ni:['($263k)','-1%'],
+      ne:['($279k)','-1%'],id:['($108k)','-2%'],  tot:['($2,1M)','-2%'],
+      diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Gastos de Representación', css:'neg',bold:false,indent:true,alloc:true,
+      di:['—','0%'],de:['—','0%'],ni:['—','0%'],ne:['—','0%'],id:['—','0%'],tot:['—','0%'],
+      diClass:'muted',deClass:'muted',niClass:'muted',neClass:'muted',idClass:'muted',totClass:'muted'},
+    { label:'Overhead',                 css:'neg',bold:false,indent:true,alloc:true,
+      di:['($1,9M)','-4%'],de:['($2,9M)','-8%'],ni:['($865k)','-5%'],
+      ne:['($4,0M)','-18%'],id:['($356k)','-7%'],tot:['($10,0M)','-8%'],
+      diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Utilidad Operativa',       css:'subtotal',bold:true,indent:false,alloc:false,
+      di:['$4,9M','10%'],   de:['($7,8M)','-21%'],ni:['$8,2M','45%'],
+      ne:['($3,7M)','-16%'],id:['($691k)','-14%'],tot:['$811k','1%'],
+      diClass:'cyan',deClass:'red',niClass:'green',neClass:'red',idClass:'red',totClass:'cyan bold',
+      di2:['$18,7M','37%'], de2:['$4,4M','12%'], ni2:['$13,4M','74%'],
+      ne2:['$5,7M','25%'],  id2:['$897k','18%'], tot2:['$811k','1%'],
+      diClass2:'cyan',deClass2:'',niClass2:'green',neClass2:'',idClass2:'',totClass2:'cyan bold'},
+    { label:'Cuota Préstamo',           css:'neg',bold:false,indent:true,alloc:true,
+      di:['($2,3M)','-4%'],de:['($1,7M)','-4%'],ni:['($814k)','-4%'],
+      ne:['($1,0M)','-4%'],id:['($222k)','-4%'],  tot:['($6,0M)','-4%'],
+      diClass:'red',deClass:'red',niClass:'red',neClass:'red',idClass:'red',totClass:'red bold'},
+    { label:'Modelo Caño',              css:'',bold:false,indent:true,alloc:false,
+      di:['—','0%'],de:['—','0%'],ni:['$685k','4%'],ne:['—','0%'],id:['—','0%'],tot:['$685k','1%'],
+      diClass:'muted',deClass:'muted',niClass:'cyan',neClass:'muted',idClass:'muted',totClass:'cyan bold'},
+    { label:'Intereses FIMA',           css:'',bold:false,indent:true,alloc:true,
+      di:['$617k','1%'],de:['$455k','1%'],ni:['$222k','1%'],
+      ne:['$277k','1%'],id:['$61k','1%'],         tot:['$1,6M','1%'],
+      diClass:'cyan',deClass:'cyan',niClass:'cyan',neClass:'cyan',idClass:'cyan',totClass:'cyan bold'},
+    { label:'Utilidad No Operativa',    css:'total',bold:true,indent:false,alloc:false,
+      di:['$3,2M','6%'],    de:['($9,0M)','-24%'],ni:['$8,3M','45%'],
+      ne:['($4,5M)','-20%'],id:['($853k)','-17%'],tot:['($2,9M)','-2%'],
+      diClass:'cyan',deClass:'red',niClass:'green',neClass:'red',idClass:'red',totClass:'red bold',
+      di2:['$18,7M','37%'], de2:['$4,4M','12%'], ni2:['$13,4M','74%'],
+      ne2:['$5,7M','25%'],  id2:['$897k','18%'], tot2:['($2,9M)','-2%'],
+      diClass2:'cyan',deClass2:'',niClass2:'green',neClass2:'',idClass2:'red',totClass2:'red bold'},
+  ],
+  // Productos
+  productos: {
+    PPT:   {dracma:52620746, idesk:4588704, novillo:24357800, total:81567250},
+    SENEBI:{dracma:14627355, idesk:0,       novillo:6380982,  total:21008337},
+    FEE:   {dracma:13775934, idesk:0,       novillo:327910,   total:14103844},
+    PYME:  {dracma:228800,   idesk:0,       novillo:0,        total:228800},
+    FCI:   {dracma:6587238,  idesk:273823,  novillo:703178,   total:7564238},
+    OFF:   {dracma:57051,    idesk:105454,  novillo:9139294,  total:9301799},
+  },
+  // AUM — compara ene vs feb
+  aumCompare: {
+    prev: { label:'ENE 2026', cttes:2477, pf:2136, pj:341, aum:83707854, cAUM:1983,
+            dracma:{cttes:1261,ext_c:515, int_c:746, aum:32242532, ext_a:16734559, int_a:15507973, roa:2.73, roa_ext:3.20, roa_int:2.22},
+            idesk: {cttes:295, ext_c:295, int_c:0,   aum:3724369,  ext_a:3724369,  int_a:0,       roa:1.76},
+            novillo:{cttes:921,ext_c:580, int_c:341, aum:47740953, ext_a:18261508, int_a:29479445, roa:0.69, roa_ext:0.92, roa_int:0.54},
+            roa:{dracma:2.73, idesk:1.76, novillo:0.69, total:1.52} },
+    curr: { label:'FEB 2026', cttes:2524, pf:2136, pj:388, aum:81039533, cAUM:1983,
+            dracma:{cttes:1291,ext_c:532, int_c:759, aum:31466212, ext_a:15963337, int_a:15502875, roa:2.34, roa_ext:1.96, roa_int:2.74},
+            idesk: {cttes:300, ext_c:300, int_c:0,   aum:3778435,  ext_a:3778435,  int_a:0,       roa:1.10},
+            novillo:{cttes:933,ext_c:593, int_c:340, aum:45794886, ext_a:17278944, int_a:28515942, roa:0.75, roa_ext:1.10, roa_int:0.54},
+            roa:{dracma:2.34, idesk:1.10, novillo:0.75, total:1.39} },
+  },
+  // BE
+  beIng:    141138715,
+  beFijos:  -46263977,
+  beInviu:  -26401987,
+  beCom:    -56712373,
+  beImp:    -12445070,
+  beNeto:    45579285,
+  // waterfall (feb)
+  wfData: [
+    { label:'Ingresos Brutos',  val:133774268, type:'pos' },
+    { label:'- Costo INVIU',    val:25024363,  type:'neg' },
+    { label:'- Comisiones AP',  val:53753190,  type:'neg' },
+    { label:'- Impuestos',      val:11795701,  type:'neg' },
+    { label:'= Ing. Netos Op.', val:43201013,  type:'result' },
+    { label:'- Sueldos',        val:30241978,  type:'neg' },
+    { label:'- Overhead',       val:10037980,  type:'neg' },
+    { label:'- Otros gastos',   val:2109978,   type:'neg' },
+    { label:'= Util. Operativa',val:811077,    type:'result' },
+    { label:'± No Operativo',   val:2857951,   type:'neg' },
+    { label:'= Util. Final',    val:2857951,   type:'neg_result' },
+  ],
+};
+
+const MONTHS_2026_AVAILABLE = ['ene', 'feb'];
+
+// Per-month datasets — each mirrors the D['2026'] structure
+const D2026_MONTHS = {
+  'ene': null, // populated below — reference to D['2026']
+};
+
+// Will be set after D is defined
+function init2026MonthRefs() {
+  D2026_MONTHS['ene'] = D['2026'];
+  D2026_MONTHS['feb'] = D2026_FEB;
+}
+
+let activeMonth2026 = 'ene';
+
+function selectMonth2026(month) {
+  // Only allow available months
+  if (month !== 'acum' && !MONTHS_2026_AVAILABLE.includes(month)) return;
+
+  activeMonth2026 = month;
+
+  // Update button styles
+  document.querySelectorAll('.month-btn:not(.unavailable)').forEach(btn => {
+    btn.classList.remove('active-month', 'active-acum26');
+  });
+  if (month === 'acum') {
+    const acumBtn = document.getElementById('mBtnAcum26');
+    if (acumBtn) acumBtn.classList.add('active-acum26');
+  } else {
+    const btn = document.getElementById(`mBtn_${month}`);
+    if (btn) btn.classList.add('active-month');
+  }
+
+  // Build dataset for this view
+  const dataset = build2026Dataset(month);
+  if (!dataset) return;
+
+  // Apply it
+  applyDataset2026(dataset, month);
+}
+
+function build2026Dataset(month) {
+  if (month === 'acum') {
+    // Sum all available months
+    const available = MONTHS_2026_AVAILABLE.map(m => D2026_MONTHS[m]).filter(Boolean);
+    if (available.length === 0) return null;
+    if (available.length === 1) return { ...available[0], periodo: 'Enero 2026 · 1 mes (Acumulado)' };
+
+    // Sum numeric fields across months
+    const summed = { ...available[0] };
+    for (let i = 1; i < available.length; i++) {
+      const m = available[i];
+      summed.ingBrutos  += m.ingBrutos;
+      summed.cm         += m.cm;
+      summed.utilNoOp   += m.utilNoOp;
+      summed.ingNetos   += m.ingNetos;
+      summed.comAP      += m.comAP;
+      // revenue array concatenated
+      summed.months  = [...summed.months, ...m.months];
+      summed.revenue = [...summed.revenue, ...m.revenue];
+      summed.pcts    = [...summed.pcts, null]; // recalc not needed for now
+      // CM
+      summed.origenIng.dracma.tot += m.origenIng.dracma.tot;
+      summed.origenIng.dracma.ext += m.origenIng.dracma.ext;
+      summed.origenIng.dracma.int += m.origenIng.dracma.int;
+      summed.origenIng.idesk.tot  += m.origenIng.idesk.tot;
+      summed.origenIng.idesk.ext  += m.origenIng.idesk.ext;
+      summed.origenIng.novillo.tot+= m.origenIng.novillo.tot;
+      summed.origenIng.novillo.ext+= m.origenIng.novillo.ext;
+      summed.origenIng.novillo.int+= m.origenIng.novillo.int;
+      summed.origenIng.total      += m.origenIng.total;
+      summed.origenCM.dracma.tot  += m.origenCM.dracma.tot;
+      summed.origenCM.dracma.ext  += m.origenCM.dracma.ext;
+      summed.origenCM.dracma.int  += m.origenCM.dracma.int;
+      summed.origenCM.idesk.tot   += m.origenCM.idesk.tot;
+      summed.origenCM.idesk.ext   += m.origenCM.idesk.ext;
+      summed.origenCM.novillo.tot += m.origenCM.novillo.tot;
+      summed.origenCM.novillo.ext += m.origenCM.novillo.ext;
+      summed.origenCM.novillo.int += m.origenCM.novillo.int;
+      summed.origenCM.total       += m.origenCM.total;
+    }
+    summed.cmPct     = `${(summed.cm/summed.ingBrutos*100).toFixed(1)}%`;
+    summed.utilNoOpPct = `${(summed.utilNoOp/summed.ingBrutos*100).toFixed(1)}%`;
+    summed.comAPPct  = `${(summed.comAP/summed.ingBrutos*100).toFixed(1)}%`;
+    summed.periodo   = `Acumulado 2026 · ${available.length} mes${available.length>1?'es':''}`;
+    summed.label     = `Acumulado 2026`;
+    summed.origenCM.total_pct = summed.origenCM.total / summed.origenIng.total;
+    return summed;
+
+  } else {
+    const d = D2026_MONTHS[month];
+    if (!d) return null;
+    return { ...d };
+  }
+}
+
+// applyDataset2026 — applies a specific month/acum dataset without mutating D['2026']
+function applyDataset2026(dataset, month) {
+  // Pass dataset directly to applyDataset via a temp key
+  D['_2026tmp'] = dataset;
+  applyDataset('_2026tmp');
+  renderWaterfall('2026', dataset);
+
+  // Period label
+  const mp = document.querySelector('.header-meta p');
+  let periodLabel;
+  if (month === 'acum') {
+    periodLabel = `Período: Acumulado 2026 · ${MONTHS_2026_AVAILABLE.length} mes${MONTHS_2026_AVAILABLE.length>1?'es':''}`;
+  } else if (month === 'feb') {
+    periodLabel = `Período: Febrero 2026 · 1 mes`;
+  } else {
+    periodLabel = `Período: Enero 2026 · 1 mes`;
+  }
+  if (mp) mp.textContent = periodLabel;
+
+  // Header label
+  const rl = document.querySelector('.report-label');
+  if (rl) rl.textContent = dataset.label || 'Informe Mensual 2026';
+
+  delete D['_2026tmp'];
+}
+
+function updateMonthNav() {
+  // Show/hide month nav based on active year
+  const bar = document.getElementById('monthNavBar');
+  if (!bar) return;
+  if (activeYear === '2026') {
+    bar.classList.add('visible');
+    // Adjust nav sticky top
+    document.querySelector('nav').style.top = '91px';
+  } else {
+    bar.classList.remove('visible');
+    document.querySelector('nav').style.top = '49px';
+  }
+}
+
+// ── RENDER ORIGIN CARDS ──
+function renderOriginCards(d) {
+  const container = document.getElementById('originCards');
+  if (!container) return;
+  const oi = d.origenIng, cm = d.origenCM;
+  const total = oi.total;
+  const fmtO = v => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : `$${(v/1e3).toFixed(0)}k`;
+  const pct  = (v, t) => `${(v/t*100).toFixed(0)}%`;
+  const cmPct = (v, t) => `${(v/t*100).toFixed(1)}%`;
+
+  const cards = [
+    {
+      name: 'DRACMA',
+      headStyle: '',
+      pctColor: 'var(--cyan)',
+      ingColor: 'cyan',
+      badgeClass: 'badge-cyan',
+      ing: oi.dracma.tot, ext: oi.dracma.ext, int: oi.dracma.int,
+      cmVal: cm.dracma.tot,
+      hasInt: true,
+    },
+    {
+      name: 'NOVILLO',
+      headStyle: 'background:rgba(0,200,150,0.1)',
+      pctColor: 'var(--accent-g)',
+      ingColor: '',
+      ingStyleExtra: 'color:var(--accent-g)',
+      badgeClass: 'badge-g',
+      ing: oi.novillo.tot, ext: oi.novillo.ext, int: oi.novillo.int,
+      cmVal: cm.novillo.tot,
+      hasInt: true,
+    },
+    {
+      name: 'IDESK',
+      headStyle: 'background:rgba(255,209,102,0.08)',
+      pctColor: 'var(--accent-y)',
+      ingColor: '',
+      ingStyleExtra: 'color:var(--accent-y)',
+      badgeClass: 'badge-y',
+      ing: oi.idesk.tot, ext: oi.idesk.tot,
+      cmVal: cm.idesk.tot,
+      hasInt: false,
+    },
+  ];
+
+  container.innerHTML = cards.map(c => {
+    const ingPct   = pct(c.ing, total);
+    const extPct   = pct(c.ext, total);
+    const intPct   = c.hasInt ? pct(c.int, total) : '';
+    const cmPctStr = cmPct(c.cmVal, c.ing);
+    const ingStyle = c.ingStyleExtra ? ` style="${c.ingStyleExtra}"` : '';
+    const intRow   = c.hasInt
+      ? `<div class="origin-row"><span class="origin-row-label">Interno</span><span class="origin-row-val">${fmtO(c.int)} <span class="muted" style="font-size:.7rem">${intPct}</span></span></div>`
+      : '';
+    const extLabel = c.hasInt ? 'Externo' : 'Solo Externo';
+
+    return `<div class="origin-card">
+      <div class="origin-head" ${c.headStyle ? `style="${c.headStyle}"` : ''}>
+        <div class="origin-name">${c.name}</div>
+        <div class="origin-pct" style="color:${c.pctColor}">${ingPct} del total</div>
+      </div>
+      <div class="origin-body">
+        <div class="origin-row"><span class="origin-row-label">Ing. Brutos</span><span class="origin-row-val"${ingStyle}>${fmtO(c.ing)}</span></div>
+        <div class="origin-row"><span class="origin-row-label">${extLabel}</span><span class="origin-row-val">${fmtO(c.ext)} <span class="muted" style="font-size:.7rem">${extPct}</span></span></div>
+        ${intRow}
+        <div class="origin-row"><span class="origin-row-label">CM</span><span class="origin-row-val green">${fmtO(c.cmVal)}</span></div>
+        <div class="origin-row"><span class="origin-row-label">% CM s/Ing.</span><span class="origin-row-val"><span class="badge ${c.badgeClass}">${cmPctStr}</span></span></div>
+        ${!c.hasInt ? `<div class="origin-row"><span class="origin-row-label">APs propios</span><span class="origin-row-val muted">Solo externos</span></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function applyDataset(yr) {
+  const d = D[yr];
+  if (!d) return;
+
+  // ── Header ──
+  const rl = document.querySelector('.report-label');
+  const h1 = document.querySelector('.header-meta h1');
+  const mp = document.querySelector('.header-meta p');
+  if (rl) rl.textContent = d.label;
+  if (h1) h1.textContent = d.titulo;
+  if (mp) mp.textContent = `Período: ${d.periodo}`;
+
+  // ── KPI Cards ──
+  const kpiMap = [
+    ['.kpi-card:nth-child(1) .kpi-value', d.ingBrutos, 'M ARS', '.kpi-card:nth-child(1) .kpi-sub', 'Ingresos acumulados'],
+    ['.kpi-card:nth-child(2) .kpi-value', d.cm, 'M ARS',        '.kpi-card:nth-child(2) .kpi-sub', `CM / Ing. Brutos = ${d.cmPct}`],
+    ['.kpi-card:nth-child(3) .kpi-value', d.utilNoOp, 'M ARS',  '.kpi-card:nth-child(3) .kpi-sub', 'Resultado neto consolidado'],
+    ['.kpi-card:nth-child(4) .kpi-value', d.ingNetos, 'M ARS',  '.kpi-card:nth-child(4) .kpi-sub', 'Después INVIU y Cuota PTO'],
+    ['.kpi-card:nth-child(5) .kpi-value', d.be, 'M ARS',        '.kpi-card:nth-child(5) .kpi-sub', `Superado en ${d.bePct}`],
+    ['.kpi-card:nth-child(6) .kpi-value', d.comAP, 'M ARS',     '.kpi-card:nth-child(6) .kpi-sub', `${d.comAPPct} s/ingresos`],
+  ];
+  kpiMap.forEach(([sel, val, sfx, subSel, subTxt]) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    const isNeg = val < 0;
+    const m = (Math.abs(val)/1e6).toFixed(1);
+    if (isNeg) {
+      el.innerHTML = `<span class="prefix" style="color:var(--accent-r)">−$</span><span style="color:var(--accent-r)">${m}</span><span class="suffix" style="color:var(--accent-r)">${sfx}</span>`;
+      // Also update card class
+      const card = el.closest('.kpi-card');
+      if (card) { card.className = card.className.replace(/\bgreen\b|\byellow\b/, ''); card.classList.add('red-card'); }
+    } else {
+      el.innerHTML = `<span class="prefix">$</span>${m}<span class="suffix">${sfx}</span>`;
+      const card = el.closest('.kpi-card');
+      if (card) { card.classList.remove('red-card'); if (sel.includes('nth-child(3)') || sel.includes('nth-child(2)')) card.classList.add('green'); }
+    }
+    const sub = document.querySelector(subSel);
+    if (sub) sub.textContent = subTxt;
+  });
+
+  // KPIs 7 & 8 (AUM, Cuentas)
+  const kpi7v = document.querySelector('.kpi-card:nth-child(7) .kpi-value');
+  const kpi7s = document.querySelector('.kpi-card:nth-child(7) .kpi-sub');
+  const kpi8v = document.querySelector('.kpi-card:nth-child(8) .kpi-value');
+  const kpi8s = document.querySelector('.kpi-card:nth-child(8) .kpi-sub');
+  if (kpi7v) kpi7v.innerHTML = `${(d.aum/1e6).toFixed(1)}<span class="suffix">M USD</span>`;
+  if (kpi7s) kpi7s.textContent = `${d.aumPct} vs período anterior`;
+  if (kpi8v) kpi8v.innerHTML = d.cuentas.toLocaleString('es-AR');
+  if (kpi8s) kpi8s.textContent = `${d.cuentasPct} vs período anterior`;
+
+  // ── KPI badges — computed correctly per metric ──
+  const setB = (id, val, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val;
+    el.className = 'kpi-pct' + (cls ? ' '+cls : '');
+  };
+  const ing = d.ingBrutos;
+
+  // Badge 0: Ingresos — var% vs período anterior
+  const ingVar = d.ingVar !== undefined ? d.ingVar : null;
+  if (ingVar !== null) {
+    const sign = ingVar >= 0 ? '+' : '';
+    const cls  = ingVar >= 0 ? 'g' : 'r';
+    setB('badge0', `${sign}${ingVar.toFixed(1)}%`, cls);
+  } else {
+    setB('badge0', 'Base', '');
+  }
+
+  // Badge 1: CM / Ing.Brutos
+  setB('badge1', `${(d.cm/ing*100).toFixed(1)}%`, 'g');
+
+  // Badge 2: Util No Op / Ing.Brutos
+  const utilPct = d.utilNoOp/ing*100;
+  setB('badge2', `${utilPct.toFixed(1)}%`, utilPct >= 0 ? 'g' : 'r');
+
+  // Badge 3: Ing.Netos / Ing.Brutos
+  setB('badge3', `${(d.ingNetos/ing*100).toFixed(0)}%`, '');
+
+  // Badge 4: BE excedente/BE
+  setB('badge4', d.bePct, parseFloat(d.bePct) >= 0 ? 'y' : 'r');
+
+  // Badge 5: Comisiones AP / Ing.Brutos
+  setB('badge5', `${(d.comAP/ing*100).toFixed(1)}%`, '');
+
+  // Badge 6: AUM var%
+  const aumPctVal = parseFloat(d.aumPct);
+  setB('badge6', d.aumPct, aumPctVal >= 0 ? 'g' : 'r');
+
+  // Badge 7: Cuentas var%
+  const cttesPctVal = parseFloat(d.cuentasPct);
+  setB('badge7', d.cuentasPct, cttesPctVal >= 0 ? 'g' : 'r');
+
+  // ── KPI badge CSS class 'r' support ──
+
+  if (window._chart1) {
+    window._chart1.data.labels = d.months.map(m => m+'-'+(yr==='2026'?'26':'25'));
+    window._chart1.data.datasets[0].data = d.revenue;
+    window._chart1.update();
+  }
+
+  // ── Monthly table ──
+  const tb = document.getElementById('tbMensual');
+  if (tb) {
+    tb.innerHTML = '';
+    let acum = 0;
+    const suffix = yr==='2026'?'-26':'-25';
+    d.months.forEach((m, i) => {
+      acum += d.revenue[i];
+      const p = d.pcts[i];
+      const pCell = p === null ? '<td class="muted">—</td>'
+        : `<td class="${p>=0?'green':'red'}">${p>=0?'+':''}${(p*100).toFixed(2)}%</td>`;
+      tb.innerHTML += `<tr>
+        <td class="bold">${m}${suffix}</td>
+        <td class="cyan">${fmtM(d.revenue[i])}</td>
+        ${pCell}
+        <td class="muted">${fmtM(acum)}</td>
+      </tr>`;
+    });
+    tb.innerHTML += `<tr class="total"><td class="bold" colspan="2">Total Acumulado</td><td class="muted">—</td><td class="cyan bold">${fmtM(acum)}</td></tr>`;
+  }
+
+  // ── P&L table ──
+  if ((yr === '2026' || yr === '_2026tmp') && d.pl2026rows) {
+    plData.rows = d.pl2026rows;
+  } else if (yr === '2025') {
+    // restore 2025 plData (already set at init)
+    plData.rows = plData._rows2025 || plData.rows;
+  }
+  renderPL();
+  renderWaterfall(yr);
+
+  // ── Origen cards ──
+  const od = d.origenIng;
+  const cm = d.origenCM;
+  const cards = document.querySelectorAll('.origin-card');
+  if (cards.length >= 3) {
+    const setCard = (card, ing, ing_pct, cm_val, cm_pct_s) => {
+      const rows = card.querySelectorAll('.origin-row-val');
+      if (rows[0]) rows[0].textContent = fmtM(ing);
+      if (rows[rows.length-1]) rows[rows.length-1].innerHTML = `<span class="badge badge-cyan">${cm_pct_s}</span>`;
+    };
+    // Simplified — update CM meters instead
+  }
+
+
+  // ── CM Meters — update bars and values ──
+  const cmCard = document.querySelector('#resumen .grid-2 .card:first-child');
+  if (cmCard) {
+    const cm = d.origenCM;
+    const total_cm = cm.total;
+    // DRACMA bar width = % of CM total
+    const dmPct  = Math.round(cm.dracma.tot / total_cm * 100);
+    const dmePct = Math.round(cm.dracma.ext / total_cm * 100);
+    const dmiPct = Math.round(cm.dracma.int / total_cm * 100);
+    const nvPct  = Math.round(cm.novillo.tot / total_cm * 100);
+    const nvePct = Math.round(cm.novillo.ext / total_cm * 100);
+    const nviPct = Math.round(cm.novillo.int / total_cm * 100);
+    const idPct  = Math.round(cm.idesk.tot  / total_cm * 100);
+    const totalBarPct = Math.round(cm.total_pct * 100);
+
+    const fmtCM = (v) => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : `$${(v/1e3).toFixed(0)}k`;
+    const bars = cmCard.querySelectorAll('.meter-bar');
+    const vals = cmCard.querySelectorAll('.meter-val');
+    if (bars.length >= 7) {
+      bars[0].style.width = dmPct+'%';
+      bars[1].style.width = dmePct+'%';
+      bars[2].style.width = dmiPct+'%';
+      bars[3].style.width = nvPct+'%';
+      bars[4].style.width = nvePct+'%';
+      bars[5].style.width = nviPct+'%';
+      // IDESK
+      bars[6].style.width = idPct+'%';
+      // Total CM bar
+      if (bars[8]) bars[8].style.width = totalBarPct+'%';
+    }
+    if (vals.length >= 7) {
+      vals[0].textContent = `${dmPct}% · ${fmtCM(cm.dracma.tot)}`;
+      vals[1].textContent = `${Math.round(cm.dracma.ext_pct*100)}% · ${fmtCM(cm.dracma.ext)}`;
+      vals[2].textContent = `${Math.round(cm.dracma.int_pct*100)}% · ${fmtCM(cm.dracma.int)}`;
+      vals[3].textContent = `${nvPct}% · ${fmtCM(cm.novillo.tot)}`;
+      vals[4].textContent = `${Math.round(cm.novillo.ext_pct*100)}% · ${fmtCM(cm.novillo.ext)}`;
+      vals[5].textContent = `${Math.round(cm.novillo.int_pct*100)}% · ${fmtCM(cm.novillo.int)}`;
+      if (vals[6]) vals[6].textContent = `${idPct}% · ${fmtCM(cm.idesk.tot)}`;
+      // CM / Ing total
+      const totValEl = cmCard.querySelector('.meter-val[style*="accent-g"]');
+      if (totValEl) totValEl.textContent = d.cmPct;
+    }
+  }
+
+  // ── P&L bar chart ──
+  if (window.chartPL2 && d.plNetOp) {
+    window.chartPL2.data.datasets[0].data = d.plNetOp.slice(0,5);
+    // Update colors: negative values get red
+    window.chartPL2.data.datasets[0].backgroundColor = (d.plNetOp||[]).slice(0,5).map((v,i) =>
+      v < 0 ? red : (i===2 ? green : cyan)
+    );
+    window.chartPL2.update();
+  }
+
+  // ── 07 · BE section ──
+  if (d.beIng) {
+    const f   = v => v >= 0 ? `$${(v/1e6).toFixed(1)}M` : `($${(Math.abs(v)/1e6).toFixed(1)}M)`;
+    const fDif = v => v >= 0 ? `+$${(v/1e6).toFixed(1)}M` : `-$${(Math.abs(v)/1e6).toFixed(1)}M`;
+    const ing  = d.ingBrutos;
+    const pctBE  = (d.beIng / ing * 100).toFixed(1);
+    const pctExc = (100 - parseFloat(pctBE)).toFixed(1);
+    const excAbs = ing - d.beIng;
+    const excPct = (excAbs / d.beIng * 100).toFixed(1);
+    const label  = (yr === '2026' || yr === '_2026tmp') ? (activeMonth2026==='feb'?'Feb 2026':'Ene 2026') : '2025';
+
+    // Title + header
+    const titleEl = document.getElementById('beTitleYear');
+    if (titleEl) titleEl.textContent = label;
+    const thReal = document.getElementById('beThReal');
+    if (thReal) thReal.textContent = `Real ${label}`;
+
+    // Bar labels
+    const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+    setEl('beValReal', `$${(ing/1e6).toFixed(1)}M`);
+    setEl('beValBE',   `$${(d.beIng/1e6).toFixed(1)}M`);
+    setEl('beValExc',  `+$${(excAbs/1e6).toFixed(1)}M (+${excPct}%)`);
+
+    // Bar widths
+    const setBar = (id, w) => { const el=document.getElementById(id); if(el) el.style.width=w+'%'; };
+    setBar('beBarReal', 100);
+    setBar('beBarBE',   pctBE);
+    setBar('beBarExc',  pctExc);
+
+    // Real values for the table (pro-rated with same % as BE)
+    const realInviu  = -Math.abs(d.beInviu / d.beIng * ing);
+    const realCom    = -Math.abs(d.beCom   / d.beIng * ing);
+    const realImp    = -Math.abs(d.beImp   / d.beIng * ing);
+    const realNeto   = d.origenCM.total;
+    const realFijos  = d.beFijos; // same costos fijos
+    const realResult = d.utilNoOp;
+
+    const tbl = document.getElementById('beTableBody');
+    if (tbl) {
+      tbl.innerHTML = `
+        <tr><td>Ing. Brutos</td>
+          <td class="yellow">$${(d.beIng/1e6).toFixed(1)}M</td>
+          <td class="cyan">$${(ing/1e6).toFixed(1)}M</td>
+          <td class="green">${fDif(excAbs)}</td></tr>
+        <tr><td class="indent">- Costo INVIU</td>
+          <td class="red">(${f(d.beInviu)})</td>
+          <td class="red">(${f(realInviu)})</td>
+          <td class="muted">—</td></tr>
+        <tr><td class="indent">- Comisiones AP</td>
+          <td class="red">(${f(d.beCom)})</td>
+          <td class="red">($${(Math.abs(d.comAP)/1e6).toFixed(1)}M)</td>
+          <td class="muted">—</td></tr>
+        <tr><td class="indent">- Impuestos</td>
+          <td class="red">(${f(d.beImp)})</td>
+          <td class="red">(${f(realImp)})</td>
+          <td class="muted">—</td></tr>
+        <tr class="subtotal"><td class="bold">Ing. Netos Op.</td>
+          <td class="bold">$${(d.beNeto/1e6).toFixed(1)}M</td>
+          <td class="cyan bold">$${(realNeto/1e6).toFixed(1)}M</td>
+          <td class="green bold">${fDif(realNeto - d.beNeto)}</td></tr>
+        <tr><td class="indent">- Costos Fijos</td>
+          <td class="red">($${(Math.abs(d.beFijos)/1e6).toFixed(1)}M)</td>
+          <td class="red">($${(Math.abs(d.beFijos)/1e6).toFixed(1)}M)</td>
+          <td class="muted">—</td></tr>
+        <tr class="total"><td class="bold">Resultado</td>
+          <td class="bold" style="color:var(--accent-g)">$0 ✓</td>
+          <td class="green bold">$${(realResult/1e6).toFixed(1)}M</td>
+          <td class="green bold">${fDif(realResult)}</td></tr>`;
+    }
+
+    // BE donut chart
+    if (window.chartBE) {
+      window.chartBE.data.datasets[0].data = [
+        Math.abs(d.beInviu), Math.abs(d.beCom), Math.abs(d.beImp),
+        Math.abs(d.beFijos), d.utilNoOp
+      ];
+      window.chartBE.update();
+    }
+  }
+
+  // ── Top APs table ──
+  const apsData = {
+    '2025': [
+      ['Lucas Ripanti',   193373268, '65%', 125692624, 29825095, '15%'],
+      ['C. Del Boca',      57683255, '57%',  32706406, 14020887, '24%'],
+      ['Luis Turletti',    73574140, '52%',  38240159, 20982821, '29%'],
+      ['Jorge Vetrano',    56048625, '52%',  29131273, 18041849, '32%'],
+      ['Carlos Checchi',   47644095, '50%',  23822047, 14448066, '30%'],
+      ['Javier Milanesio', 36438951, '52%',  18939145, 10330444, '28%'],
+      ['Patricio Garlot',  32552561, '40%',  13021025, 13622289, '42%'],
+      ['Horacio Marin',    24952461, '67%',  16718149,  3324914, '13%'],
+      ['Juan Cruz Lami',   21244319, '52%',  11041735,  6022740, '28%'],
+      ['Federico Aird',    15676273, '50%',   7838137,  4753842, '30%'],
+    ],
+    'ene': [
+      ['Lucas Ripanti',    31309918, '65%', 20351447,  4842013, '15%'],
+      ['C. Del Boca',      12540788, '57%',  7110627,  2962741, '24%'],
+      ['Luis Turletti',    12418782, '52%',  6454662,  3529668, '28%'],
+      ['Matias Novillo',    6236208, '50%',  3118104,  1913337, '31%'],
+      ['Jorge Vetrano',     4959713, '52%',  2577811,  1406093, '28%'],
+      ['Carlos Checchi',    3904000, '50%',  1952000,  1191695, '31%'],
+      ['Horacio Marin',     3652526, '67%',  2447192,   486698, '13%'],
+      ['Juan Cruz Lami',    2835724, '52%',  1473868,   803936, '28%'],
+      ['Javier Milanesio',  2110314, '52%',  1096836,   598267, '28%'],
+      ['Federico Aird',     1973462, '50%',   986731,   598463, '30%'],
+    ],
+    'feb': [
+      ['Lucas Ripanti',    21283150, '65%', 13834047,  3264316, '15%'],
+      ['Patricio Garlot',   8272380, '40%',  3308952,  3647824, '44%'],
+      ['Luis Turletti',     5013520, '52%',  2605777,  1421328, '28%'],
+      ['Matias Novillo',    3483469, '50%',  1741734,  1059593, '30%'],
+      ['Carlos Checchi',    3250625, '50%',  1625313,   985752, '30%'],
+      ['Horacio Marin',     2548098, '67%',  1707226,   339534, '13%'],
+      ['Juan Cruz Lami',    2166992, '52%',  1126294,   614341, '28%'],
+      ['C. Del Boca',       2135125, '57%',  1210616,   504422, '24%'],
+      ['Javier Milanesio',  2132133, '52%',  1108176,   604466, '28%'],
+      ['Federico Aird',     1630759, '50%',   815380,   494533, '30%'],
+    ],
+  };
+  // For _2026tmp use the active month key; acum uses ene as base
+  const apKey = (yr === '_2026tmp' || yr === '2026')
+    ? (activeMonth2026 === 'acum' ? 'ene' : (activeMonth2026 || 'ene'))
+    : yr;
+  const apTbody = document.getElementById('apsTbody');
+  if (apTbody && apsData[apKey]) {
+    apTbody.innerHTML = '';
+    apsData[apKey].forEach(([name, ing, pctCom, com, neto, pctCM], i) => {
+      const ingM = (ing/1e6).toFixed(1);
+      const comM = (com/1e6).toFixed(1);
+      const netM = (neto/1e6).toFixed(1);
+      apTbody.innerHTML += `<tr>
+        <td class="bold">${i+1}</td>
+        <td>${name}</td>
+        <td class="cyan">$${ingM}M</td>
+        <td class="muted">${pctCom}</td>
+        <td class="red">($${comM}M)</td>
+        <td class="cyan">$${netM}M</td>
+        <td><span class="badge badge-cyan">${pctCM}</span></td>
+      </tr>`;
+    });
+    const totData = d.apTotal;
+    apTbody.innerHTML += `<tr class="total">
+      <td></td><td class="bold">TOTAL</td>
+      <td class="bold cyan">$${(totData.ing/1e6).toFixed(1)}M</td>
+      <td class="bold muted">${Math.round(totData.pct*100)}%</td>
+      <td class="bold red">($${(totData.com/1e6).toFixed(1)}M)</td>
+      <td class="bold cyan">$${(totData.neto/1e6).toFixed(1)}M</td>
+      <td><span class="badge badge-g">${Math.round(totData.cm*100)}%</span></td>
+    </tr>`;
+  }
+
+  // ── AUM ──
+  const aumD = d.aum_data;
+  const aumEls = {
+    total:   document.querySelector('.kpi-card:nth-child(7) .kpi-value'),
+    cuentas: document.querySelector('.kpi-card:nth-child(8) .kpi-value'),
+  };
+  // Already handled above via kpiMap
+
+  // ── CM Table por Origen ──
+  const cmTbl = document.getElementById('cmTableBody');
+  if (cmTbl) {
+    const c = d.origenCM;
+    const fmtCMv = v => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : `$${(v/1e3).toFixed(0)}k`;
+    const pct = (v, t) => `${(v/t*100).toFixed(1)}%`;
+
+    const dmPct  = pct(c.dracma.tot, c.dracma.tot);   // s/propio
+    const dmCMpct = pct(c.dracma.tot, d.origenIng.dracma.tot);
+    const dePct  = pct(c.dracma.ext, d.origenIng.dracma.ext);
+    const diPct  = pct(c.dracma.int, d.origenIng.dracma.int);
+    const nvCMpct = pct(c.novillo.tot, d.origenIng.novillo.tot);
+    const nvePct = pct(c.novillo.ext, d.origenIng.novillo.ext);
+    const nviPct = pct(c.novillo.int, d.origenIng.novillo.int);
+    const idCMpct = pct(c.idesk.tot, d.origenIng.idesk.tot);
+    const totCMpct = pct(c.total, d.origenIng.total);
+
+    cmTbl.innerHTML = `
+      <tr class="subtotal">
+        <td class="bold">DRACMA</td>
+        <td>${fmtCMv(d.origenIng.dracma.tot)}</td>
+        <td>${fmtCMv(c.dracma.tot)}</td>
+        <td><span class="badge badge-cyan">${dmCMpct}</span></td>
+      </tr>
+      <tr><td class="indent">Externo</td><td>${fmtCMv(d.origenIng.dracma.ext)}</td><td>${fmtCMv(c.dracma.ext)}</td><td class="muted">${dePct}</td></tr>
+      <tr><td class="indent">Interno</td><td>${fmtCMv(d.origenIng.dracma.int)}</td><td>${fmtCMv(c.dracma.int)}</td><td class="cyan">${diPct}</td></tr>
+      <tr class="subtotal">
+        <td class="bold">NOVILLO</td>
+        <td>${fmtCMv(d.origenIng.novillo.tot)}</td>
+        <td>${fmtCMv(c.novillo.tot)}</td>
+        <td><span class="badge badge-g">${nvCMpct}</span></td>
+      </tr>
+      <tr><td class="indent">Externo</td><td>${fmtCMv(d.origenIng.novillo.ext)}</td><td>${fmtCMv(c.novillo.ext)}</td><td class="muted">${nvePct}</td></tr>
+      <tr><td class="indent">Interno</td><td>${fmtCMv(d.origenIng.novillo.int)}</td><td>${fmtCMv(c.novillo.int)}</td><td class="green">${nviPct}</td></tr>
+      <tr class="subtotal">
+        <td class="bold">IDESK</td>
+        <td>${fmtCMv(d.origenIng.idesk.tot)}</td>
+        <td>${fmtCMv(c.idesk.tot)}</td>
+        <td><span class="badge badge-cyan">${idCMpct}</span></td>
+      </tr>
+      <tr class="total">
+        <td class="bold">TOTAL</td>
+        <td class="bold">${fmtCMv(d.origenIng.total)}</td>
+        <td class="bold cyan">${fmtCMv(c.total)}</td>
+        <td><span class="badge badge-g">${totCMpct}</span></td>
+      </tr>`;
+  }
+
+  // ── Ingresos tag line ──
+  document.querySelectorAll('.tag-period').forEach(el => { el.textContent = `Período: ${d.periodo}`; });
+
+  // ── Global total for tooltips ──
+  window._currentIngTotal = d.origenIng.total;
+
+  // ── 03 · Origin cards ──
+  renderOriginCards(d);
+
+  // ── 03 · Origen charts ──
+  if (window.chartOrigen) {
+    const oi = d.origenIng;
+    window.chartOrigen.data.datasets[0].data = [oi.dracma.tot, oi.idesk.tot, oi.novillo.tot];
+    window.chartOrigen.update();
+  }
+  if (window.chartOrigenCM) {
+    const oi = d.origenIng; const cmO = d.origenCM;
+    window.chartOrigenCM.data.datasets[0].data = [oi.dracma.tot, oi.idesk.tot, oi.novillo.tot];
+    window.chartOrigenCM.data.datasets[1].data = [cmO.dracma.tot, cmO.idesk.tot, cmO.novillo.tot];
+    window.chartOrigenCM.update();
+  }
+
+  // ── 04 · Productos chart + table ──
+  const fmtMp = v => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : (v > 0 ? `$${(v/1e3).toFixed(0)}k` : '—');
+  const prodSrc = d.productos || {
+    PPT:   {dracma:499086827,idesk:21805188,novillo:308614095,total:829506111},
+    SENEBI:{dracma:96443561, idesk:47144062,novillo:36342769, total:179930391},
+    FEE:   {dracma:98910111, idesk:0,       novillo:2332724,  total:101242835},
+    PYME:  {dracma:48159989, idesk:0,       novillo:23610541, total:71770530},
+    FCI:   {dracma:50152662, idesk:2992285, novillo:7902521,  total:61047468},
+    OFF:   {dracma:1662849,  idesk:977263,  novillo:26387928, total:29028040},
+  };
+  const ingTotal = d.origenIng.total;
+  if (window.chartProducto) {
+    window.chartProducto.data.datasets[0].data = [
+      prodSrc.PPT.total,prodSrc.SENEBI.total,prodSrc.FEE.total,
+      prodSrc.PYME.total,prodSrc.FCI.total,prodSrc.OFF.total
+    ];
+    window.chartProducto.update();
+  }
+  const prodTbl = document.getElementById('prodTableBody');
+  if (prodTbl) {
+    const rows = [['FCI',prodSrc.FCI],['FEE',prodSrc.FEE],['OFF',prodSrc.OFF],
+                  ['PPT',prodSrc.PPT],['PYME',prodSrc.PYME],['SENEBI',prodSrc.SENEBI]];
+    prodTbl.innerHTML = rows.map(([name, r]) => {
+      const isPPT = name==='PPT';
+      const pctStr = `${(r.total/ingTotal*100).toFixed(1)}%`;
+      return `<tr class="${isPPT?'subtotal':''}">
+        <td${isPPT?' class="bold"':''}>${name}</td>
+        <td>${fmtMp(r.dracma)}</td><td>${fmtMp(r.idesk)}</td><td>${fmtMp(r.novillo)}</td>
+        <td class="${isPPT?'bold cyan':'cyan'}">${fmtMp(r.total)}</td>
+        <td>${isPPT?`<span class="badge badge-cyan">${pctStr}</span>`:`<span class="muted">${pctStr}</span>`}</td></tr>`;
+    }).join('') + `<tr class="total"><td class="bold">TOTAL</td>
+      <td class="bold">${fmtMp(d.origenIng.dracma.tot)}</td>
+      <td class="bold">${fmtMp(d.origenIng.idesk.tot)}</td>
+      <td class="bold">${fmtMp(d.origenIng.novillo.tot)}</td>
+      <td class="bold cyan">${fmtMp(ingTotal)}</td>
+      <td class="bold muted">100%</td></tr>`;
+  }
+
+  // ── 05 · APs bar chart ──
+  if (window.chartAPs) {
+    const apsChart = {
+      '2025': { names:['F. Aird','J.C. Lami','H. Marin','P. Garlot','J. Milanesio','C. Checchi','J. Vetrano','C. Del Boca','L. Turletti','L. Ripanti'], values:[15676273,21244319,24952461,32552561,36438951,47644095,56048625,57683255,73574140,193373268] },
+      'ene': { names:['F. Aird','J. Milanesio','J.C. Lami','H. Marin','C. Checchi','J. Vetrano','M. Novillo','L. Turletti','C. Del Boca','L. Ripanti'],   values:[1973462,2110314,2835724,3652526,3904000,4959713,6236208,12418782,12540788,31309918] },
+      'feb': { names:['F. Aird','J. Milanesio','C. Del Boca','J.C. Lami','H. Marin','C. Checchi','M. Novillo','L. Turletti','P. Garlot','L. Ripanti'], values:[1630759,2132133,2135125,2166992,2548098,3250625,3483469,5013520,8272380,21283150] },
+      '2026': { names:['F. Aird','J. Milanesio','J.C. Lami','H. Marin','C. Checchi','J. Vetrano','M. Novillo','L. Turletti','C. Del Boca','L. Ripanti'],   values:[1973462,2110314,2835724,3652526,3904000,4959713,6236208,12418782,12540788,31309918] },
+    };
+    const apKey = (yr === '2026' || yr === '_2026tmp')
+      ? (activeMonth2026 === 'acum' ? 'ene' : (activeMonth2026 || 'ene'))
+      : yr;
+    const ap = apsChart[apKey] || apsChart['ene'] || apsChart['2025'];
+    window.chartAPs.data.labels = ap.names;
+    window.chartAPs.data.datasets[0].data = ap.values;
+    window.chartAPs.data.datasets[0].backgroundColor = ap.values.map((_,i)=> i===ap.values.length-1 ? cyan : 'rgba(0,176,216,0.55)');
+    window.chartAPs.update();
+  }
+
+  // ── 08 · AUM ──
+  const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  const aumC = d.aumCompare;
+  if (aumC) {
+    const p=aumC.prev, c=aumC.curr;
+    setEl('aum-prev-label', p.label); setEl('aum-prev-cttes', p.cttes.toLocaleString('es-AR'));
+    setEl('aum-curr-label-cttes', c.label); setEl('aum-curr-cttes', c.cttes.toLocaleString('es-AR'));
+    const cttesSubEl=document.getElementById('aum-curr-cttes-sub'); if(cttesSubEl) cttesSubEl.textContent=`${c.pf.toLocaleString('es-AR')} PF · ${c.pj} PJ`;
+    const pctCttes=((c.cttes/p.cttes-1)*100).toFixed(1);
+    setEl('aum-pct-cttes',(pctCttes>=0?'+':'')+pctCttes+'%');
+    const pctCttesEl=document.getElementById('aum-pct-cttes'); if(pctCttesEl) pctCttesEl.style.color=pctCttes>=0?'var(--accent-g)':'var(--accent-r)';
+    setEl('aum-prev-label-usd',p.label); setEl('aum-prev-usd',`$${(p.aum/1e6).toFixed(2)}M`);
+    setEl('aum-curr-label-usd',c.label); setEl('aum-curr-usd',`$${(c.aum/1e6).toFixed(2)}M`);
+    const pctAUM=((c.aum/p.aum-1)*100).toFixed(1);
+    setEl('aum-pct-usd',(pctAUM>=0?'+':'')+pctAUM+'%');
+    const pctAUMEl=document.getElementById('aum-pct-usd'); if(pctAUMEl) pctAUMEl.style.color=pctAUM>=0?'var(--accent-g)':'var(--accent-r)';
+    // ROA meters — with subgroups
+    setEl('roaLabel', c.label.toLowerCase());
+    const roa = c.roa;
+    const maxROA = roa.dracma || 1;
+    const roaFmt = v => v != null ? v.toFixed(2)+'%' : 'n/d';
+    const roaW   = v => v != null ? (v/maxROA*100).toFixed(0)+'%' : '0%';
+    setEl('roa-dracma',      roaFmt(roa.dracma));
+    setEl('roa-idesk',       roaFmt(roa.idesk));
+    setEl('roa-novillo',     roaFmt(roa.novillo));
+    setEl('roa-total',       roaFmt(roa.total));
+    setEl('roa-dracma-ext',  roaFmt(c.dracma.roa_ext));
+    setEl('roa-dracma-int',  roaFmt(c.dracma.roa_int));
+    setEl('roa-novillo-ext', roaFmt(c.novillo.roa_ext));
+    setEl('roa-novillo-int', roaFmt(c.novillo.roa_int));
+    // Bar widths
+    const sB = (id, w) => { const el=document.getElementById(id); if(el) el.style.width=w; };
+    sB('roa-bar-dracma',     roaW(roa.dracma));
+    sB('roa-bar-idesk',      roaW(roa.idesk));
+    sB('roa-bar-novillo',    roaW(roa.novillo));
+    sB('roa-bar-total',      roaW(roa.total));
+    sB('roa-bar-dracma-ext', roaW(c.dracma.roa_ext));
+    sB('roa-bar-dracma-int', roaW(c.dracma.roa_int));
+    sB('roa-bar-novillo-ext',roaW(c.novillo.roa_ext));
+    sB('roa-bar-novillo-int',roaW(c.novillo.roa_int));
+    // Style novillo bars as muted when low ROA
+    ['roa-bar-novillo','roa-bar-novillo-ext','roa-bar-novillo-int'].forEach(id => {
+      const el=document.getElementById(id); if(el) el.style.background='var(--muted)';
+    });
+
+    // AUM table — with subgroups
+    setEl('aumTh1',`Q Cttes ${p.label.toLowerCase()}`); setEl('aumTh2',`AUM ${p.label.toLowerCase()} USD`);
+    setEl('aumTh3',`Q Cttes ${c.label.toLowerCase()}`); setEl('aumTh4',`AUM ${c.label.toLowerCase()} USD`);
+    const aumTbl = document.getElementById('aumTableBody');
+    if (aumTbl) {
+      const fA = v => v >= 1e6 ? `$${(v/1e6).toFixed(1)}M` : `$${(v/1e3).toFixed(0)}k`;
+      const pctTd = (a, b) => {
+        if (!a || !b) return '<td class="muted">—</td>';
+        const pc = ((b/a-1)*100);
+        const abs = Math.abs(pc);
+        const str = abs >= 1000 ? `+${(abs/100).toFixed(0)}x` : `${pc>=0?'+':''}${pc.toFixed(0)}%`;
+        return `<td class="${pc>=0?'green':'red'}">${str}</td>`;
+      };
+      const roaTd = v => v != null ? `<td>${v.toFixed(2)}%</td>` : '<td class="muted">n/d</td>';
+      aumTbl.innerHTML = `
+        <tr class="subtotal">
+          <td class="bold">DRACMA</td>
+          <td>${p.dracma.cttes}</td><td class="muted">${fA(p.dracma.aum)}</td>
+          <td>${c.dracma.cttes}</td><td class="cyan">${fA(c.dracma.aum)}</td>
+          ${pctTd(p.dracma.cttes,c.dracma.cttes)}${pctTd(p.dracma.aum,c.dracma.aum)}
+          ${roaTd(c.dracma.roa)}</tr>
+        <tr>
+          <td class="indent">Externo</td>
+          <td>${p.dracma.ext_c}</td><td class="muted">${fA(p.dracma.ext_a)}</td>
+          <td>${c.dracma.ext_c}</td><td>${fA(c.dracma.ext_a)}</td>
+          ${pctTd(p.dracma.ext_c,c.dracma.ext_c)}${pctTd(p.dracma.ext_a,c.dracma.ext_a)}
+          ${roaTd(c.dracma.roa_ext)}</tr>
+        <tr>
+          <td class="indent">Interno</td>
+          <td>${p.dracma.int_c}</td><td class="muted">${fA(p.dracma.int_a)}</td>
+          <td>${c.dracma.int_c}</td><td>${fA(c.dracma.int_a)}</td>
+          ${pctTd(p.dracma.int_c,c.dracma.int_c)}${pctTd(p.dracma.int_a,c.dracma.int_a)}
+          ${roaTd(c.dracma.roa_int)}</tr>
+        <tr class="subtotal">
+          <td class="bold">IDESK</td>
+          <td>${p.idesk.cttes}</td><td>${fA(p.idesk.aum)}</td>
+          <td>${c.idesk.cttes}</td><td class="cyan">${fA(c.idesk.aum)}</td>
+          ${pctTd(p.idesk.cttes,c.idesk.cttes)}${pctTd(p.idesk.aum,c.idesk.aum)}
+          ${roaTd(c.idesk.roa)}</tr>
+        <tr class="subtotal">
+          <td class="bold">NOVILLO</td>
+          <td>${p.novillo.cttes}</td><td>${fA(p.novillo.aum)}</td>
+          <td>${c.novillo.cttes}</td><td class="cyan">${fA(c.novillo.aum)}</td>
+          ${pctTd(p.novillo.cttes,c.novillo.cttes)}${pctTd(p.novillo.aum,c.novillo.aum)}
+          ${roaTd(c.novillo.roa)}</tr>
+        <tr>
+          <td class="indent">Externo</td>
+          <td>${p.novillo.ext_c}</td><td>${fA(p.novillo.ext_a)}</td>
+          <td>${c.novillo.ext_c}</td><td>${fA(c.novillo.ext_a)}</td>
+          ${pctTd(p.novillo.ext_c,c.novillo.ext_c)}${pctTd(p.novillo.ext_a,c.novillo.ext_a)}
+          ${roaTd(c.novillo.roa_ext)}</tr>
+        <tr>
+          <td class="indent">Interno</td>
+          <td>${p.novillo.int_c}</td><td>${fA(p.novillo.int_a)}</td>
+          <td>${c.novillo.int_c}</td><td>${fA(c.novillo.int_a)}</td>
+          ${pctTd(p.novillo.int_c,c.novillo.int_c)}${pctTd(p.novillo.int_a,c.novillo.int_a)}
+          ${roaTd(c.novillo.roa_int)}</tr>
+        <tr class="total">
+          <td class="bold">TOTAL</td>
+          <td class="bold">${p.cttes.toLocaleString('es-AR')}</td><td class="bold">${fA(p.aum)}</td>
+          <td class="bold">${c.cttes.toLocaleString('es-AR')}</td><td class="green bold">${fA(c.aum)}</td>
+          ${pctTd(p.cttes,c.cttes)}${pctTd(p.aum,c.aum)}
+          <td class="cyan">${c.roa.total.toFixed(2)}%</td></tr>`;
+    }
+  }
+
+  // ── 06b · 06c · 09 — hide/show based on data availability ──
+  const hideSections = yr === '2026' || yr === '_2026tmp';
+  ['overhead','retiro','rrhh'].forEach(id => {
+    const sec = document.getElementById(id);
+    if (sec) sec.style.display = hideSections ? 'none' : '';
+  });
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    const t = btn.textContent;
+    if (t.includes('Overhead') || t.includes('Retiro') || t.includes('RRHH')) {
+      btn.style.display = hideSections ? 'none' : '';
+    }
+  });
+
+  // ── BE donut chart ──
+  if (window.chartBE && d.beInviu) {
+    const beInvAbs = Math.abs(d.beInviu), beComAbs = Math.abs(d.beCom), beImpAbs = Math.abs(d.beImp);
+    const beFixAbs = Math.abs(d.beFijos) - (d.beIng * 0); // costos fijos
+    window.chartBE.data.datasets[0].data = [beInvAbs, beComAbs, beImpAbs, Math.abs(d.beFijos), d.utilNoOp];
+    window.chartBE.update();
+  }
+
+  console.log(`Dataset ${yr} applied ✓`);
+}
+
+function selectYear(year) {
+  activeYear = year;
+  const overlay = document.getElementById('zeroOverlay');
+
+  // Reset all buttons
+  ['2025','2026','Acum'].forEach(y => {
+    const btn = document.getElementById(`yearBtn${y}`);
+    if (btn) btn.className = 'year-btn';
+  });
+
+  if (year === '2025') {
+    document.getElementById('yearBtn2025').className = 'year-btn active-2025';
+    overlay.classList.remove('show');
+    applyDataset('2025');
+    if (isUSD) { isUSD = false; toggleCurrency(); }
+    updateMonthNav();
+
+  } else if (year === '2026') {
+    document.getElementById('yearBtn2026').className = 'year-btn active-2026';
+    overlay.classList.remove('show');
+    updateMonthNav();
+    // Apply the currently selected month
+    const dataset = build2026Dataset(activeMonth2026);
+    if (dataset) applyDataset2026(dataset, activeMonth2026);
+    if (isUSD) { isUSD = false; toggleCurrency(); }
+    document.querySelector('#yearBtn2026 .year-tag').textContent = D['2026'].tag;
+
+  } else if (year === 'acum') {
+    document.getElementById('yearBtnAcum').className = 'year-btn active-acum';
+    // Acumulado still pending
+    const title = document.getElementById('zeroTitle');
+    const sub   = document.getElementById('zeroSub');
+    const badge = document.getElementById('zeroBadge');
+    if (title) title.textContent = 'Vista Acumulada';
+    if (sub)   sub.innerHTML = 'La vista acumulada (2025 + 2026) estará disponible<br>a medida que se incorporen más meses de 2026.';
+    if (badge) { badge.textContent = '← Volver a 2025'; badge.className = 'zero-overlay-badge y'; badge.onclick = () => selectYear('2025'); }
+    overlay.classList.add('show');
+  }
+}
+
+// Save 2025 plData rows reference after renderPL init
+setTimeout(() => {
+  if (plData) plData._rows2025 = plData.rows.map(r => ({...r}));
+  renderOriginCards(D['2025']);
+  init2026MonthRefs();   // wire D2026_MONTHS['ene'] → D['2026']
+}, 200);
+
+
 // ── CHART OVERHEAD: Donut ──
 new Chart(document.getElementById('chartOverhead'), {
   type: 'doughnut',
@@ -2261,7 +3746,39 @@ const MEP_MONTHLY = {
   'oct-25': 1473.95,
   'nov-25': 1471.00,
   'dic-25': 1485.25,
+  'ene-26': 1477.74, // MEP promedio enero 2026
+  'feb-26': 1429.50, // MEP promedio febrero 2026
 };
+
+// MEP promedio por año/período
+const MEP_BY_YEAR = {
+  '2025': 1322.93,  // promedio abr–dic 2025
+  '2026': 1477.74,  // promedio enero 2026 (default)
+  '2026_feb': 1429.50, // promedio febrero 2026
+};
+
+// Helper: get current rate based on active year
+function currentMEP() {
+  if (activeYear === '2026') {
+    const monthKey = activeMonth2026 || 'ene';
+    return MEP_MONTHLY[monthKey + '-26'] || MEP_BY_YEAR['2026'] || MEP_RATE;
+  }
+  return MEP_BY_YEAR[activeYear] || MEP_RATE;
+}
+
+// Helper: get current dataset values
+function currentArsValues() {
+  const d = D[activeYear];
+  if (!d) return {};
+  return {
+    ingBrutos:    d.ingBrutos,
+    cm:           d.cm,
+    utilNoOp:     d.utilNoOp,
+    ingNetos:     d.ingNetos,
+    be:           d.be,
+    comAP:        d.comAP,
+  };
+}
 
 // All ARS values keyed by data-ars attribute (in ARS, full units)
 const ARS_VALUES = {
@@ -2306,11 +3823,17 @@ function toggleCurrency() {
   const badge  = document.getElementById('fxBadge');
   const banner = document.getElementById('fxBanner');
 
+  const rate = currentMEP();
+  const rateLabel = rate.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
   if (isUSD) {
     btn.classList.add('usd-mode');
     lbl.textContent  = 'ARS';
     badge.textContent = 'USD';
     banner.classList.add('show');
+    // Update banner text with correct TC
+    const bannerSpans = banner.querySelectorAll('span');
+    if (bannerSpans[1]) bannerSpans[1].innerHTML = `Valores convertidos a <strong>USD</strong> · Tipo de cambio: <strong>Dólar MEP promedio ${activeYear==='2026'?'Enero 2026':'Abr–Dic 2025'}</strong> = <strong>$${rateLabel} ARS/USD</strong>`;
   } else {
     btn.classList.remove('usd-mode');
     lbl.textContent  = 'USD MEP';
@@ -2318,16 +3841,21 @@ function toggleCurrency() {
     banner.classList.remove('show');
   }
 
-  // ── KPI CARDS ──
-  const kpiMap = [
-    // [kpi-value selector, ars value, suffix, extra-note]
-    ['.kpi-card:nth-child(1) .kpi-value', 1272525375, null, 'Abr–Dic 2025'],
-    ['.kpi-card:nth-child(2) .kpi-value', 388633098,  null, 'CM / Ing. Brutos = 30,5%'],
-    ['.kpi-card:nth-child(3) .kpi-value', 117885329,  null, 'Resultado neto consolidado'],
-    ['.kpi-card:nth-child(4) .kpi-value', 986040508,  null, 'Después INVIU y Cuota PTO'],
-    ['.kpi-card:nth-child(5) .kpi-value', 969681370,  null, 'Superado en +31%'],
-    ['.kpi-card:nth-child(6) .kpi-value', 527742518,  null, '47% promedio sobre ingresos'],
+  // ── KPI CARDS — use active dataset values ──
+  const ars = currentArsValues();
+  const d   = D[activeYear];
+  if (!d) return;
+
+  const kpiARS = [
+    d.ingBrutos,
+    d.cm,
+    d.utilNoOp,
+    d.ingNetos,
+    d.be,
+    d.comAP,
   ];
+  const kpiARSLabels = kpiARS.map(v => (Math.abs(v)/1e6).toFixed(1).replace('.',','));
+  const usdNote = `USD · TC MEP $${Math.round(rate).toLocaleString('es-AR')}`;
 
   const kpiSubs = [
     '.kpi-card:nth-child(1) .kpi-sub',
@@ -2337,107 +3865,97 @@ function toggleCurrency() {
     '.kpi-card:nth-child(5) .kpi-sub',
     '.kpi-card:nth-child(6) .kpi-sub',
   ];
-
   const arsTexts = [
-    'ARS acumulado abr–dic 2025',
-    'CM / Ingresos Brutos = 30,5%',
+    `${d.periodo}`,
+    `CM / Ingresos Brutos = ${d.cmPct}`,
     'Resultado neto consolidado',
     'Después INVIU y Cuota PTO',
-    'Superado en ARS +302,8M',
-    '47% promedio sobre ingresos',
-  ];
-  const usdTexts = [
-    `USD · TC MEP prom. $1.322,93`,
-    `USD · TC MEP prom. $1.322,93`,
-    `USD · TC MEP prom. $1.322,93`,
-    `USD · TC MEP prom. $1.322,93`,
-    `USD Break-even · TC $1.322,93`,
-    `USD · TC MEP prom. $1.322,93`,
+    `Superado en ${d.bePct}`,
+    `${d.comAPPct} s/ingresos`,
   ];
 
-  kpiMap.forEach(([sel, ars], i) => {
-    const el = document.querySelector(sel);
+  kpiARS.forEach((arsVal, i) => {
+    const sel = `.kpi-card:nth-child(${i+1}) .kpi-value`;
+    const el  = document.querySelector(sel);
     if (!el) return;
     animateEl(el);
     if (isUSD) {
-      const usd = arsToUSD(ars, MEP_RATE);
-      el.innerHTML = fmtUSD(usd).replace('USD ','<span class="prefix">USD </span>').replace('M','<span class="suffix">M</span>');
+      const usd = arsToUSD(arsVal, rate);
+      const usdStr = usd >= 1e6 ? (usd/1e6).toFixed(1) : (usd/1e3).toFixed(0);
+      const sfx    = usd >= 1e6 ? 'M' : 'K';
+      el.innerHTML = `<span class="prefix">USD </span>${usdStr}<span class="suffix">${sfx}</span>`;
     } else {
-      // Restore original ARS markup
-      const arsLabels = ['1.272,5','410,6','77,9','986,0','1.031,1','519,4'];
-      const suffixes  = ['M ARS','M ARS','M ARS','M ARS','M ARS','M ARS'];
-      el.innerHTML = `<span class="prefix">$</span>${arsLabels[i]}<span class="suffix">${suffixes[i]}</span>`;
+      el.innerHTML = `<span class="prefix">$</span>${kpiARSLabels[i]}<span class="suffix">M ARS</span>`;
     }
-    // Update sub
     const sub = document.querySelector(kpiSubs[i]);
-    if (sub) sub.textContent = isUSD ? usdTexts[i] : arsTexts[i];
+    if (sub) sub.textContent = isUSD ? usdNote : arsTexts[i];
   });
 
-  // ── PROJECTED METRICS ──
-  const projEls = document.querySelectorAll('#analisis .kpi-grid > div');
-  const projARS  = [1696700000, 157200000, null, null]; // null = non-monetary
-  const projFmts = ['$1.696,7M ARS','$157,2M ARS','+108 CTAS','+$2,7M USD'];
+  // ── PROJECTED METRICS — only for 2025 ──
+  if (activeYear === '2025') {
+    const projEls = document.querySelectorAll('#analisis .kpi-grid > div');
+    const projARS  = [1696700000, 157200000, null, null];
+    projEls.forEach((el, i) => {
+      const valEl = el.querySelector('div:nth-child(2)');
+      if (!valEl) return;
+      animateEl(valEl);
+      if (isUSD && projARS[i] !== null) {
+        const usd = arsToUSD(projARS[i], rate);
+        valEl.innerHTML = `<span style="font-size:.68em;opacity:.7">USD </span>${(usd/1e6).toFixed(1)}<span style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:.48em;letter-spacing:.06em;opacity:.6;vertical-align:middle;margin-left:3px">M</span>`;
+      } else if (!isUSD) {
+        const originals = [
+          `<span style="font-size:.68em; opacity:.7">$</span>1.696,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>`,
+          `<span style="font-size:.68em; opacity:.7">$</span>157,2<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>`,
+          `+108<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.38em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:4px">CTAS</span>`,
+          `+<span style="font-size:.68em; opacity:.7">$</span>2,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M USD</span>`,
+        ];
+        valEl.innerHTML = originals[i];
+      }
+    });
+  }
 
-  projEls.forEach((el, i) => {
-    const valEl = el.querySelector('div:nth-child(2)');
-    if (!valEl) return;
-    animateEl(valEl);
-    if (isUSD && projARS[i] !== null) {
-      const usd = arsToUSD(projARS[i], MEP_RATE);
-      valEl.innerHTML = `<span style="font-size:.68em;opacity:.7">USD </span>${(usd/1e6).toFixed(1)}<span style="font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:.48em;letter-spacing:.06em;opacity:.6;vertical-align:middle;margin-left:3px">M</span>`;
-    } else if (!isUSD) {
-      const originals = [
-        `<span style="font-size:.68em; opacity:.7">$</span>1.696,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>`,
-        `<span style="font-size:.68em; opacity:.7">$</span>157,2<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M ARS</span>`,
-        `+108<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.38em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:4px">CTAS</span>`,
-        `+<span style="font-size:.68em; opacity:.7">$</span>2,7<span style="font-family:'Barlow Condensed',sans-serif; font-weight:500; font-size:.48em; letter-spacing:.06em; opacity:.6; vertical-align:middle; margin-left:3px">M USD</span>`,
-      ];
-      valEl.innerHTML = originals[i];
-    }
-  });
-
-  // ── MONTHLY TABLE ── (rebuild)
+  // ── MONTHLY TABLE — rebuild with correct rates per year ──
   const tbMensual = document.getElementById('tbMensual');
-  if (tbMensual) {
+  if (tbMensual && d) {
     tbMensual.innerHTML = '';
-    const pcts = [null,-0.1461,-0.0148,0.1326,0.0932,0.7005,0.2306,-0.3864,-0.0029];
     let acum = 0;
-    months.forEach((m, i) => {
-      const rate = MEP_MONTHLY[m + '-25'] || MEP_RATE;
-      const displayVal = isUSD ? arsToUSD(revenue[i], rate) : revenue[i];
-      const displayAccum = isUSD ? (acum + arsToUSD(revenue[i], rate)) : (acum + revenue[i]);
-      acum += isUSD ? arsToUSD(revenue[i], rate) : revenue[i];
-      const fmtVal  = isUSD ? fmtUSD(displayVal)  : fmt(revenue[i]);
-      const fmtAcum = isUSD ? fmtUSD(acum)         : fmt(isUSD ? acum : (acum));
-      const p = pcts[i];
+    const suffix = activeYear === '2026' ? '-26' : '-25';
+    d.months.forEach((m, i) => {
+      const mepRate = MEP_MONTHLY[m + suffix] || rate;
+      const v = d.revenue[i];
+      const displayVal   = isUSD ? arsToUSD(v, mepRate) : v;
+      acum += displayVal;
+      const fmtVal  = isUSD ? fmtUSD(displayVal) : fmt(v);
+      const fmtAcum = isUSD ? fmtUSD(acum)        : fmt(acum);
+      const p = d.pcts[i];
       const pCell = p === null ? '<td class="muted">—</td>'
         : `<td class="${p>=0?'green':'red'}">${p>=0?'+':''}${(p*100).toFixed(2)}%</td>`;
-      const unit = isUSD ? ` <span style="font-size:.65em;color:var(--muted)">TC $${rate.toFixed(0)}</span>` : '';
+      const unit = isUSD ? ` <span style="font-size:.65em;color:var(--muted)">TC $${Math.round(mepRate).toLocaleString('es-AR')}</span>` : '';
       tbMensual.innerHTML += `<tr>
-        <td class="bold">${m}-25</td>
+        <td class="bold">${m}${suffix}</td>
         <td class="cyan">${fmtVal}${unit}</td>
         ${pCell}
         <td class="muted">${fmtAcum}</td>
       </tr>`;
     });
-    const totalFmt = isUSD ? fmtUSD(acum) : fmt(1272525375);
-    tbMensual.innerHTML += `<tr class="total"><td class="bold" colspan="2">Total Acumulado</td><td class="muted">—</td><td class="cyan bold">${totalFmt}</td></tr>`;
+    const acumTotal = isUSD
+      ? d.revenue.reduce((s,v,i) => { const r = MEP_MONTHLY[d.months[i]+suffix]||rate; return s+arsToUSD(v,r); }, 0)
+      : d.revenue.reduce((s,v) => s+v, 0);
+    tbMensual.innerHTML += `<tr class="total"><td class="bold" colspan="2">Total Acumulado</td><td class="muted">—</td><td class="cyan bold">${isUSD?fmtUSD(acumTotal):fmt(acumTotal)}</td></tr>`;
   }
 
   // ── UPDATE CHART 1 (monthly line) ──
-  if (window._chart1) {
+  if (window._chart1 && d) {
+    const suffix = activeYear === '2026' ? '-26' : '-25';
     const newData = isUSD
-      ? revenue.map((v, i) => arsToUSD(v, MEP_MONTHLY[months[i]+'-25'] || MEP_RATE))
-      : revenue;
+      ? d.revenue.map((v, i) => arsToUSD(v, MEP_MONTHLY[d.months[i]+suffix] || rate))
+      : d.revenue;
     window._chart1.data.datasets[0].data = newData;
     window._chart1.options.scales.y.ticks.callback = isUSD
       ? v => 'USD '+(v/1e6).toFixed(1)+'M'
       : v => '$'+(v/1e6).toFixed(0)+'M';
     window._chart1.update();
   }
-
-  // ── CURRENCY LABEL on all .kpi-value .suffix that say "M ARS" ──
-  // Already handled above per-card
 }
 
 </script>
