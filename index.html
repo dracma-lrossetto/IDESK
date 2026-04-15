@@ -671,6 +671,7 @@
   .year-btn.active-2025 { color: var(--cyan); border-bottom-color: var(--cyan); background: rgba(0,176,216,0.05); }
   .year-btn.active-2026 { color: var(--accent-g); border-bottom-color: var(--accent-g); background: rgba(0,200,150,0.05); }
   .year-btn.active-acum { color: var(--accent-y); border-bottom-color: var(--accent-y); background: rgba(255,209,102,0.05); }
+  .year-btn.active-proj { color: #E879F9; border-bottom-color: #E879F9; background: rgba(232,121,249,0.05); }
   .year-btn .year-tag {
     font-family: 'DM Mono', monospace; font-size: 0.6rem;
     padding: 2px 7px; border-radius: 2px; letter-spacing: 0.08em;
@@ -678,6 +679,7 @@
   .year-btn.active-2025 .year-tag { background: rgba(0,176,216,0.15); color: var(--cyan); }
   .year-btn.active-2026 .year-tag { background: rgba(0,200,150,0.15); color: var(--accent-g); }
   .year-btn.active-acum .year-tag { background: rgba(255,209,102,0.15); color: var(--accent-y); }
+  .year-btn.active-proj .year-tag { background: rgba(232,121,249,0.15); color: #E879F9; }
   .year-btn:not([class*="active"]) .year-tag { background: rgba(122,155,181,0.1); color: var(--muted); }
 
   /* ── ZERO OVERLAY ── */
@@ -786,6 +788,9 @@
     <button class="year-btn" id="yearBtnAcum" onclick="selectYear('acum')">
       ACUMULADO <span class="year-tag">2025 + 2026</span>
     </button>
+    <button class="year-btn" id="yearBtnProj" onclick="selectYear('proyeccion')">
+      PROYECCIÓN <span class="year-tag">NOVILLO · 12M</span>
+    </button>
   </div>
 </div>
 
@@ -846,6 +851,9 @@
     ← Volver a 2025
   </button>
 </div>
+
+<!-- MAIN DASHBOARD CONTENT (2025 / 2026 / ACUM views) -->
+<div id="mainDashboard">
 
 <!-- FX RATE BANNER -->
 <div class="fx-banner" id="fxBanner">
@@ -1646,7 +1654,7 @@
           <div class="compare-col" id="aum-col-prev-cttes">
             <div class="compare-col-year" id="aum-prev-label">OCT 2024</div>
             <div class="compare-col-val" id="aum-prev-cttes" style="color:var(--muted)">936</div>
-            <div class="compare-col-sub">838 PF · 98 PJ</div>
+            <div class="compare-col-sub" id="aum-prev-cttes-sub">838 PF · 98 PJ</div>
           </div>
           <div class="compare-arrow">→</div>
           <div class="compare-col" id="aum-col-curr-cttes">
@@ -1663,13 +1671,13 @@
           <div class="compare-col" id="aum-col-prev-usd">
             <div class="compare-col-year" id="aum-prev-label-usd">OCT 2024</div>
             <div class="compare-col-val" id="aum-prev-usd" style="color:var(--muted)">$45,98M</div>
-            <div class="compare-col-sub">756 c/AUM</div>
+            <div class="compare-col-sub" id="aum-prev-usd-sub">756 c/AUM</div>
           </div>
           <div class="compare-arrow">→</div>
           <div class="compare-col" id="aum-col-curr-usd">
             <div class="compare-col-year" id="aum-curr-label-usd">DIC 2025</div>
             <div class="compare-col-val" id="aum-curr-usd" style="color:var(--accent-g)">$84,13M</div>
-            <div class="compare-col-sub">1.983 c/AUM</div>
+            <div class="compare-col-sub" id="aum-curr-usd-sub">1.983 c/AUM</div>
           </div>
         </div>
         <div id="aum-pct-usd" style="text-align:center; font-family:'DM Mono',monospace; font-size:1.2rem; color:var(--accent-g)">+83%</div>
@@ -1764,7 +1772,7 @@
         <div class="section-label">09</div>
         <h2 class="section-title">Recursos Humanos</h2>
       </div>
-      <div class="tag-period">6 empleados · Abr–Dic 2025</div>
+      <div class="tag-period">7 empleados · Abr–Dic 2025</div>
     </div>
 
     <div class="kpi-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom: 24px">
@@ -1811,7 +1819,7 @@
               <tr><td style="font-size:.78rem">Sanchez Gavier, M.</td><td class="cyan">$17,6M</td><td class="muted">8%</td><td>$1,95M</td></tr>
               <tr><td style="font-size:.78rem">Bazan, M.C.</td><td class="cyan">$7,2M</td><td class="muted">3%</td><td>$800k</td></tr>
               <tr class="total">
-                <td class="bold">TOTAL</td><td class="bold">—</td><td class="bold">$222,7M</td><td class="bold muted">—</td><td class="bold muted">—</td><td class="bold muted">—</td><td class="bold cyan">$24,75M</td>
+                <td class="bold">TOTAL</td><td class="bold cyan">$222,7M</td><td class="bold muted">100%</td><td class="bold cyan">$24,75M</td>
               </tr>
             </tbody>
           </table>
@@ -1973,6 +1981,465 @@
 <!-- ══════════════════════════════════════════════
      09 · RECURSOS HUMANOS
 ══════════════════════════════════════════════ -->
+
+</div><!-- /mainDashboard -->
+
+<!-- PROYECCION VIEW (separate from main dashboard, toggled via year selector) -->
+<div id="projView" style="display:none">
+<!-- ══════════════════════════════════════════════
+     11 · PROYECCIÓN COMISIONES NOVILLO
+══════════════════════════════════════════════ -->
+<section id="proyeccion">
+  <div class="wrap">
+    <div class="section-header">
+      <div>
+        <div class="section-label">11</div>
+        <h2 class="section-title">Proyección Comisiones NOVILLO</h2>
+      </div>
+      <div class="tag-period">Abr 2025 – Mar 2026 · 12 meses · Simulador interactivo</div>
+    </div>
+
+    <!-- ASSUMPTIONS -->
+    <div class="card" style="margin-bottom:20px; animation-delay:.05s">
+      <div class="card-title" style="justify-content:space-between">
+        <div style="display:flex; align-items:center; gap:10px">
+          <span class="dot y"></span>Supuestos de Comisión
+        </div>
+        <button id="projResetBtn" onclick="projReset()"
+          style="padding:5px 14px; background:rgba(255,75,110,0.1); border:1px solid var(--accent-r);
+                 border-radius:4px; cursor:pointer; font-family:'DM Mono',monospace; font-size:0.68rem;
+                 letter-spacing:0.06em; color:var(--accent-r); transition:all 0.2s">
+          ↺ RESET
+        </button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px">
+        <div style="padding:16px; background:rgba(0,176,216,0.06); border:1px solid var(--border); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:8px; text-transform:uppercase">COM. NOVILLO INTERNO</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px">
+            <input id="projPctInt" type="number" min="0" max="100" step="1" value="60"
+              oninput="projRecalc()"
+              style="width:72px; padding:8px 10px; background:rgba(10,22,40,0.9); border:1px solid var(--cyan);
+                     border-radius:4px; color:var(--cyan); font-family:'Bebas Neue',sans-serif; font-size:1.6rem;
+                     text-align:center; letter-spacing:.04em; outline:none">
+            <span style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:var(--cyan); opacity:.7">%</span>
+          </div>
+          <div style="font-size:.68rem; color:var(--muted); margin-top:6px">Default: 60%</div>
+        </div>
+        <div style="padding:16px; background:rgba(0,200,150,0.06); border:1px solid rgba(0,200,150,0.2); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:8px; text-transform:uppercase">COM. NOVILLO EXTERNO</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px">
+            <input id="projPctExt" type="number" min="0" max="100" step="0.5" value="5"
+              oninput="projRecalc()"
+              style="width:72px; padding:8px 10px; background:rgba(10,22,40,0.9); border:1px solid var(--accent-g);
+                     border-radius:4px; color:var(--accent-g); font-family:'Bebas Neue',sans-serif; font-size:1.6rem;
+                     text-align:center; letter-spacing:.04em; outline:none">
+            <span style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:var(--accent-g); opacity:.7">%</span>
+          </div>
+          <div style="font-size:.68rem; color:var(--muted); margin-top:6px">Default: 5%</div>
+        </div>
+        <div style="padding:16px; background:rgba(255,209,102,0.06); border:1px solid rgba(255,209,102,0.2); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:8px; text-transform:uppercase">COM. VIANO</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px">
+            <input id="projPctViano" type="number" min="0" max="100" step="0.5" value="2"
+              oninput="projRecalc()"
+              style="width:72px; padding:8px 10px; background:rgba(10,22,40,0.9); border:1px solid var(--accent-y);
+                     border-radius:4px; color:var(--accent-y); font-family:'Bebas Neue',sans-serif; font-size:1.6rem;
+                     text-align:center; letter-spacing:.04em; outline:none">
+            <span style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:var(--accent-y); opacity:.7">%</span>
+          </div>
+          <div style="font-size:.68rem; color:var(--muted); margin-top:6px">Default: 2%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI TOTALS -->
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:20px">
+      <div class="kpi-card" style="animation-delay:.1s">
+        <div class="kpi-label">Total Comisión ARS</div>
+        <div class="kpi-value cyan" id="projKpiArs"><span class="prefix">$</span>159,2<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Suma 12 meses</div>
+      </div>
+      <div class="kpi-card" style="animation-delay:.15s">
+        <div class="kpi-label">Total Comisión USD</div>
+        <div class="kpi-value green" id="projKpiUsd">114.159<span class="suffix">USD</span></div>
+        <div class="kpi-sub">Convertido a TC MEP mensual</div>
+      </div>
+      <div class="kpi-card" style="animation-delay:.2s">
+        <div class="kpi-label">Promedio Mensual ARS</div>
+        <div class="kpi-value" id="projKpiAvgArs"><span class="prefix">$</span>13,3<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Total ÷ 12</div>
+      </div>
+      <div class="kpi-card yellow" style="animation-delay:.25s">
+        <div class="kpi-label">Promedio Mensual USD</div>
+        <div class="kpi-value yellow" id="projKpiAvgUsd">9.513<span class="suffix">USD</span></div>
+        <div class="kpi-sub">Total ÷ 12</div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Detalle Mensual — Comisiones por Segmento</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">#</th>
+              <th style="text-align:left">Mes</th>
+              <th>Ing. Nov. Interno</th>
+              <th>Comisión Int.</th>
+              <th>Ing. Nov. Externo</th>
+              <th>Comisión Ext.</th>
+              <th>VIANO</th>
+              <th>Comisión Viano</th>
+              <th>Total Com. ARS</th>
+              <th>TC MEP</th>
+              <th>Total Com. USD</th>
+            </tr>
+          </thead>
+          <tbody id="projTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CUENTA CORRIENTE -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-title"><span class="dot y"></span>Cuenta Corriente NOVILLO (USD)</div>
+      <div style="max-width:420px">
+        <table>
+          <tbody>
+            <tr>
+              <td class="lbl" style="font-size:.88rem">COMISION TOTAL</td>
+              <td class="cyan bold" style="font-size:.88rem" id="projCcCom">110.375</td>
+            </tr>
+            <tr class="neg">
+              <td class="lbl" style="font-size:.88rem">PAGOS EFECTUADOS</td>
+              <td class="red" style="font-size:.88rem">- 7.656</td>
+            </tr>
+            <tr style="border-top:2px solid var(--border)">
+              <td style="padding-top:14px"></td><td style="padding-top:14px"></td>
+            </tr>
+            <tr class="total">
+              <td class="bold lbl" style="font-size:.95rem">NETO</td>
+              <td class="bold" style="font-size:.95rem; color:var(--accent-g)" id="projCcNeto">102.719</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- DRACMA PROJECTION -->
+    <!-- ═══════════════════════════════════════════ -->
+    <hr class="divider" style="margin:48px 0 40px">
+
+    <div class="section-header">
+      <div>
+        <div class="section-label">11b</div>
+        <h2 class="section-title">Proyección Comisiones DRACMA</h2>
+      </div>
+      <div class="tag-period">Abr 2025 – Mar 2026 · 12 meses · Simulador interactivo</div>
+    </div>
+
+    <!-- ASSUMPTIONS DRACMA -->
+    <div class="card" style="margin-bottom:20px; animation-delay:.05s">
+      <div class="card-title" style="justify-content:space-between">
+        <div style="display:flex; align-items:center; gap:10px">
+          <span class="dot"></span>Supuestos de Comisión — DRACMA
+        </div>
+        <button onclick="projDracmaReset()"
+          style="padding:5px 14px; background:rgba(255,75,110,0.1); border:1px solid var(--accent-r);
+                 border-radius:4px; cursor:pointer; font-family:'DM Mono',monospace; font-size:0.68rem;
+                 letter-spacing:0.06em; color:var(--accent-r); transition:all 0.2s">
+          ↺ RESET
+        </button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; max-width:500px">
+        <div style="padding:16px; background:rgba(0,176,216,0.06); border:1px solid var(--border); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:8px; text-transform:uppercase">COM. DRACMA INTERNO</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px">
+            <input id="projDrPctInt" type="number" min="0" max="100" step="1" value="60"
+              oninput="projDracmaRecalc()"
+              style="width:72px; padding:8px 10px; background:rgba(10,22,40,0.9); border:1px solid var(--cyan);
+                     border-radius:4px; color:var(--cyan); font-family:'Bebas Neue',sans-serif; font-size:1.6rem;
+                     text-align:center; letter-spacing:.04em; outline:none">
+            <span style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:var(--cyan); opacity:.7">%</span>
+          </div>
+          <div style="font-size:.68rem; color:var(--muted); margin-top:6px">Default: 60%</div>
+        </div>
+        <div style="padding:16px; background:rgba(0,200,150,0.06); border:1px solid rgba(0,200,150,0.2); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:8px; text-transform:uppercase">COM. DRACMA EXTERNO</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px">
+            <input id="projDrPctExt" type="number" min="0" max="100" step="0.5" value="5"
+              oninput="projDracmaRecalc()"
+              style="width:72px; padding:8px 10px; background:rgba(10,22,40,0.9); border:1px solid var(--accent-g);
+                     border-radius:4px; color:var(--accent-g); font-family:'Bebas Neue',sans-serif; font-size:1.6rem;
+                     text-align:center; letter-spacing:.04em; outline:none">
+            <span style="font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; color:var(--accent-g); opacity:.7">%</span>
+          </div>
+          <div style="font-size:.68rem; color:var(--muted); margin-top:6px">Default: 5%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI TOTALS DRACMA -->
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:20px">
+      <div class="kpi-card" style="animation-delay:.1s">
+        <div class="kpi-label">Total Comisión ARS</div>
+        <div class="kpi-value cyan" id="projDrKpiArs"><span class="prefix">$</span>320,0<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Suma 12 meses</div>
+      </div>
+      <div class="kpi-card" style="animation-delay:.15s">
+        <div class="kpi-label">Total Comisión USD</div>
+        <div class="kpi-value green" id="projDrKpiUsd">231.179<span class="suffix">USD</span></div>
+        <div class="kpi-sub">Convertido a TC MEP mensual</div>
+      </div>
+      <div class="kpi-card" style="animation-delay:.2s">
+        <div class="kpi-label">Promedio Mensual ARS</div>
+        <div class="kpi-value" id="projDrKpiAvgArs"><span class="prefix">$</span>26,7<span class="suffix">M ARS</span></div>
+        <div class="kpi-sub">Total ÷ 12</div>
+      </div>
+      <div class="kpi-card yellow" style="animation-delay:.25s">
+        <div class="kpi-label">Promedio Mensual USD</div>
+        <div class="kpi-value yellow" id="projDrKpiAvgUsd">19.265<span class="suffix">USD</span></div>
+        <div class="kpi-sub">Total ÷ 12</div>
+      </div>
+    </div>
+
+    <!-- TABLE DRACMA -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Detalle Mensual — Comisiones DRACMA por Segmento</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:left">#</th>
+              <th style="text-align:left">Mes</th>
+              <th>Ing. Dracma Interno</th>
+              <th>Comisión Int.</th>
+              <th>Ing. Dracma Externo</th>
+              <th>Comisión Ext.</th>
+              <th>Total Com. ARS</th>
+              <th>TC MEP</th>
+              <th>Total Com. USD</th>
+            </tr>
+          </thead>
+          <tbody id="projDrTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CUENTA CORRIENTE DRACMA -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-title"><span class="dot y"></span>Cuenta Corriente DRACMA (USD)</div>
+      <div style="max-width:420px">
+        <table>
+          <tbody>
+            <tr>
+              <td class="lbl" style="font-size:.88rem">TOTAL COMISION</td>
+              <td class="cyan bold" style="font-size:.88rem" id="projDrCcCom">231.179</td>
+            </tr>
+            <tr class="neg">
+              <td class="lbl" style="font-size:.88rem">PAGOS EFECTUADOS</td>
+              <td class="red" style="font-size:.88rem">- 76.389</td>
+            </tr>
+            <tr class="neg">
+              <td class="lbl" style="font-size:.88rem">PAGOS EFECTUADOS</td>
+              <td class="red" style="font-size:.88rem">- 9.358</td>
+            </tr>
+            <tr class="neg">
+              <td class="lbl" style="font-size:.88rem">RESERVA</td>
+              <td class="red" style="font-size:.88rem">- 2.176</td>
+            </tr>
+            <tr class="neg">
+              <td class="lbl" style="font-size:.88rem">DISPONIBILIDAD APROX</td>
+              <td class="red" style="font-size:.88rem">- 15.000</td>
+            </tr>
+            <tr class="neg">
+              <td class="lbl" style="font-size:.88rem">CAP TRABAJO APROX</td>
+              <td class="red" style="font-size:.88rem">- 25.000</td>
+            </tr>
+            <tr style="border-top:2px solid var(--border)">
+              <td style="padding-top:14px"></td><td style="padding-top:14px"></td>
+            </tr>
+            <tr class="total">
+              <td class="bold lbl" style="font-size:.95rem">NETO</td>
+              <td class="bold" style="font-size:.95rem; color:var(--accent-g)" id="projDrCcNeto">103.256</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SIMULADOR PUNTO DE EQUILIBRIO -->
+    <!-- ═══════════════════════════════════════════ -->
+    <hr class="divider" style="margin:48px 0 40px">
+
+    <div class="section-header">
+      <div>
+        <div class="section-label">11c</div>
+        <h2 class="section-title">Simulador Punto de Equilibrio</h2>
+      </div>
+      <div class="tag-period">¿Cómo llegar al BE? · AUM vs ROA</div>
+    </div>
+
+    <!-- BE DATA CARD -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title"><span class="dot y"></span>Punto de Equilibrio — Datos Base</div>
+      <div class="grid-2">
+        <div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th style="text-align:left">Concepto</th><th>Pto. Equilibrio</th><th>%</th></tr></thead>
+              <tbody>
+                <tr><td class="bold lbl">Ingresos Brutos</td><td class="cyan bold">$262,2M</td><td class="muted">100%</td></tr>
+                <tr><td class="lbl indent">Costo INVIU</td><td class="red">($48,0M)</td><td class="muted">-18%</td></tr>
+                <tr><td class="lbl indent">Comisiones AP</td><td class="red">($147,8M)</td><td class="muted">-56%</td></tr>
+                <tr><td class="lbl indent">Impuestos</td><td class="red">($22,2M)</td><td class="muted">-8%</td></tr>
+                <tr class="subtotal"><td class="bold lbl">Total Ing. Netos Op.</td><td class="cyan bold">$44,2M</td><td class="muted">17%</td></tr>
+                <tr><td class="lbl indent">Costos Fijos</td><td class="red">($45,2M)</td><td class="muted">-17%</td></tr>
+                <tr><td class="lbl indent">Modelo Caño</td><td class="cyan">$967k</td><td class="muted">0%</td></tr>
+                <tr class="total"><td class="bold lbl">Utilidad No Operativa</td><td class="bold" style="color:var(--accent-g)">$0 ✓</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div style="padding:16px; background:rgba(0,176,216,0.06); border:1px solid var(--border); border-radius:6px; margin-bottom:12px">
+            <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:6px">AUM USD AL 31/12/2025</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--cyan); letter-spacing:.04em">81.803.149<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:4px">USD</span></div>
+          </div>
+          <div style="padding:16px; background:rgba(0,200,150,0.06); border:1px solid rgba(0,200,150,0.2); border-radius:6px; margin-bottom:12px">
+            <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:6px">INGRESOS DIC 2025 (USD)</div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--accent-g); letter-spacing:.04em">109.589<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:4px">USD</span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+            <div style="padding:12px; background:rgba(255,209,102,0.06); border:1px solid rgba(255,209,102,0.2); border-radius:6px; text-align:center">
+              <div style="font-family:'DM Mono',monospace; font-size:.55rem; color:var(--muted); letter-spacing:.1em; margin-bottom:4px">ROA ACTUAL ANUAL</div>
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:var(--accent-y)">1,61<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7">%</span></div>
+            </div>
+            <div style="padding:12px; background:rgba(255,75,110,0.06); border:1px solid rgba(255,75,110,0.2); border-radius:6px; text-align:center">
+              <div style="font-family:'DM Mono',monospace; font-size:.55rem; color:var(--muted); letter-spacing:.1em; margin-bottom:4px">ING. EQUILIBRIO USD</div>
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:var(--accent-r)">176.762<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7">USD</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULATOR -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title" style="justify-content:space-between">
+        <div style="display:flex; align-items:center; gap:10px">
+          <span class="dot g"></span>Simulador — ¿Cómo llegar al equilibrio?
+        </div>
+        <button onclick="beSimReset()"
+          style="padding:5px 14px; background:rgba(255,75,110,0.1); border:1px solid var(--accent-r);
+                 border-radius:4px; cursor:pointer; font-family:'DM Mono',monospace; font-size:0.68rem;
+                 letter-spacing:0.06em; color:var(--accent-r); transition:all 0.2s">
+          ↺ RESET
+        </button>
+      </div>
+
+      <div style="margin-bottom:16px; padding:10px 14px; background:rgba(0,200,150,0.08); border:1px solid rgba(0,200,150,0.25); border-radius:4px; font-size:.74rem; color:var(--accent-g); font-family:'DM Sans',sans-serif">
+        <strong style="color:var(--white)">Fórmula:</strong>
+        Ingreso mensual = AUM × ROA anual ÷ 12. Para llegar al BE se necesita un ingreso mensual de <strong>USD 176.762</strong>.
+        Podés combinar crecimiento de AUM con mejora de ROA para alcanzarlo.
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px">
+        <!-- AUM Slider -->
+        <div style="padding:20px; background:rgba(0,176,216,0.06); border:1px solid var(--border); border-radius:6px">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:10px; text-transform:uppercase">Crecimiento AUM (%)</div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px">
+            <input id="beSimAum" type="range" min="0" max="150" step="1" value="0"
+              oninput="beSimRecalc()"
+              style="flex:1; accent-color:var(--cyan); cursor:pointer">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--cyan); min-width:70px; text-align:right" id="beSimAumVal">+0<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7">%</span></div>
+          </div>
+          <div style="font-family:'DM Mono',monospace; font-size:.68rem; color:var(--muted)" id="beSimAumAbs">AUM: USD 81.803.149</div>
+        </div>
+        <!-- ROA Slider -->
+        <div style="padding:20px; background:rgba(255,209,102,0.06); border:1px solid rgba(255,209,102,0.2); border-radius:6px">
+          <div style="font-family:'DM Mono',monospace; font-size:.6rem; color:var(--muted); letter-spacing:.12em; margin-bottom:10px; text-transform:uppercase">ROA Anual Objetivo (%)</div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px">
+            <input id="beSimRoa" type="range" min="0.5" max="5" step="0.01" value="1.61"
+              oninput="beSimRecalc()"
+              style="flex:1; accent-color:var(--accent-y); cursor:pointer">
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--accent-y); min-width:80px; text-align:right" id="beSimRoaVal">1,61<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7">%</span></div>
+          </div>
+          <div style="font-family:'DM Mono',monospace; font-size:.68rem; color:var(--muted)" id="beSimRoaChg">Δ ROA: +0,00pp (actual: 1,61%)</div>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:20px">
+        <div style="padding:16px; background:rgba(0,176,216,0.06); border:1px solid var(--border); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.55rem; color:var(--muted); letter-spacing:.1em; margin-bottom:6px">INGRESO MENSUAL PROYECTADO</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.04em" id="beSimIngreso" style="color:var(--muted)">109.589<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:3px">USD</span></div>
+        </div>
+        <div style="padding:16px; background:rgba(255,75,110,0.06); border:1px solid rgba(255,75,110,0.2); border-radius:6px; text-align:center">
+          <div style="font-family:'DM Mono',monospace; font-size:.55rem; color:var(--muted); letter-spacing:.1em; margin-bottom:6px">INGRESO BE MENSUAL</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--accent-r); letter-spacing:.04em">176.762<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:3px">USD</span></div>
+        </div>
+        <div style="padding:16px; border:2px solid var(--border); border-radius:6px; text-align:center" id="beSimGapBox">
+          <div style="font-family:'DM Mono',monospace; font-size:.55rem; color:var(--muted); letter-spacing:.1em; margin-bottom:6px">GAP vs BE</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.04em" id="beSimGap">-67.173<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:3px">USD</span></div>
+          <div style="font-family:'DM Mono',monospace; font-size:.72rem; margin-top:4px" id="beSimGapPct">-38,0%</div>
+        </div>
+      </div>
+
+      <!-- PROGRESS BAR -->
+      <div style="margin-bottom:16px">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:.72rem">
+          <span style="color:var(--muted)">Progreso hacia el equilibrio</span>
+          <span id="beSimPctLabel" style="color:var(--cyan); font-family:'DM Mono',monospace">62,0%</span>
+        </div>
+        <div style="height:12px; background:rgba(255,255,255,0.06); border-radius:6px; overflow:hidden; position:relative">
+          <div id="beSimBar" style="height:100%; border-radius:6px; background:linear-gradient(90deg, var(--accent-r), var(--accent-y)); transition:width 0.4s; width:62%"></div>
+          <div style="position:absolute; top:0; bottom:0; left:0; right:0; display:flex; align-items:center">
+            <div style="width:100%; height:2px; border-left:2px dashed var(--accent-g); margin-left:100%; opacity:0.5" id="beSimTarget"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXTREMES TABLE -->
+      <div style="font-family:'DM Mono',monospace; font-size:.62rem; color:var(--muted); letter-spacing:.1em; margin-bottom:10px; text-transform:uppercase">Escenarios extremos (referencia)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th style="text-align:left">Escenario</th><th>AUM Necesario</th><th>Δ AUM</th><th>ROA Necesario</th><th>Δ ROA</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="lbl">Solo AUM (ROA fijo 1,61%)</td>
+              <td class="cyan" id="beSimE1Aum">USD 131,7M</td>
+              <td class="green" id="beSimE1Pct">+61,1%</td>
+              <td class="muted">1,61%</td>
+              <td class="muted">—</td>
+            </tr>
+            <tr>
+              <td class="lbl">Solo ROA (AUM fijo)</td>
+              <td class="muted">USD 81,8M</td>
+              <td class="muted">—</td>
+              <td class="cyan" id="beSimE2Roa">2,59%</td>
+              <td class="green" id="beSimE2Pct">+61,1%</td>
+            </tr>
+            <tr class="subtotal">
+              <td class="bold lbl" style="color:var(--accent-g)">Tu escenario</td>
+              <td class="cyan bold" id="beSimMyAum">USD 81,8M</td>
+              <td class="bold" id="beSimMyAumPct" style="color:var(--muted)">+0%</td>
+              <td class="bold" id="beSimMyRoa" style="color:var(--accent-y)">1,61%</td>
+              <td class="bold" id="beSimMyRoaPct" style="color:var(--muted)">+0,00pp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+</div><!-- /projView -->
 
 <!-- FOOTER -->
 <footer>
@@ -2317,8 +2784,8 @@ const plData = {
 
     { label:'Utilidad No Operativa',    css:'total', bold:true, indent:false, alloc:false,
       di:['$61,1M','18%'],    de:['($56,7M)','-11%'], ni:['$85,1M','57%'],
-      ne:['($11,1M)','-2%'],  id:['($535k)','5%'],    tot:['$77,9M','8%'],
-      diClass:'cyan', deClass:'red', niClass:'green', neClass:'red', idClass:'', totClass:'green bold',
+      ne:['($11,1M)','-2%'],  id:['($535k)','-1%'],    tot:['$77,9M','8%'],
+      diClass:'cyan', deClass:'red', niClass:'green', neClass:'red', idClass:'red', totClass:'green bold',
       di2:['$157,6M','42%'],  de2:['$61,1M','14%'],  ni2:['$117,4M','74%'],
       ne2:['$55,5M','22%'],   id2:['$18,9M','26%'],  tot2:['$77,9M','8%'],
       diClass2:'cyan', deClass2:'', niClass2:'green', neClass2:'', idClass2:'', totClass2:'green bold' },
@@ -2467,7 +2934,7 @@ const D = {
     plUtilOp:  [70965075,-44308296,79334424,-4378636,1315487,102928053],
     plNetOp:   [157642832,61071165,117439834,55474424,18944263,410572518],
     // BE
-    beIng:145215543, // not applicable for 2025 (using 1031098046 above)
+    beIng:1031098046,
     beFijos:-332677469,
     beInviu:-194972031,
     beCom:-420895218,
@@ -2561,10 +3028,14 @@ const D = {
     // AUM enero 2026 — comparar con dic 2025
     aumCompare: {
       prev: { label:'DIC 2025', cttes:2453, pf:2136, pj:317,  aum:84129051, cAUM:1983,
-              dracma:{cttes:1258,aum:31485152}, idesk:{cttes:276,aum:3314677}, novillo:{cttes:919,aum:49329222},
+              dracma:{cttes:1258,ext_c:512, int_c:746, aum:31485152, ext_a:16615622, int_a:14869530, roa:2.93, roa_ext:3.09, roa_int:2.72},
+              idesk: {cttes:276, ext_c:276, int_c:0,   aum:3314677,  ext_a:3314677,  int_a:0,       roa:2.58},
+              novillo:{cttes:919,ext_c:463, int_c:456, aum:49329222, ext_a:18683070, int_a:30646152, roa:0.88, roa_ext:1.35, roa_int:0.57},
               roa:{dracma:2.93, idesk:2.58, novillo:0.88, total:1.67} },
-      curr: { label:'ENE 2026', cttes:2477, pf:2136, pj:341,  aum:83707854, cAUM:1983,
-              dracma:{cttes:1261,aum:32242532}, idesk:{cttes:295,aum:3724369}, novillo:{cttes:921,aum:47740953},
+      curr: { label:'ENE 2026', cttes:2477, pf:2150, pj:327,  aum:83707854, cAUM:2021,
+              dracma:{cttes:1261,ext_c:515, int_c:746, aum:32242532, ext_a:16734559, int_a:15507973, roa:2.73, roa_ext:3.20, roa_int:2.22},
+              idesk: {cttes:295, ext_c:295, int_c:0,   aum:3724369,  ext_a:3724369,  int_a:0,       roa:1.76},
+              novillo:{cttes:921,ext_c:580, int_c:341, aum:47740953, ext_a:18261508, int_a:29479445, roa:0.69, roa_ext:0.92, roa_int:0.54},
               roa:{dracma:2.73, idesk:1.76, novillo:0.69, total:1.52} },
     },
     // P&L rows
@@ -2777,7 +3248,7 @@ const D2026_FEB = {
   },
   // AUM — compara ene vs feb
   aumCompare: {
-    prev: { label:'ENE 2026', cttes:2477, pf:2136, pj:341, aum:83707854, cAUM:1983,
+    prev: { label:'ENE 2026', cttes:2477, pf:2150, pj:327, aum:83707854, cAUM:2021,
             dracma:{cttes:1261,ext_c:515, int_c:746, aum:32242532, ext_a:16734559, int_a:15507973, roa:2.73, roa_ext:3.20, roa_int:2.22},
             idesk: {cttes:295, ext_c:295, int_c:0,   aum:3724369,  ext_a:3724369,  int_a:0,       roa:1.76},
             novillo:{cttes:921,ext_c:580, int_c:341, aum:47740953, ext_a:18261508, int_a:29479445, roa:0.69, roa_ext:0.92, roa_int:0.54},
@@ -3511,13 +3982,16 @@ function applyDataset(yr) {
   if (aumC) {
     const p=aumC.prev, c=aumC.curr;
     setEl('aum-prev-label', p.label); setEl('aum-prev-cttes', p.cttes.toLocaleString('es-AR'));
+    const prevCttesSubEl=document.getElementById('aum-prev-cttes-sub'); if(prevCttesSubEl) prevCttesSubEl.textContent=`${p.pf.toLocaleString('es-AR')} PF · ${p.pj} PJ`;
     setEl('aum-curr-label-cttes', c.label); setEl('aum-curr-cttes', c.cttes.toLocaleString('es-AR'));
     const cttesSubEl=document.getElementById('aum-curr-cttes-sub'); if(cttesSubEl) cttesSubEl.textContent=`${c.pf.toLocaleString('es-AR')} PF · ${c.pj} PJ`;
     const pctCttes=((c.cttes/p.cttes-1)*100).toFixed(1);
     setEl('aum-pct-cttes',(pctCttes>=0?'+':'')+pctCttes+'%');
     const pctCttesEl=document.getElementById('aum-pct-cttes'); if(pctCttesEl) pctCttesEl.style.color=pctCttes>=0?'var(--accent-g)':'var(--accent-r)';
     setEl('aum-prev-label-usd',p.label); setEl('aum-prev-usd',`$${(p.aum/1e6).toFixed(2)}M`);
+    const prevUsdSubEl=document.getElementById('aum-prev-usd-sub'); if(prevUsdSubEl) prevUsdSubEl.textContent=`${p.cAUM.toLocaleString('es-AR')} c/AUM`;
     setEl('aum-curr-label-usd',c.label); setEl('aum-curr-usd',`$${(c.aum/1e6).toFixed(2)}M`);
+    const currUsdSubEl=document.getElementById('aum-curr-usd-sub'); if(currUsdSubEl) currUsdSubEl.textContent=`${c.cAUM.toLocaleString('es-AR')} c/AUM`;
     const pctAUM=((c.aum/p.aum-1)*100).toFixed(1);
     setEl('aum-pct-usd',(pctAUM>=0?'+':'')+pctAUM+'%');
     const pctAUMEl=document.getElementById('aum-pct-usd'); if(pctAUMEl) pctAUMEl.style.color=pctAUM>=0?'var(--accent-g)':'var(--accent-r)';
@@ -3643,12 +4117,44 @@ function applyDataset(yr) {
 function selectYear(year) {
   activeYear = year;
   const overlay = document.getElementById('zeroOverlay');
+  const mainDash = document.getElementById('mainDashboard');
+  const projView = document.getElementById('projView');
 
   // Reset all buttons
-  ['2025','2026','Acum'].forEach(y => {
+  ['2025','2026','Acum','Proj'].forEach(y => {
     const btn = document.getElementById(`yearBtn${y}`);
     if (btn) btn.className = 'year-btn';
   });
+
+  // Toggle main dashboard vs proyeccion view
+  if (year === 'proyeccion') {
+    document.getElementById('yearBtnProj').className = 'year-btn active-proj';
+    overlay.classList.remove('show');
+    mainDash.style.display = 'none';
+    projView.style.display = '';
+    // Hide month nav and section nav
+    const monthBar = document.getElementById('monthNavBar');
+    if (monthBar) monthBar.classList.remove('visible');
+    const sectionNav = document.querySelector('nav');
+    if (sectionNav) sectionNav.style.display = 'none';
+    // Re-render data
+    // Update header
+    const rl = document.querySelector('.report-label');
+    const h1 = document.querySelector('.header-meta h1');
+    const mp = document.querySelector('.header-meta p');
+    if (rl) rl.textContent = 'Proyección Comisiones';
+    if (h1) h1.textContent = 'Simulador NOVILLO';
+    if (mp) mp.textContent = 'Período: Abril 2025 – Marzo 2026 · 12 meses';
+    projRecalc();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // Any non-proyeccion view: show main, hide proj, restore nav
+  mainDash.style.display = '';
+  projView.style.display = 'none';
+  const sectionNav = document.querySelector('nav');
+  if (sectionNav) sectionNav.style.display = '';
 
   if (year === '2025') {
     document.getElementById('yearBtn2025').className = 'year-btn active-2025';
@@ -3781,14 +4287,15 @@ function currentArsValues() {
 }
 
 // All ARS values keyed by data-ars attribute (in ARS, full units)
+// SYNC: these must match D['2025'] dataset values exactly
 const ARS_VALUES = {
-  // KPI cards
+  // KPI cards — aligned with D['2025']
   'ing-brutos':    1272525375,
-  'cm-total':       388633098,
-  'util-neta':      117885329,
+  'cm-total':       410572518,
+  'util-neta':       77895048,
   'ing-netos':      986040508,
   'pto-equilibrio': 1031098046,
-  'comisiones-ap':  527742518,
+  'comisiones-ap':  519446087,
   // Projected metrics
   'proj-ing':      1696700000,
   'proj-util':      157200000,
@@ -3957,6 +4464,326 @@ function toggleCurrency() {
     window._chart1.update();
   }
 }
+
+// ══════════════════════════════════════════════════════════
+// 11 · PROYECCIÓN COMISIONES NOVILLO
+// ══════════════════════════════════════════════════════════
+
+const PROJ_DATA = [
+  { n:1,  mes:'abr-25', ingInt:12427782.75,  ingExt:36222326.44, viano:0,            tc:1250.10 },
+  { n:2,  mes:'may-25', ingInt:5703475.44,   ingExt:21131693.27, viano:27151332.39,  tc:1175.59 },
+  { n:3,  mes:'jun-25', ingInt:10380585.56,  ingExt:16499705.60, viano:10063755.61,  tc:1189.63 },
+  { n:4,  mes:'jul-25', ingInt:16519442.01,  ingExt:26128478.16, viano:16868269.55,  tc:1277.18 },
+  { n:5,  mes:'ago-25', ingInt:10713101.74,  ingExt:25263519.32, viano:17462891.02,  tc:1333.04 },
+  { n:6,  mes:'sep-25', ingInt:38213721.31,  ingExt:34214357.32, viano:12318951.79,  tc:1435.50 },
+  { n:7,  mes:'oct-25', ingInt:25313427.16,  ingExt:31997540.40, viano:25879973.90,  tc:1500.35 },
+  { n:8,  mes:'nov-25', ingInt:15549567.94,  ingExt:28436125.05, viano:11098255.15,  tc:1466.24 },
+  { n:9,  mes:'dic-25', ingInt:22796231.70,  ingExt:27679496.08, viano:12795114.41,  tc:1483.57 },
+  { n:10, mes:'ene-26', ingInt:19584098.00,  ingExt:20771425.00, viano:19500175.00,  tc:1477.74 },
+  { n:11, mes:'feb-26', ingInt:18204575.00,  ingExt:22704589.00, viano:8558650.00,   tc:1429.50 },
+  { n:12, mes:'mar-26', ingInt:29548600.00,  ingExt:21415252.00, viano:10011612.50,  tc:1422.12 },
+];
+
+const PROJ_DEFAULTS = { pctInt: 60, pctExt: 5, pctViano: 2 };
+
+function projFmt(v) {
+  const abs = Math.abs(v);
+  if (abs >= 1e6) return (v<0?'(':'') + '$' + (abs/1e6).toFixed(1) + 'M' + (v<0?')':'');
+  if (abs >= 1e3) return (v<0?'(':'') + '$' + (abs/1e3).toFixed(0) + 'k' + (v<0?')':'');
+  return '$' + v.toFixed(0);
+}
+
+function projFmtUSD(v) {
+  return v.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function projRecalc() {
+  const pctInt   = (parseFloat(document.getElementById('projPctInt').value)   || 0) / 100;
+  const pctExt   = (parseFloat(document.getElementById('projPctExt').value)   || 0) / 100;
+  const pctViano = (parseFloat(document.getElementById('projPctViano').value) || 0) / 100;
+
+  const tbody = document.getElementById('projTbody');
+  if (!tbody) return;
+
+  let totalArs = 0, totalUsd = 0;
+
+  tbody.innerHTML = '';
+  PROJ_DATA.forEach(r => {
+    const comInt   = r.ingInt * pctInt;
+    const comExt   = r.ingExt * pctExt;
+    const comViano = r.viano  * pctViano;
+    const totalCom = comInt + comExt + comViano;
+    const comUsd   = totalCom / r.tc;
+
+    totalArs += totalCom;
+    totalUsd += comUsd;
+
+    tbody.innerHTML += `<tr>
+      <td class="bold">${r.n}</td>
+      <td class="bold">${r.mes}</td>
+      <td class="muted">${projFmt(r.ingInt)}</td>
+      <td class="cyan">${projFmt(comInt)}</td>
+      <td class="muted">${projFmt(r.ingExt)}</td>
+      <td class="green">${projFmt(comExt)}</td>
+      <td class="muted">${r.viano > 0 ? projFmt(r.viano) : '—'}</td>
+      <td style="color:var(--accent-y)">${r.viano > 0 ? projFmt(comViano) : '—'}</td>
+      <td class="cyan bold">${projFmt(totalCom)}</td>
+      <td class="muted">$${r.tc.toLocaleString('es-AR',{minimumFractionDigits:0})}</td>
+      <td class="green bold">${projFmtUSD(Math.round(comUsd))}</td>
+    </tr>`;
+  });
+
+  // Total row
+  tbody.innerHTML += `<tr class="total">
+    <td colspan="2" class="bold">TOTALES</td>
+    <td class="muted">${projFmt(PROJ_DATA.reduce((s,r)=>s+r.ingInt,0))}</td>
+    <td class="cyan bold">${projFmt(PROJ_DATA.reduce((s,r)=>s+r.ingInt*pctInt,0))}</td>
+    <td class="muted">${projFmt(PROJ_DATA.reduce((s,r)=>s+r.ingExt,0))}</td>
+    <td class="green bold">${projFmt(PROJ_DATA.reduce((s,r)=>s+r.ingExt*pctExt,0))}</td>
+    <td class="muted">${projFmt(PROJ_DATA.reduce((s,r)=>s+r.viano,0))}</td>
+    <td class="bold" style="color:var(--accent-y)">${projFmt(PROJ_DATA.reduce((s,r)=>s+r.viano*pctViano,0))}</td>
+    <td class="cyan bold">${projFmt(totalArs)}</td>
+    <td class="muted">—</td>
+    <td class="green bold">${projFmtUSD(Math.round(totalUsd))}</td>
+  </tr>`;
+
+  // KPIs
+  const kpiArs    = document.getElementById('projKpiArs');
+  const kpiUsd    = document.getElementById('projKpiUsd');
+  const kpiAvgArs = document.getElementById('projKpiAvgArs');
+  const kpiAvgUsd = document.getElementById('projKpiAvgUsd');
+  if (kpiArs)    kpiArs.innerHTML    = `<span class="prefix">$</span>${(totalArs/1e6).toFixed(1)}<span class="suffix">M ARS</span>`;
+  if (kpiUsd)    kpiUsd.innerHTML    = `${projFmtUSD(Math.round(totalUsd))}<span class="suffix"> USD</span>`;
+  if (kpiAvgArs) kpiAvgArs.innerHTML = `<span class="prefix">$</span>${(totalArs/12/1e6).toFixed(1)}<span class="suffix">M ARS</span>`;
+  if (kpiAvgUsd) kpiAvgUsd.innerHTML = `${projFmtUSD(Math.round(totalUsd/12))}<span class="suffix"> USD</span>`;
+
+  // Cuenta Corriente
+  // Cuenta Corriente NOVILLO
+  const PROJ_CC_PAGOS = 7656;
+  const comisionUsdTotal = Math.round(totalUsd);
+  const neto = comisionUsdTotal - PROJ_CC_PAGOS;
+
+  const ccCom   = document.getElementById('projCcCom');
+  const ccNeto  = document.getElementById('projCcNeto');
+  if (ccCom)   ccCom.textContent  = comisionUsdTotal.toLocaleString('es-AR');
+  if (ccNeto)  ccNeto.textContent = neto.toLocaleString('es-AR');
+}
+
+function projReset() {
+  document.getElementById('projPctInt').value   = PROJ_DEFAULTS.pctInt;
+  document.getElementById('projPctExt').value   = PROJ_DEFAULTS.pctExt;
+  document.getElementById('projPctViano').value = PROJ_DEFAULTS.pctViano;
+  projRecalc();
+}
+
+// ══════════════════════════════════════════════════════════
+// 11b · PROYECCIÓN COMISIONES DRACMA
+// ══════════════════════════════════════════════════════════
+
+const PROJ_DR_DATA = [
+  { n:1,  mes:'abr-25', ingInt:39849076,  ingExt:23640686,  tc:1250.10 },
+  { n:2,  mes:'may-25', ingInt:37229962,  ingExt:31188643,  tc:1175.59 },
+  { n:3,  mes:'jun-25', ingInt:28541517,  ingExt:36927644,  tc:1189.63 },
+  { n:4,  mes:'jul-25', ingInt:19780521,  ingExt:43637832,  tc:1277.18 },
+  { n:5,  mes:'ago-25', ingInt:29178609,  ingExt:50399836,  tc:1333.04 },
+  { n:6,  mes:'sep-25', ingInt:36870999,  ingExt:66664498,  tc:1435.50 },
+  { n:7,  mes:'oct-25', ingInt:79901568,  ingExt:85614288,  tc:1500.35 },
+  { n:8,  mes:'nov-25', ingInt:36096914,  ingExt:63319210,  tc:1466.24 },
+  { n:9,  mes:'dic-25', ingInt:51080431,  ingExt:34493765,  tc:1483.57 },
+  { n:10, mes:'ene-26', ingInt:42454625,  ingExt:66019540,  tc:1477.74 },
+  { n:11, mes:'feb-26', ingInt:50601562,  ingExt:37295562,  tc:1429.50 },
+  { n:12, mes:'mar-26', ingInt:32265105,  ingExt:53727450,  tc:1422.12 },
+];
+
+const PROJ_DR_DEFAULTS = { pctInt: 60, pctExt: 5 };
+const PROJ_DR_CC_PAGOS1 = 76389;
+const PROJ_DR_CC_PAGOS2 = 9358;
+const PROJ_DR_CC_RESERVA = 2176;
+const PROJ_DR_CC_DISP = 15000;
+const PROJ_DR_CC_CAP = 25000;
+
+function projDracmaRecalc() {
+  const pctInt = (parseFloat(document.getElementById('projDrPctInt').value) || 0) / 100;
+  const pctExt = (parseFloat(document.getElementById('projDrPctExt').value) || 0) / 100;
+
+  const tbody = document.getElementById('projDrTbody');
+  if (!tbody) return;
+
+  let totalArs = 0, totalUsd = 0;
+
+  tbody.innerHTML = '';
+  PROJ_DR_DATA.forEach(r => {
+    const comInt   = r.ingInt * pctInt;
+    const comExt   = r.ingExt * pctExt;
+    const totalCom = comInt + comExt;
+    const comUsd   = totalCom / r.tc;
+
+    totalArs += totalCom;
+    totalUsd += comUsd;
+
+    tbody.innerHTML += `<tr>
+      <td class="bold">${r.n}</td>
+      <td class="bold">${r.mes}</td>
+      <td class="muted">${projFmt(r.ingInt)}</td>
+      <td class="cyan">${projFmt(comInt)}</td>
+      <td class="muted">${projFmt(r.ingExt)}</td>
+      <td class="green">${projFmt(comExt)}</td>
+      <td class="cyan bold">${projFmt(totalCom)}</td>
+      <td class="muted">$${r.tc.toLocaleString('es-AR',{minimumFractionDigits:0})}</td>
+      <td class="green bold">${projFmtUSD(Math.round(comUsd))}</td>
+    </tr>`;
+  });
+
+  // Total row
+  tbody.innerHTML += `<tr class="total">
+    <td colspan="2" class="bold">TOTALES</td>
+    <td class="muted">${projFmt(PROJ_DR_DATA.reduce((s,r)=>s+r.ingInt,0))}</td>
+    <td class="cyan bold">${projFmt(PROJ_DR_DATA.reduce((s,r)=>s+r.ingInt*pctInt,0))}</td>
+    <td class="muted">${projFmt(PROJ_DR_DATA.reduce((s,r)=>s+r.ingExt,0))}</td>
+    <td class="green bold">${projFmt(PROJ_DR_DATA.reduce((s,r)=>s+r.ingExt*pctExt,0))}</td>
+    <td class="cyan bold">${projFmt(totalArs)}</td>
+    <td class="muted">—</td>
+    <td class="green bold">${projFmtUSD(Math.round(totalUsd))}</td>
+  </tr>`;
+
+  // KPIs
+  const kpiArs    = document.getElementById('projDrKpiArs');
+  const kpiUsd    = document.getElementById('projDrKpiUsd');
+  const kpiAvgArs = document.getElementById('projDrKpiAvgArs');
+  const kpiAvgUsd = document.getElementById('projDrKpiAvgUsd');
+  if (kpiArs)    kpiArs.innerHTML    = `<span class="prefix">$</span>${(totalArs/1e6).toFixed(1)}<span class="suffix">M ARS</span>`;
+  if (kpiUsd)    kpiUsd.innerHTML    = `${projFmtUSD(Math.round(totalUsd))}<span class="suffix"> USD</span>`;
+  if (kpiAvgArs) kpiAvgArs.innerHTML = `<span class="prefix">$</span>${(totalArs/12/1e6).toFixed(1)}<span class="suffix">M ARS</span>`;
+  if (kpiAvgUsd) kpiAvgUsd.innerHTML = `${projFmtUSD(Math.round(totalUsd/12))}<span class="suffix"> USD</span>`;
+
+  // Cuenta Corriente DRACMA
+  const comisionUsdTotal = Math.round(totalUsd);
+  const neto = comisionUsdTotal - PROJ_DR_CC_PAGOS1 - PROJ_DR_CC_PAGOS2 - PROJ_DR_CC_RESERVA - PROJ_DR_CC_DISP - PROJ_DR_CC_CAP;
+
+  const ccCom  = document.getElementById('projDrCcCom');
+  const ccNeto = document.getElementById('projDrCcNeto');
+  if (ccCom)  ccCom.textContent  = comisionUsdTotal.toLocaleString('es-AR');
+  if (ccNeto) ccNeto.textContent = neto.toLocaleString('es-AR');
+}
+
+function projDracmaReset() {
+  document.getElementById('projDrPctInt').value = PROJ_DR_DEFAULTS.pctInt;
+  document.getElementById('projDrPctExt').value = PROJ_DR_DEFAULTS.pctExt;
+  projDracmaRecalc();
+}
+
+// Initial render
+projRecalc();
+projDracmaRecalc();
+
+// ══════════════════════════════════════════════════════════
+// 11c · SIMULADOR PUNTO DE EQUILIBRIO
+// ══════════════════════════════════════════════════════════
+
+const BE_SIM = {
+  aumActual: 81803149,
+  roaActual: 1.61,
+  beMonthlyUsd: 176762,
+  ingActualUsd: 109589,
+};
+
+function beSimRecalc() {
+  const aumGrowth = parseFloat(document.getElementById('beSimAum').value) || 0;
+  const roaNew    = parseFloat(document.getElementById('beSimRoa').value) || 1.61;
+
+  const aumNew = BE_SIM.aumActual * (1 + aumGrowth / 100);
+  const ingresoMensual = aumNew * roaNew / 100 / 12;
+  const gap = ingresoMensual - BE_SIM.beMonthlyUsd;
+  const gapPct = (ingresoMensual / BE_SIM.beMonthlyUsd - 1) * 100;
+  const progressPct = Math.min((ingresoMensual / BE_SIM.beMonthlyUsd * 100), 150);
+  const roaDelta = roaNew - BE_SIM.roaActual;
+
+  const fmtN = v => Math.round(Math.abs(v)).toLocaleString('es-AR');
+
+  // Sliders display
+  const aumValEl = document.getElementById('beSimAumVal');
+  if (aumValEl) aumValEl.innerHTML = `+${Math.round(aumGrowth)}<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7">%</span>`;
+  
+  const aumAbsEl = document.getElementById('beSimAumAbs');
+  if (aumAbsEl) aumAbsEl.textContent = `AUM: USD ${Math.round(aumNew).toLocaleString('es-AR')}`;
+
+  const roaValEl = document.getElementById('beSimRoaVal');
+  if (roaValEl) roaValEl.innerHTML = `${roaNew.toFixed(2).replace('.',',')}<span style="font-family:'Barlow Condensed',sans-serif; font-size:.5em; opacity:.7">%</span>`;
+
+  const roaChgEl = document.getElementById('beSimRoaChg');
+  if (roaChgEl) roaChgEl.textContent = `Δ ROA: ${roaDelta >= 0 ? '+' : ''}${roaDelta.toFixed(2).replace('.',',')}pp (actual: 1,61%)`;
+
+  // Ingreso proyectado
+  const ingEl = document.getElementById('beSimIngreso');
+  const isAboveBE = ingresoMensual >= BE_SIM.beMonthlyUsd;
+  if (ingEl) {
+    ingEl.innerHTML = `${fmtN(ingresoMensual)}<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:3px">USD</span>`;
+    ingEl.style.color = isAboveBE ? 'var(--accent-g)' : 'var(--muted)';
+  }
+
+  // Gap
+  const gapEl = document.getElementById('beSimGap');
+  if (gapEl) {
+    const sign = gap >= 0 ? '+' : '-';
+    gapEl.innerHTML = `${sign}${fmtN(gap)}<span style="font-family:'Barlow Condensed',sans-serif; font-size:.45em; opacity:.6; margin-left:3px">USD</span>`;
+    gapEl.style.color = isAboveBE ? 'var(--accent-g)' : 'var(--accent-r)';
+  }
+  const gapPctEl = document.getElementById('beSimGapPct');
+  if (gapPctEl) {
+    gapPctEl.textContent = `${gapPct >= 0 ? '+' : ''}${gapPct.toFixed(1).replace('.',',')}%`;
+    gapPctEl.style.color = isAboveBE ? 'var(--accent-g)' : 'var(--accent-r)';
+  }
+  const gapBox = document.getElementById('beSimGapBox');
+  if (gapBox) gapBox.style.borderColor = isAboveBE ? 'var(--accent-g)' : 'var(--accent-r)';
+
+  // Progress bar
+  const barEl = document.getElementById('beSimBar');
+  if (barEl) {
+    barEl.style.width = Math.min(progressPct, 100) + '%';
+    barEl.style.background = isAboveBE
+      ? 'linear-gradient(90deg, var(--accent-g), var(--cyan))'
+      : 'linear-gradient(90deg, var(--accent-r), var(--accent-y))';
+  }
+  const pctLbl = document.getElementById('beSimPctLabel');
+  if (pctLbl) {
+    pctLbl.textContent = progressPct.toFixed(1).replace('.',',') + '%';
+    pctLbl.style.color = isAboveBE ? 'var(--accent-g)' : 'var(--cyan)';
+  }
+
+  // Extremes table — recalc
+  const aumNeeded = BE_SIM.beMonthlyUsd * 12 / (BE_SIM.roaActual / 100);
+  const aumNeededPct = (aumNeeded / BE_SIM.aumActual - 1) * 100;
+  const roaNeeded = BE_SIM.beMonthlyUsd * 12 / BE_SIM.aumActual * 100;
+  const roaNeededPct = (roaNeeded / BE_SIM.roaActual - 1) * 100;
+
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setEl('beSimE1Aum', `USD ${(aumNeeded/1e6).toFixed(1)}M`);
+  setEl('beSimE1Pct', `+${aumNeededPct.toFixed(1).replace('.',',')}%`);
+  setEl('beSimE2Roa', `${roaNeeded.toFixed(2).replace('.',',')}%`);
+  setEl('beSimE2Pct', `+${roaNeededPct.toFixed(1).replace('.',',')}%`);
+
+  // My scenario row
+  setEl('beSimMyAum', `USD ${(aumNew/1e6).toFixed(1)}M`);
+  const myAumPctEl = document.getElementById('beSimMyAumPct');
+  if (myAumPctEl) {
+    myAumPctEl.textContent = `+${Math.round(aumGrowth)}%`;
+    myAumPctEl.style.color = aumGrowth > 0 ? 'var(--accent-g)' : 'var(--muted)';
+  }
+  setEl('beSimMyRoa', `${roaNew.toFixed(2).replace('.',',')}%`);
+  const myRoaPctEl = document.getElementById('beSimMyRoaPct');
+  if (myRoaPctEl) {
+    myRoaPctEl.textContent = `${roaDelta >= 0 ? '+' : ''}${roaDelta.toFixed(2).replace('.',',')}pp`;
+    myRoaPctEl.style.color = roaDelta > 0 ? 'var(--accent-g)' : 'var(--muted)';
+  }
+}
+
+function beSimReset() {
+  document.getElementById('beSimAum').value = 0;
+  document.getElementById('beSimRoa').value = 1.61;
+  beSimRecalc();
+}
+
+beSimRecalc();
 
 </script>
 </body>
